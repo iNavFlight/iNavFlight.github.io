@@ -1,0 +1,14 @@
+# Setup
+name:         iNav
+tagline:      Drone Autopilot Software
+baseurl:      ""
+
+excerpt_separator: <!--more-->
+paginate:     5
+
+# Gems
+gems:
+  - jekyll-paginate
+
+#Others
+markdown: kramdown

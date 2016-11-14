@@ -1,0 +1,55 @@
+---
+layout: default
+title: INAV - Drone Autopilot Software
+---
+
+<div id="home">
+  <div class="posts">
+    {% assign index = true %}
+
+    <!-- add this section to put sticky posts on page 1 -->
+    {% if paginator.page == 1 %}
+        {% for post in site.categories.sticky %}
+            <article>
+                <h2>{{ post.title }}</h2>
+                <p class="meta">{{ post.date | date_to_string }}</p>
+                <p>{{ post.excerpt }}</p>
+                <a href="{{ post.url }}">Read more...</a>
+            </article>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- this next section is used to see if the post is sticky, in which case it's already been shown -->    
+    {% for post in paginator.posts %}
+        {% assign sticky = false %}
+        {% for cat in post.categories %} <!-- roll through this pages categories to find if it is sticky -->
+            {% if cat == 'sticky' %}
+                {% assign sticky = true %}
+            {% endif %}
+        {% endfor %}
+        {% unless sticky %}
+            <article>
+                <h2>{{ post.title }}</h2>
+                <p class="meta">{{ post.date | date_to_string }}</p>
+                <p>{{ post.excerpt }}</p>
+                <a href="{{ post.url }}">Read more...</a>
+            </article>
+        {% endunless %}
+    {% endfor %}
+  </div>
+  
+    <!-- Pagination links -->
+    <div class="pagination">
+      {% if paginator.next_page %}
+        <a href="{{ paginator.next_page_path }}" class="next">&larr; Older</a>
+      {% else %}
+        <span class="next ">&larr; Older</span>
+      {% endif %}
+      <!--span class="page_number ">{{ paginator.page }} of {{ paginator.total_pages }}</span-->
+      {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path }}" class="previous">Newer &rarr;</a>
+      {% else %}
+        <span class="previous">Newer &rarr;</span>
+      {% endif %}
+    </div>
+</div>
