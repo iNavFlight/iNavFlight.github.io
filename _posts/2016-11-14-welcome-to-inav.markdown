@@ -5,7 +5,32 @@ date:   2016-11-14
 categories: [sticky]
 ---
 
-Welcome to INAV. Started in 2015 as a small hobby project for personal needs INAV grew into something bigger - an entry-level autopilot for R/C enthusiast community. 
+INAV is a firmware to control multicopter and fixed-wing UAVs.
+
+<table style="width:100%;border:none;margin-bottom:20px;">
+<tr>
+<td style="width:25%;border:none;text-align:center;vertical-align:top;">
+    <img style="width:200px; height:200px;" src="/assets/welcome/flight-control.jpg">
+    <div style="text-align:center;">Works on wide range of flight control boards</div>
+</td>
+<td style="width:25%;border:none;text-align:center;vertical-align:top;">
+    <img style="width:200px; height:200px;" src="/assets/welcome/mission.jpg">
+    <div style="text-align:center;">Flies way-point missions even on a CC3D board</div>
+</td>
+<td style="width:25%;border:none;text-align:center;vertical-align:top;">
+    <img style="width:200px; height:200px;" src="/assets/welcome/airplane.jpg">
+    <div style="text-align:center;">Supports fixed-wing UAVs and multirotors in one firmware</div>
+</td>
+<td style="width:25%;border:none;text-align:center;vertical-align:top;">
+    <img style="width:200px; height:200px;" src="/assets/welcome/racing.jpg">
+    <div style="text-align:center;">Doesn't require GPS - works perfectly on racing drones</div>
+</td>
+</tr>
+</table>
+
+<!--more-->
+
+Started in 2015 as a small hobby project for personal needs INAV grew into something bigger - an entry-level autopilot for R/C enthusiast community. 
 
 Designed to run on a large variety of hardware it can fly almost anything that flies - from a small R/C airplane to a big hexacopter drone. While using a cheapest possible hardware it still offers a lot of cool features: 
 
