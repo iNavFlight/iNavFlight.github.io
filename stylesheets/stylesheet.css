@@ -440,8 +440,8 @@ header {
   padding-bottom: 20px;
   font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
   text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
-  background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
-  border-bottom: solid 1px #275da1;
+  background: #2e7bcf url(../images/map_bg.svg) 0 0 repeat-x;
+  /*border-bottom: solid 1px #2e7bcf;*/
 }
 header a {
   color: #fff;

@@ -18,7 +18,7 @@ ever growing project next to a paying full-time job. ​So now I'm asking for yo
 
 You can **support INAV development** by [becoming a patron on Patreon](https://www.patreon.com/inavflight) or [making a one-time contribution on Paypal](https://www.paypal.me/KonstantinSharlaimov).
 
-Please note that **becoming a patron [on Patreon](https://www.patreon.com/inavflight) allows me to plan ahead**. Patreon also works through PayPal, you can opt out at any time, and on top of that you get access to some nifty perks.
+Please note that **becoming a patron [on Patreon](https://www.patreon.com/inavflight) allows me to plan ahead**. Patreon also works through PayPal, you can opt out at any time, and on top of that you get access to some bonuses.
 
 <table style="width:100%;border:none;">
 <tr>
