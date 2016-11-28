@@ -7,11 +7,11 @@ categories: [news]
 
 I'm happy to announce official release of INAV 1.4.
 
-Download binaries at [GitHub](https://github.com/iNavFlight/inav/releases/tag/1.4) and please carefully read release notes.
-
-<!--more-->
+Binaries available at [GitHub](https://github.com/iNavFlight/inav/releases/tag/1.4).
 
 INAV 1.4 has some significant differences from 1.3, please read the release notes carefully and upgrade INAV Configurator available at [Chrome Store](https://chrome.google.com/webstore/detail/inav-configurator/fmaidjmgkdkpafmbnmigkpdnpdhopgel).
+
+<!--more-->
 
 ## Motor/servo outpurs are DISABLED by default
 For safety motor/servo outputs are disabled after flashing with configuration erase. After configuring motor/servo mixer you have to enable PWM outputs using CLI (`feature PWM_OUTPUT_ENABLE`) or using new Configurator.
