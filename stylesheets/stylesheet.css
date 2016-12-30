@@ -688,7 +688,7 @@ form {
 }
 
 #main-content h3 {
-  margin-top: 24px;
+  margin-top: 8px;
   margin-bottom: 8px;
   font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 18px;
@@ -747,7 +747,7 @@ ul {
 ol {
   list-style-position: inside;
   list-style: decimal;
-  padding-left: 3px;
+  padding-left: 20px;
 }
 
 dl dd {
