@@ -11,11 +11,13 @@ Featuring a lot more safety features the new firmware will protect you from flyi
 
 <!--more-->
 
-New OSD-enabled boards also have some support now. Not all of the required information is displayed on OSD yet, but we are working to fix this. At the moment the OMNIBUS F3 AIO board is a very appealing solution suitable for both multuirotor and fixes-wing aircrafts. You can get one here - [url]http://shop.myairbot.com/index.php/early-bird/omnibusv11.html[/url]
+New OSD-enabled boards also have some support now. Not all of the required information is displayed on OSD yet, but we are working to fix this. At the moment the OMNIBUS F3 AIO board is a very appealing solution suitable for both multuirotor and fixes-wing aircrafts. You can get one here - [Airbot Store](http://shop.myairbot.com/index.php/early-bird/omnibusv11.html)
 
-Airplane launch mode is improved - now it is much more reliable and allows you to launch your flying wing by holding it by the wingtip and swinging it into the air. One of the INAV developers - DzikuVx - made a video explaining the new feature - [url]https://www.youtube.com/watch?v=LfoYep7a8jQ[/url]
+Airplane launch mode is improved - now it is much more reliable and allows you to launch your flying wing by holding it by the wingtip and swinging it into the air. One of the INAV developers - DzikuVx - made a video explaining the new feature:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LfoYep7a8jQ" frameborder="0" allowfullscreen></iframe>
 
-A lot of bugs has been fixes as well. A few most notable fixes are
+A lot of bugs has been fixes as well. A few most notable fixes are:
+
 1. An issue with coarse resolution in the middle of the stick in ACRO mode which was bugging us for quite a while (known as "deadband even when deadband = 0 issue")
 2. BARO + GPS co-existance on airplanes is finally fixed. It's now perfectly safe to leave BARO enabled on airplanes.
 3. Failsafe defaults are now more safe. A lot of failsafe bugs have been fixed as well.
