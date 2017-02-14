@@ -55,3 +55,9 @@ As you can see IFF behaves much more like a human pilot - moving the servos only
 Tuning PIFF is fairly simple. What FF-gain is really - it's an inverse of airplane capabilities. You need to figure out what rotation rate your plane can reach will full servo deflection (in passthrough mode), calculate inverse of that, type that into FF-gain and get a nearly perfectly tuned machine. Then adjust I until you get rid of drift (caused by error in trimming) and add some P to make it snappier. Described approach for tuning is oversimplified, FF-gain in INAV can't be calculated exactly like that, but you get the idea.
 
 So, to conclude. PIFF-controller is behaving more like a human pilot, consuming less energy and extending life-span of your servos. It can also be tuned to be as snappy as you want it to be, possibly even snappier than classic PI-controller.
+
+### And this is how PIFF flies:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/r4vRrhFjdiQ" frameborder="0" allowfullscreen></iframe>
+
+Stay tuned for release of INAV 1.6-RC1 to try the new PIFF!
