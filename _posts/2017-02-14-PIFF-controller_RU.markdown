@@ -56,5 +56,3 @@ PIFF расшифровывается как Proportional - Integral - Feed-Forw
 ### А летает PIFF вот так:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/r4vRrhFjdiQ" frameborder="0" allowfullscreen></iframe>
-
-Stay tuned for release of INAV 1.6-RC1 to try the new PIFF!
