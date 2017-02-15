@@ -2,7 +2,7 @@
 layout: post
 title:  "INAV 1.6 PIFF Controller"
 date:   2017-02-14
-categories: [news]
+categories: [news,pages]
 ---
 
 While INAV 1.6 is just a few weeks away I'd like to highlight a brand new stabilisation controller for fixed-wing aircrafts - the PIFF.
@@ -10,6 +10,8 @@ While INAV 1.6 is just a few weeks away I'd like to highlight a brand new stabil
 So why invent a yet another controller if we already have a PID (although it's recommended to zero-out D-gain turning it into a PI-controller)?
 
 Let's talk about it.
+
+This article is also available in [Russian]({{ site.baseurl }}{% post_url 2017-02-14-PIFF-controller_RU %})
 
 <!--more-->
 
