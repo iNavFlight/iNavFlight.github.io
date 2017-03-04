@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "INAV 1.6 Released"
-date:   2015-02-28
+date:   2017-02-28
 categories: [news]
 ---
 
