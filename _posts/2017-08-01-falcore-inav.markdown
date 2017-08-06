@@ -62,11 +62,40 @@ Now you should have you FLACORE drone flashed with INAV firmware.
 
 ### Calibrating the accelerometer
 
-TODO
+INAV requires you to follow the accelerometer calibration steps below. It's vitally important for good performance.
+
+To perform the Falcore 6 point accelerometer calibration:
+
+1. Select the Setup Tab. The Setup screen is displayed.
+2. Place the drone leveled on a solid surface.
+3. Click the Calibrate Accelerometer button once, do not move drone. The Calibration Finished message is displayed when the calibration is complete.
+4. Repeat the calibration procedure for the following 5 positions:
+ * leveled upside-down
+ * on its right side (90 degrees right roll)
+ * nose up
+ * on its left side (90 degrees left roll)
+ * nose down
+
+![](/assets/2017-08-01/acc-calibration-positions.jpg)
 
 ### Calibrating the compass sensor
 
-TODO
+Accurately setting up the compass is vital because it is the primary source of heading information.
+
+Without an accurate heading the drone will not move in the correct direction in autopilot modes (POSHOLD, RTH, Waypoint). This can lead to circling (aka “toilet-bowling”) or even fly-aways.
+
+Calibrate with flight battery powering up the aircraft:
+
+1. Press "Calibrate Magnetometer" button.
+2. You have 30 seconds to hold the copter in the air and rotate it so that each side (front, back, left, right, top and bottom) points down towards the earth. However the algorithm is smart enough to calculate the proper calibration values even if you simply wave the copter in the air for 30 seconds after pressing "Calibrate Magnetometer" button.
+
+After that you need to verify that compass is calibrated correctly:
+
+Connect the FALCORE drone to INAV Configurator and observe the attitude values on the "Setup" screen (values of Heading, Pitch and Roll). 
+
+Point your FALCORE's nose North and verify that heading is reading 0 deg. Tilt the copter 30 degrees forward, right, left and back while observing the Heading value. Value of 0 deg shouldn't change more than 3-5 degrees. Repeat the process with models nose pointing East (heading=90 deg), South (heading=180 deg), West (heading=270 deg).
+
+If you are not able to get the compass to pass the verification - DO NOT FLY the drone!
 
 ### Test-flying the drone
 
