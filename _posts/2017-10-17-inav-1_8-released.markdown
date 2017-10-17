@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "INAV 1.8 Released"
+title:  "INAV 1.8-RC1 Released"
 date:   2017-10-17
 categories: [news]
 ---
 
-I'm happy to announce that [INAV 1.8](https://github.com/iNavFlight/inav/releases/tag/1.8) has been release right on schedule.
+I'm happy to announce that [INAV 1.8-RC1](https://github.com/iNavFlight/inav/releases/tag/1.8-RC1) has been released. This is a release-candidate for upcoming version 1.8.
 
 Note, that you'll need a new INAV Configurator which is available as a [Chrome App](https://chrome.google.com/webstore/detail/inav-configurator/fmaidjmgkdkpafmbnmigkpdnpdhopgel?hl=en) or as a [standalone application for Windows or MacOS](https://github.com/iNavFlight/inav-configurator/releases/tag/1.8.0)
 
