@@ -130,7 +130,6 @@ const config: Config = {
           label: "Download",
           position: "left",
         },
-        { to: "/blog", label: "Blog", position: "left" },
         {
           to: "/about",
           label: "About",
@@ -191,10 +190,6 @@ const config: Config = {
         {
           title: "More",
           items: [
-            {
-              label: "Blog",
-              to: "/blog",
-            },
             {
               label: "GitHub",
               href: "https://github.com/iNavFlight/inav",
