@@ -9,16 +9,21 @@ const config: Config = {
   tagline: "Exploring the limits of navigation enhanced UAV Functionality",
   favicon: "img/favicon.ico",
 
+  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+  future: {
+    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+  },
+
   // Set the production url of your site here
-  url: "https://robotgoat.github.io/",
+  url: "https://inavflight.github.io/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/inavdocs/",
+  baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "iNavFlight", // Usually your GitHub org/user name.
-  projectName: "inavdocs", // Usually your repo name.
+  projectName: "iNavFlight.github.io", // Usually your repo name.
 
   onBrokenLinks: "throw",
   // onBrokenMarkdownLinks: "warn", #deprecated comment out for now
@@ -32,17 +37,16 @@ const config: Config = {
   },
 
   plugins: [
-    require.resolve("docusaurus-lunr-search"),
-    require.resolve("docusaurus-plugin-image-zoom"),
-    // Multi instance blog for the release notes
     [
-      "@docusaurus/plugin-content-blog",
+      require.resolve("@easyops-cn/docusaurus-search-local"),
       {
-        id: "release-notes",
-        routeBasePath: "releasenotes",
-        path: "./releasenotes",
+        hashed: true,
+        indexDocs: true,
+        indexBlog: true,
+        indexPages: true,
       },
     ],
+    require.resolve("docusaurus-plugin-image-zoom"),
   ],
 
   themes: ["@docusaurus/theme-mermaid"],
@@ -61,7 +65,8 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/robotgoat/inavdocs/tree/main/",
+          editUrl:
+            "https://github.com/iNavFlight/iNavFlight.github.io/tree/main/",
         },
         blog: {
           showReadingTime: true,
@@ -71,7 +76,8 @@ const config: Config = {
           },
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/robotgoat/inavdocs/tree/main/",
+          editUrl:
+            "https://github.com/iNavFlight/iNavFlight.github.io/tree/main/",
           // Useful options to enforce blogging best practices
           onInlineTags: "warn",
           onInlineAuthors: "warn",
@@ -93,7 +99,7 @@ const config: Config = {
     announcementBar: {
       id: "the_news",
       content:
-        '<a href="https://github.com/iNavFlight/inav/releases">🎉 INAV 8.0.1 is out now! 🎉</a>',
+        '<a href="https://github.com/iNavFlight/inav/releases">🎉 INAV 9.0.1 is out now! 🎉</a>',
       backgroundColor: "#ff9999",
       isCloseable: true,
     },
@@ -113,11 +119,6 @@ const config: Config = {
         src: "img/logo.svg",
       },
       items: [
-        {
-          to: "/releasenotes",
-          label: "Release Notes",
-          position: "left",
-        },
         {
           type: "docSidebar",
           sidebarId: "documentationSidebar",
@@ -163,10 +164,6 @@ const config: Config = {
             {
               label: "Documentation",
               to: "/docs/welcome",
-            },
-            {
-              label: "Release Notes",
-              to: "/releasenotes",
             },
           ],
         },

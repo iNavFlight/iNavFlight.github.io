@@ -17,16 +17,27 @@ To build and run the docs locally, install npm on your system and follow the Doc
 - Make sure all packages are installed with `npm install`.
 - Run the dev server with `npm run start`.
 
-The temporary documentation can be accessed at this URL: https://www.spiffygoose.com/inavdocs/
+Documentation can be accessed at this URL: https://inavflight.github.io/
 
-## Versioning Scheme
+## For Contributors
+
+### Versioning Scheme
 
 The website utilizes Docusaurus's versioning feature to keep track of major changes to the firmware.
-The current version is the active stable release in the main `./docs` directory that is intended to be continually updated with minor updates until the next version. 
-Upon the release of the next stable version, the current version will be archived (versioned) into its own directory using `npm run docusaurus docs:version x.y.z`
-Lastly, the next current version's label will updated in `docusaurus.config.ts`.
+The current version is the active stable release in `/versioned_docs/version-x.x.x` directory that has been frozen with no further updates. 
+Upon the release of the next stable version, it will be created into its own, new directory using `npm run docusaurus docs:version x.y.z`
+
+### Image and Media References
+As per the latest Docusaurus file structure, please place new static images in the `/static/img/` directory in an organized fashion. 
+When referring to an image in a markdown file, please use absolute paths according to the following markdown syntax: `![Image Info](/img/FolderName/NameOfImage.jpg)`
+
+### Linking to Pages
+When linking to local pages, please do not use http urls or relative paths to link to other markdown documents that are part of the docusaurus site.
+For easier maintenance and organization, use relative paths starting from the root directory eg: `../quickstart/Name_of_markdown.md` if not in the `quickstart` directory, which exists one level above.
+Autocomplete on VS Code should find the directories automatically. 
+Linking to headings within the document work as well by using `#` following the filename.
 
 ## Plugins Used
 
-* The search plugin used is docusaurus-lunr-search: https://github.com/praveenn77/docusaurus-lunr-search
+* Search plugin: https://github.com/easyops-cn/docusaurus-search-local
 * Image zoom plugin: https://github.com/gabrielcsapo/docusaurus-plugin-image-zoom

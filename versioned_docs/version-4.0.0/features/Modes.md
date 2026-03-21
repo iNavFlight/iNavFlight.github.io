@@ -3,7 +3,9 @@ title: Modes
 description: Explaination of all the modes
 ---
 
-**REFER TO THIS PAGE FOR NAVIGATION MODES:** [Navigation-modes](https://github.com/iNavFlight/inav/wiki/Navigation-modes)
+:::info
+**REFER TO THIS PAGE FOR NAVIGATION MODES:** [Navigation-modes](./Navigation-modes.md)
+:::
 
 ## Non-navigation modes index:
 

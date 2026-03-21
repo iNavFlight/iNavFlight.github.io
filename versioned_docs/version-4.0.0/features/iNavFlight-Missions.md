@@ -9,7 +9,7 @@ iNav supports autonomous flight using waypoints. In order to use this capability
 * A GCS (Ground Control Station). The GCS will typically provide functions to create waypoint (WP) missions, upload WP missions to the flight controller (FC), validate the mission, execute the mission and log the mission;
 * Telemetry Hardware. In order to transfer the mission to the FC and monitor the mission in real time during mission execution it is necessary to install and configure a telemetry system between the GCS and the multicopter.
 
-This wiki topic describes the software currently available and some of the telemetry options. Please also see the [wiki page on more general navigation mode options](https://github.com/iNavFlight/inav/wiki/Navigation-modes#wp---autonomous-waypoint-mission).
+This wiki topic describes the software currently available and some of the telemetry options. Please also see the [wiki page on more general navigation mode options](./Navigation-modes.md#wp---autonomous-waypoint-mission).
 
 Before you get started on a waypoint mission, you need to know what the expectation is. Namely, the constraints of what is needed in order for waypoints to be loaded in the FC and the FC to allow you to ARM without a message of "Navigation Is Unsafe". If you get this message after loading your mission, one of the following is the cause:
 * You configured WP/PH/RTH or Failsafe RTH and you don't have a good GPS fix accuracy

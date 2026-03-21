@@ -27,7 +27,7 @@ Some of the most popular flight controllers for fixed wing are:
 
 * Flash the latest version of iNav using the [iNav Configurator](https://github.com/iNavFlight/inav-configurator/releases)
 
-* Do an entire [sensor calibration](https://github.com/iNavFlight/inav/wiki/Sensor-calibration). Level should be the angle of the plane itself when flying straight. **Do not skip this step**.
+* Do an entire [sensor calibration](./Sensor-calibration.md). Level should be the angle of the plane itself when flying straight. **Do not skip this step**.
 
 * Select a preset from the iNav presets tab that fits your aircraft the best, then press "Save & Reboot"
 

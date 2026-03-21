@@ -29,13 +29,13 @@ With the default iNav settings, iNav will configure the ublox GPS for you. There
 
 Also be aware that some of our flight controllers can cause interference with the GPS, causing low satellites, or even no satellites at all. Keep the GPS as far away from the flight controller as possible. Either shield your GPS, or flight controller from any equipment that could cause interference.
 
-You can learn how to setup your GPS unit for use with iNav on [on this page](https://github.com/iNavFlight/inav/wiki/GPS--and-Compass-setup).
+You can learn how to setup your GPS unit for use with iNav on [on this page](./GPS--and-Compass-setup.md).
 
 ## Notes / Common issues
 
 * Old version of iNav configurator, verify that your on the latest version see [link](https://chrome.google.com/webstore/detail/inav-configurator/fmaidjmgkdkpafmbnmigkpdnpdhopgel). If it has failed to update, simply uninstall and re-install the configurator.
 
-* Unable to enable NAV related modes, see [Navigation-modes](https://github.com/iNavFlight/inav/wiki/Navigation-modes) for possible reasons for why.
+* Unable to enable NAV related modes, see [Navigation-modes](../features/Navigation-modes.md) for possible reasons for why.
 
 * iNav does not show "GPS Signal Strength" for each satellite in the Cleanflight configurator. Instead, only the first one is used to show [HDOP](https://en.wikipedia.org/wiki/Dilution_of_precision_%28GPS%29)
 
@@ -47,7 +47,7 @@ You can learn how to setup your GPS unit for use with iNav on [on this page](htt
 1. Navigation modes are turned on while trying to arm.
 
 
-* iNav has GPS modes that differ from Cleanflight, or names them differently. Read [this wiki page](https://github.com/iNavFlight/inav/wiki/Navigation-modes) for how to use them, and combine them, to get the wanted position hold.
+* iNav has GPS modes that differ from Cleanflight, or names them differently. Read [this wiki page](../features/Navigation-modes.md) for how to use them, and combine them, to get the wanted position hold.
 
 * If your copter is toilet-bowling, which means, in the beginning it holds its position and then starts to make bigger and bigger circles, you probably have your magnetometer calibrated incorrectly, or it’s seeing the magnetic field of power lines or the beeper.  
 If you are using your FC onboard mag, try to place the the FC as far away as possible from the parts causing magnetic interference e.g. mounting it on/under the top plate on small racers.
