@@ -1,5 +1,5 @@
 ---
-title: MSP NAV Protocol and Types
+title: MSP Navigation Messages
 ---
 
 ## MSP NAV Protocol and Types

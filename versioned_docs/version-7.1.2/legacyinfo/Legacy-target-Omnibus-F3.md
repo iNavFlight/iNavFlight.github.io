@@ -1,5 +1,5 @@
 ---
-title: Board - OMNIBUS F3
+title: Legacy Target Omnibus F3
 ---
 
 ## Board - OMNIBUS F3

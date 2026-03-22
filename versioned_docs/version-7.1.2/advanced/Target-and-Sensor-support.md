@@ -1,5 +1,5 @@
 ---
-title: Sensor Support
+title: Target and Sensor Support
 ---
 
 ## Sensor Support

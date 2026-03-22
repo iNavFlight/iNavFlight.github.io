@@ -1,5 +1,5 @@
 ---
-title: version
+title: Upgrading from an Older Version of iNav to the Current Version
 ---
 
 ![](http://static.rcgroups.net/forums/attachments/6/1/0/3/7/6/a9088858-102-inav.png)

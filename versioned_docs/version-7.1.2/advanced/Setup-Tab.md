@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Setup Tab
 ---
 
 ## Introduction

@@ -1,5 +1,5 @@
 ---
-title: HOWTO setup iNAV for fixed wing
+title: "Howto: CC3D Flight Controller, MinimOSD, GPS and LTM Telemetry for Fixed Wing"
 ---
 
 ## HOWTO setup iNAV for fixed wing

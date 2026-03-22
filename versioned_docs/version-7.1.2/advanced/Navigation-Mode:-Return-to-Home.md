@@ -1,5 +1,5 @@
 ---
-title: RTH Altitudes
+title: "Navigation Mode: Return to Home"
 ---
 
 Return to Home (**RTH**) has quite a few settings, so would benefit from a page of it's own. **RTH** will attempt to bring copter/plane to the home position, or safehome if used. The home position is defined as a point where aircraft was first armed, by default. RTH will control both position and altitude. You will have to manually control altitude if your aircraft does not have an altitude sensor (barometer).

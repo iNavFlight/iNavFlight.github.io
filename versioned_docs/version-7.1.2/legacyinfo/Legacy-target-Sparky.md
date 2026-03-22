@@ -1,5 +1,5 @@
 ---
-title: Board - Sparky
+title: Legacy Target Sparky
 ---
 
 ## Board - Sparky

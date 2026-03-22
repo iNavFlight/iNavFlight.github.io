@@ -1,5 +1,5 @@
 ---
-title: "INAV Boards, Targets and PWM allocations"
+title: "Boards, Targets and PWM Allocations"
 ---
 
 ## INAV Boards, Targets and PWM allocations

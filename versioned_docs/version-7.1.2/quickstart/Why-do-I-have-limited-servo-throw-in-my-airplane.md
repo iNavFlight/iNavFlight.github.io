@@ -1,5 +1,5 @@
 ---
-title: Explanation of why you have limited throw in any stabilisation mode. ( Including Rate / Acro )
+title: Why Do I Have Limited Servo Throw in My Airplane
 ---
 
 ## Explanation of why you have limited throw in any stabilisation mode. ( Including Rate / Acro )

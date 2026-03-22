@@ -1,5 +1,5 @@
 ---
-title: Board - Seriously Pro SP Racing F3 EVO
+title: Legacy Target SPRacingF3EVO
 ---
 
 ## Board - Seriously Pro SP Racing F3 EVO

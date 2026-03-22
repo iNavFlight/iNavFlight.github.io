@@ -1,5 +1,5 @@
 ---
-title: Inertial position estimator (INAV)
+title: Developer Info
 ---
 
 ## Inertial position estimator (INAV)

@@ -1,5 +1,5 @@
 ---
-title: Equipment
+title: Bluetooth Setup to Configure Your Flight Controller
 ---
 
 You want to extend the lifetime of your micro USB and look cool on the field? Whip up your phone and setup your FC via bluetooth, this guide is for you.

@@ -1,5 +1,5 @@
 ---
-title: Initial Setup
+title: Fixed Wing Tuning for iNav 3.0
 ---
 
 This is a basic overview of the steps to perform autotune and auto board pitch alignment in INAV 3.0

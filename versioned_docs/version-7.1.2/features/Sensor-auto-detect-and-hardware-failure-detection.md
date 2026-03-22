@@ -1,5 +1,5 @@
 ---
-title: How auto detect works in INAV
+title: Sensor Auto Detect and Hardware Failure Detection
 ---
 
 ## How auto detect works in INAV

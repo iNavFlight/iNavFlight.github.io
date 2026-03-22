@@ -1,5 +1,5 @@
 ---
-title: Board - MotoLab
+title: Legacy Target Motolab
 ---
 
 ## Board - MotoLab

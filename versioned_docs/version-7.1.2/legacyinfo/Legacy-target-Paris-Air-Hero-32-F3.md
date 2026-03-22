@@ -1,5 +1,5 @@
 ---
-title: Board - Paris Air Hero 32
+title: Legacy Target Paris Air Hero 32 F3
 ---
 
 ## Board - Paris Air Hero 32

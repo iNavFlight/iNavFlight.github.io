@@ -1,5 +1,5 @@
 ---
-title: Multiwii Serial Protocol Version 2
+title: MSP V2
 ---
 
 ## Multiwii Serial Protocol Version 2

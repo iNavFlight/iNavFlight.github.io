@@ -1,5 +1,5 @@
 ---
-title: mixer
+title: Custom Mixes for Exotic Setups
 ---
 
 This page documents custom mixer for exotic platforms. As this page was written prior to inav 2.0, you are advised to verify the `smix` syntax compared to your firmware version. It is also necessary to set the `platform_type` for your platform.

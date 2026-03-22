@@ -1,5 +1,5 @@
 ---
-title: Board - Colibri RACE
+title: Legacy Target Colibri RACE
 ---
 
 ## Board - Colibri RACE

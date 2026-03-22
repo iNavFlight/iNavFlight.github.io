@@ -1,5 +1,5 @@
 ---
-title: Change to default INAV settings
+title: Default Values for Different Type of Aircrafts
 ---
 
 **This is outdated, INAV 1.6 is out and is using PRESET. Values here are old and variable names have changed by adding "mc" and "fw" to differentiate between multicopter and fixed wing.**

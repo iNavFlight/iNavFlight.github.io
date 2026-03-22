@@ -1,5 +1,5 @@
 ---
-title: The Hud
+title: OSD Hud and ESP32 Radars
 ---
 
 ## The Hud

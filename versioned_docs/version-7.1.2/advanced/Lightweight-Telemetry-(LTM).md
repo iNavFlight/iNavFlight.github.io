@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: Lightweight Telemetry (LTM)
 ---
 
 ## Overview

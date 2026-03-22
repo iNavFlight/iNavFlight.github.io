@@ -1,5 +1,5 @@
 ---
-title: Features safe to remove
+title: Features Safe to Add and Remove to Fit Your Needs.
 ---
 
 ## Features safe to remove

@@ -1,5 +1,5 @@
 ---
-title: CLI  mmix / smix for legacy mixers
+title: Legacy Mixers
 ---
 
 ## Overview

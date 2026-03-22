@@ -1,5 +1,5 @@
 ---
-title: Rationale
+title: Building Custom Firmware
 ---
 
 ## Rationale

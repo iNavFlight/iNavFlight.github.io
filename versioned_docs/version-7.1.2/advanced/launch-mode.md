@@ -1,5 +1,5 @@
 ---
-title: "[Home](/iNavFlight/inav/wiki)"
+title: Launch Mode
 ---
 
 ## [Home](https://github.com/iNavFlight/inav/wiki)

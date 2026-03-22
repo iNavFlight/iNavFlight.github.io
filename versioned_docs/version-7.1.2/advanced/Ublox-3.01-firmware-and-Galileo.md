@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Ublox 3.01 Firmware and Galileo
 ---
 
 ## Introduction

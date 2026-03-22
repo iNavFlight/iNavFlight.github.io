@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: iNav Blackbox Variables
 ---
 
 ## Overview

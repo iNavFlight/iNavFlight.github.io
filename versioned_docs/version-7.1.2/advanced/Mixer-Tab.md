@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Mixer Tab
 ---
 
 ## Introduction
@@ -20,7 +20,7 @@ INAV now was a function that allows to flexibly assign functions to PWM outputs 
 Specific function `AUTO`, `MOTORS` or `SERVOS` can be assigned to each Timer Group. Then, all outputs from this group will perform this function.
 Thanks to this, it's possible to use servos and motors in ways that previously required building a custom targets.
 
-![INAV output assignment](https://quadmeup.com/assets/inav/inav_output_assignment.png)
+![INAV output assignment](/img/content/inav_output_assignment.png)
 
 Bear in mind:
 * In some rare cases, output assignment might be different than in INAV 6. **This makes it even more important to remove your props and double check your outputs before you power your flight controller with batteries for the first time after applying your old settings or enabling outputs.**

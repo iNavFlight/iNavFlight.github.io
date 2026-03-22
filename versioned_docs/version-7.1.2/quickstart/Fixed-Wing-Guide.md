@@ -1,5 +1,5 @@
 ---
-title: The Basics of Getting INAV Working on an Airplane
+title: Fixed Wing Guide
 ---
 
 ## The Basics of Getting INAV Working on an Airplane

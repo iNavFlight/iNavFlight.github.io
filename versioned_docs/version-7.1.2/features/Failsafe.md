@@ -1,5 +1,5 @@
 ---
-title: Setting up Failsafe for RTH
+title: Failsafe
 ---
 
 ## Setting up Failsafe for RTH

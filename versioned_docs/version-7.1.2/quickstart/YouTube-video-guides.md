@@ -1,5 +1,5 @@
 ---
-title: Must watch
+title: YouTube Video Guides
 ---
 
 ## Must watch

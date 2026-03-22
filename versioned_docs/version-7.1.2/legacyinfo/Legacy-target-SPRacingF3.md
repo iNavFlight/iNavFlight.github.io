@@ -1,5 +1,5 @@
 ---
-title: Board - SPRacingF3
+title: Legacy Target SPRacingF3
 ---
 
 ## Board - SPRacingF3
