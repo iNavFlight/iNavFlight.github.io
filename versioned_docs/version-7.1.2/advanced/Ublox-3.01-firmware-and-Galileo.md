@@ -1,14 +1,14 @@
 ---
-title: Ublox 3.01 Firmware and Galileo
+title: Introduction
 ---
 
-# Introduction
+## Introduction
 
 Ublox firmware 3.01 supports the European Galileo satellites. This can provide increased satellite coverage particularly in Northern and Western Europe.
 
 A number of UBLOX configuration items can be used to check and configure Galileo capability, either using the UBLOX Windows application 'u-center' (which works on Linux using 'Wine'), or the Linux/mwptools 'ublox-cli' tool.
 
-# Firmware and settings
+## Firmware and settings
 
 It is necessary for your device to be a M8N or later to use v3.01 firmware (necessary for Galileo) and to have 1M of flash. Some of the popular Beitian BN880 devices only have 512k of flash and cannot be upgraded. Older (prior to spring 2016) and new devices (spring 2017) are reported as being upgradable.
 

@@ -1,8 +1,8 @@
 ---
-title: OSD Hud and ESP32 Radars
+title: The Hud
 ---
 
-# The Hud
+## The Hud
 
 The Hud is a feature that displays various points of interest (POI) on the OSD, in "3D", by showing a marker where the location is on the screen. For now it's capable to display :
 
@@ -10,12 +10,12 @@ The Hud is a feature that displays various points of interest (POI) on the OSD, 
 - Nearby aircrafts as sent by an ESP32 LoRa modem
 - Next waypoints during a mission.
 
-# Video Resources
+## Video Resources
 
 * [This is a video demonstrating the hud for both home point and ESP32 radar tracking](https://youtu.be/zzKkcd5_cY4?t=27).
 * [This is a video demonstrating the display of the waypoints live during an autonomous mission](https://www.youtube.com/watch?v=CqKNGY4pogU).
 
-# Configuration
+## Configuration
 
 The hud must be set from the CMS menu of the OSD or from the CLI in the Configurator.
 
@@ -102,7 +102,7 @@ How many waypoint are displayed, from 0 to 3. Set to 0 (zero) to disable. As sam
 **CLI :**
 `set osd_hud_wp_disp= 2`
 
-# CLI commands
+## CLI commands
 
 All the settings are available in the CLI, recommended settings are :
 ```
@@ -121,7 +121,7 @@ set osd_hud_radar_range_max = 4000
 set osd_hud_wp_disp = 2
 ```
 
-#  Accuracy and limitations
+##  Accuracy and limitations
 
 There's a long chain of inaccuracies conspiring to make the tracking not perfectly accurate :
 

@@ -1,18 +1,18 @@
 ---
-title: Building Custom Firmware
+title: Rationale
 ---
 
-# Rationale
+## Rationale
 
 Prebuilt targets may not include the features you wish to use. If a target already exists, it is relatively simple to build your own custom firmware.
 
 This guide provides a high level overview. It is **not** a detailed development guide.
 
-# Prerequisite
+## Prerequisite
 
 You need a working development environment. There is [developer / build environment documentation](https://github.com/iNavFlight/inav/tree/master/docs/development) for the major platforms (Linux, MacOS, Windows).
 
-# Target Specific Files
+## Target Specific Files
 
 ## Overview
 

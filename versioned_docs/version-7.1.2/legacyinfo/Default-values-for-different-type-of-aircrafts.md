@@ -1,5 +1,5 @@
 ---
-title: Default Values for Different Type of Aircrafts
+title: Change to default INAV settings
 ---
 
 **This is outdated, INAV 1.6 is out and is using PRESET. Values here are old and variable names have changed by adding "mc" and "fw" to differentiate between multicopter and fixed wing.**
@@ -27,7 +27,7 @@ Worth reading regards to deciding to use asynchronous mode. https://quadmeup.com
 2016-11-21 stronnag Added Tri 600 settings for F3/ INAV 1.4
 ```
 
-# Change to default INAV settings
+## Change to default INAV settings
 
 Changes **you** think that should be done to INAV globally:
 
@@ -36,7 +36,7 @@ Changes **you** think that should be done to INAV globally:
 
 ```
 
-# Multirotor
+## Multirotor
 
 **150 Size:**
 
@@ -248,7 +248,7 @@ _Other Values:_
 ```
 
 
-# Fixedwing
+## Fixedwing
 
 **Regular plane**
 

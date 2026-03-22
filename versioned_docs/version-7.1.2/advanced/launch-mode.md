@@ -1,10 +1,10 @@
 ---
-title: Launch Mode
+title: "[Home](/iNavFlight/inav/wiki)"
 ---
 
-# [Home](https://github.com/iNavFlight/inav/wiki)
+## [Home](https://github.com/iNavFlight/inav/wiki)
 
-# Getting Started
+## Getting Started
 
  - [Getting started with INAV](../quickstart/Getting-started-with-iNav.md)
  - [Multirotor guide](../quickstart/Multirotor-guide.md)
@@ -17,7 +17,7 @@ title: Launch Mode
  - [Sensor calibration](../quickstart/Sensor-calibration.md)
  - [GPS and Compass setup](../quickstart/GPS--and-Compass-setup.md)
 
-# Additional Information
+## Additional Information
 
  - [INAV Flight Modes](../features/Modes.md)
  - [INAV Navigation Modes](../features/Navigation-modes.md)
@@ -28,7 +28,7 @@ title: Launch Mode
  - [INAV Version History](./New-features-over-versions-log.md)
  - [Fixed Wing Tuning for INAV 3.0](../legacyinfo/Fixed-Wing-Tuning-for-INAV-3.0.md)
 
-# Additional Links
+## Additional Links
  - [Antenna Tracking](./AAT-Automatic-Antenna-Tracker.md)
  - [Beeping and flashing error codes meaning](../quickstart/Blinkenlights.md)
  - [Custom mixes for exotic setups](./Custom-mixes-for-exotic-setups.md)
@@ -42,10 +42,10 @@ title: Launch Mode
  - [Pixel OSD FAQs](../legacyinfo/Pixel-OSD-FAQs.md)
  - [TROUBLESHOOTING](../quickstart/TROUBLESHOOTING.md)
 
-# For Developers
+## For Developers
 
  - [Developer info](./Developer-info.md)
 
-# Vintage area
+## Vintage area
 
  - [Howto: CC3D flight controller, minimOSD, GPS and LTM telemetry for fixed wing](../quickstart/Howto:-CC3D-flight-controller,-minimOSD,-GPS-and-LTM-telemetry-for-fixed-wing.md)

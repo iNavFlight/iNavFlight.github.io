@@ -1,8 +1,8 @@
 ---
-title: YouTube Video Guides
+title: Must watch
 ---
 
-# Must watch
+## Must watch
 
 - [INAV 7 Ferocious Falcon](https://youtu.be/8Q8t_KwlSAQ)
 - [INAV on a flying wing video tutorial](https://www.youtube.com/playlist?list=PLOUQ8o2_nCLkZlulvqsX_vRMfXd5zM7Ha)

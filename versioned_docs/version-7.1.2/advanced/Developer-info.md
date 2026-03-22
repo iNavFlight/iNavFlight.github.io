@@ -1,8 +1,8 @@
 ---
-title: Developer Info
+title: Inertial position estimator (INAV)
 ---
 
-# Inertial position estimator (INAV)
+## Inertial position estimator (INAV)
 
 Position estimator is a vital component for navigation subsystem. It takes data from all available sensors and fuses them together to figure out coordinates and velocities in the local frame of reference. All navigational decisions are made based on estimated position/velocity data.
 
@@ -59,7 +59,7 @@ The following reference sources (with corresponding parameters for weight) are a
 GPS data is not updated instantly. GPS module needs time to calculate new position and velocity. INAV has means of compensating for this delay. Expected GPS delay in milliseconds is controlled by **inav_gps_delay_ms** parameter. Typical value for GPS delay is 200ms.
 
 
-# Position and altitude PID controllers
+## Position and altitude PID controllers
 
 ## PID regulators in ALTHOLD mode (Z-controller)
 
@@ -105,7 +105,7 @@ Output of POSR PID-controller is desired acceleration which is directly translat
 
 
 
-# Coordinate systems
+## Coordinate systems
 
 Navigation operates in 3 different coordinate systems.
 
@@ -127,7 +127,7 @@ This is a classical cartesian coordinate system where the 3 axes are orthogonal 
 
 The units for the NEU coordinate system are centimetres.
 
-# Frames of reference
+## Frames of reference
 
 ## Global (geodetic) frame of reference
 

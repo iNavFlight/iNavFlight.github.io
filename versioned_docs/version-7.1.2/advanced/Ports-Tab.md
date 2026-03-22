@@ -1,8 +1,8 @@
 ---
-title: Ports Tab
+title: Overview
 ---
 
-# Overview
+## Overview
 
 This controls the UART and USB serial ports on your flight controller (FC). These serial ports are used to communicate with devices and sensors typically soldered or connected by pins or plugs to your FC. (Other connections such as I2C, gyro, barometer, etc. are configured on the Configuration Tab)
 

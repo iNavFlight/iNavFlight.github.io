@@ -1,8 +1,8 @@
 ---
-title: Legacy Target Omnibus F3
+title: Board - OMNIBUS F3
 ---
 
-# Board - OMNIBUS F3
+## Board - OMNIBUS F3
 
 > This board is not supported in recent INAV releases
 

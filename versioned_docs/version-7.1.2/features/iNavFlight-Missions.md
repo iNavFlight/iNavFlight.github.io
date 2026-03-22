@@ -1,8 +1,8 @@
 ---
-title: iNavFlight Missions
+title: Overview
 ---
 
-# Overview
+## Overview
 
 INAV supports autonomous flight using waypoints. In order to use this capability, it is may be necessary to utilise and configure some supporting technologies, including:
 
@@ -21,7 +21,7 @@ The default distance for the first waypoint is configured with the 'nav_wp_safe_
 
 The MSP (MultiWii Serial Protocol) messages defining mission navigation are [documented](../advanced/MSP-Navigation-Messages.md). This message set is supported by the [Mission Planner for INAV](https://play.google.com/store/apps/details?id=com.eziosoft.ezgui.inav&hl=en) and [mwp](https://github.com/stronnag/mwptools) ground stations. The [protocol documentation](../advanced/MSP-Navigation-Messages.md) describes any optional parameters to control mission behaviour.
 
-# Ground Control Stations
+## Ground Control Stations
 
 Currently there are a number of GCS applications widely used for INAV mission management, including  [Mission Planner for INAV](https://play.google.com/store/apps/details?id=com.eziosoft.ezgui.inav&hl=en) (Android), [MobileFlight](https://flyinghead.github.io/mobile-flight/) (IOS) and [mwp](https://github.com/stronnag/mwptools) (Linux). In the future, other options may become available, particularly as the MAVLink protocol becomes supported by INAV. However, MAVLink based tools will only provide monitoring.
 
@@ -77,7 +77,7 @@ Please see [impload's wiki user guide](https://github.com/stronnag/impload/wiki/
 
 WinGUI is a Windows program developed for Multiwii-nav. It is currently somewhat abandoned, but would be a viable basis for developing a Windows program for INAV navigation (or better, supporting both Multiwii and INAV, as do the other tools described here). Should anyone wish to rescue this fine application, the source code (GPL v3) may be found at https://code.google.com/archive/p/mw-wingui/.
 
-# Telemetry Hardware
+## Telemetry Hardware
 
 In order to transfer missions from the GCS to the flight controller, and to monitor / log flight data, it is necessary to establish a data link between the GCS and the multirotor. Some popular technologies include:
 
@@ -160,7 +160,7 @@ I also did a DL TX power off test and it reconnected without an issue when left 
 No test flights have been performed yet.
 
 
-# Telemetry Protocols
+## Telemetry Protocols
 
 Data is transferred between the GCS and the FC using a "Telemetry Protocol". Currently, INAV offers two protocols (MSP and LTM), both of which are supported by ezgui and [mwp](https://github.com/stronnag/mwptools). There is also a minimal implementation of MAVLink ([mwp](https://github.com/stronnag/mwptools) already supports this MAVLink subset), this will allow other tools to be used, such as the cross-platform [QGroundControl](http://qgroundcontrol.org/). The MAVLink implementation only supports push telemetry (i.e. mission monitoring, not mission planning).
 
@@ -186,7 +186,7 @@ LTM is supported by ezgui, [mwp](https://github.com/stronnag/mwptools) and ([for
 
 The initial implementation in INAV is supported by ezgui, Droid Planner 2, [mwp](https://github.com/stronnag/mwptools) and some older versions of QGroundControl (modern versions appear to require a more complex handshake). Probably some of the Android .apks for Mavlink will work with this telemetry protocol. Tower (Droid Planner 3) is reported as not working.
 
-# Configuring the Flight Controller
+## Configuring the Flight Controller
 ## Ports & port sharing
 
 If order to use mission planning or just flight monitoring, it is necessary to configure a port on the flight controller. Due to the often limited number of ports, multiple devices and potential baud rate clashes, some compromises may have to be made.
@@ -214,7 +214,7 @@ From this, some configuration examples; both these examples assume a PPM RX:
 
 Using a serial RX is more difficult, particularly for F1 devices. For F3 devices, in the final example, putting the serial RX (Sbus, SpekSat) on UART3 and using soft serial for for MSP+LTM would be an acceptable solution.
 
-# Mission Planning
+## Mission Planning
 
 INAV currently supports a subset of the WP / Mission MSP
 ["specification"](https://docs.google.com/document/d/16ZfS_qwc-rJeA7N5Tx0DA6wtgxl6HdGgaz-jE3lHBWs). The
@@ -244,11 +244,11 @@ An 'in progress' mission flight may be aborted prior to reaching one of the abov
 * Switching out of WP mode; or
 * Invoking RTH.
 
-# Mission / Flight Monitoring
+## Mission / Flight Monitoring
 
 Prior to engaging any automated mode, it is advisable to verify that you have reasonable satellite performance. Even with 10+ satellites and HDOP < 1.5, there is a remote possibility that you might experience 'a bad satellite day'; there's an example described in [issue 431](https://github.com/iNavFlight/inav/issues/431). An easy way to verify you have good coverage is to try POSHOLD before executing a mission (or RTH).
 
-# Waypoint Mode
+## Waypoint Mode
 
 As soon as INAV starts a leg on a WP mission, it will attempt to reach the leg altitude, so if you have
 
@@ -264,7 +264,7 @@ WP mode is only disengaged under the following circumstances:
 3. Pilot manually disables WP mode by either turning off the switch or enabling RTH
 4. The end of the mission is reached.
 
-# Advanced configuration
+## Advanced configuration
 ## 3DR
 ### Hardware
 3DR radios are sold either as a pair of air station  / ground station or individually. Functionally, the air / ground radios are identical, the air side having a tty/serial connection and the ground side having a USB interface for connecting to a computer. For ezgui (and [mwp](https://github.com/stronnag/mwptools)), it is easier to use a Bluetooth bridge. This bridge is also recommended for [mwp](https://github.com/stronnag/mwptools), as it avoids any potential RF interference from the USB cable and allows the more flexible placement of the ground antenna. In order to use the 3DR / BT bridge, it is necessary to have 'air side' devices at both ends of the link. It is then necessary to 'back-to-back' the ground 3DR and the BT device [example field setup](http://www.rcgroups.com/forums/showthread.php?t=2495732&page=65) and provide power. A voltage regulator and an old lipo would work well. The [HR-12](https://quadmeup.com/diy-wireless-telemetry-link-for-uav/) description provides the canonical connection diagram, a 5V regulator or BEC may be used.

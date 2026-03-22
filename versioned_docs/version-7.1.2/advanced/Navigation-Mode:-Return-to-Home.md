@@ -1,5 +1,5 @@
 ---
-title: "Navigation Mode: Return to Home"
+title: RTH Altitudes
 ---
 
 Return to Home (**RTH**) has quite a few settings, so would benefit from a page of it's own. **RTH** will attempt to bring copter/plane to the home position, or safehome if used. The home position is defined as a point where aircraft was first armed, by default. RTH will control both position and altitude. You will have to manually control altitude if your aircraft does not have an altitude sensor (barometer).
@@ -8,7 +8,7 @@ With default settings RTH will land immediately if you are closer than 5 meters 
 
 Return to Home is activated by the NAV RTH flight mode.
 
-# RTH Altitudes
+## RTH Altitudes
 
 There are two altitudes that can be used with RTH: _nav_rth_altitude_ and _nav_rth_home_altitude_.
 
@@ -16,7 +16,7 @@ _nav_rth_altitude_ is used in conjunction with the RTH Altitude control modes to
 
 _nav_rth_home_altitude_ sets the altitude that a plane will loiter at when it arrives at home. If above the _nav_rth_home_altitude_, the plane will start loitering, then loiter down to the home altitude. The default, 0, means that the feature is disabled. In which case the plane will loiter at the **Actual RTH Altitude**, or _nav_rth_altitude_ if linear descent is used.
 
-# RTH Altitude control modes
+## RTH Altitude control modes
 
 RTH sequence can control altitude in several different ways, controlled by _nav_rth_alt_mode_ and _nav_rth_altitud_ (the altitude in centimetres) parameters.
 
@@ -76,7 +76,7 @@ If the aircraft is below _nav_rth_altitude_ it will climb to desired altitude pr
 
 ![](https://i.imgur.com/CPgKb4w.png)
 
-# Linear Descent
+## Linear Descent
 _INAV 7.0 Onwards_
 
 Before INAV 7.0; linear descent was an extended version of the **AT_LEAST** return to home method. From INAV 7.0 onwards, linear descent can be used with all RTH methods. It has also been extended to give the pilot more control. Because all RTH methods can now use linear descent; there needs to be a target altitude to descend to, that works with all RTH methods. To do this, the target altitude of the linear descent is now the `nav_rth_home_altitude`. You will need to set this parameter in order for linear descent to work.
@@ -88,7 +88,7 @@ An option has also been added to decide how far away the linear descent starts. 
 
 Though this feature is still called linear descent, due to consistency. In some cases, if flying below the home position, this can work as a linear ascent. Rising up to the `nav_rth_home_altitude`.
 
-# Climb first
+## Climb first
 
 The _nav_rth_climb_first_ option sets how the model will initiate the **RTH**.
 

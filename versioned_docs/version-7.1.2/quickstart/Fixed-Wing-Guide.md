@@ -1,8 +1,8 @@
 ---
-title: Fixed Wing Guide
+title: The Basics of Getting INAV Working on an Airplane
 ---
 
-# The Basics of Getting INAV Working on an Airplane
+## The Basics of Getting INAV Working on an Airplane
 
 ### Flight controllers designed for fixed wing
 
@@ -35,7 +35,7 @@ The image below shows the standard wiring for both a flying wing and for a norma
 
 **Note:** If you are using INAV with a Mini Talon you'll need a [Custom Mix](../advanced/Custom-mixes-for-exotic-setups.md#v-tail-fixed-wing) so that the servos move correctly or if using a Skyhunter (Nano, Micro, Mini & full sized) then there is also a custom mix available [here](../advanced/Custom-mixes-for-exotic-setups.md#skyhunter-nano-no-rudder).
 
-<img src="https://cloud.githubusercontent.com/assets/16717155/26343189/d7ffbef4-3f92-11e7-8997-242fa990d50c.png"/>
+<img src="/img/content/d7ffbef4-3f92-11e7-8997-242fa990d50c.png"/>
 
 * Servo and ESC/MOTOR. ( Keep in mind servos positive wire **should** go to an independent BEC instead of connecting to the flight controller itself. )
 

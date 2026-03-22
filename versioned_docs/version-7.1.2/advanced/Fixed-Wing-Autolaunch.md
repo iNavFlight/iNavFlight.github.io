@@ -2,7 +2,7 @@
 title: Fixed Wing Autolaunch
 ---
 
-# Fixed Wing Autolaunch
+## Fixed Wing Autolaunch
 
 Fixed Wing Autolaunch, aka launch mode, allows the pilot to have assistance in launching their airplane. This can be particularly useful if you're a new pilot, have a difficult model to launch, or have a large model.
 

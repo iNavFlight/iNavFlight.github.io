@@ -1,8 +1,8 @@
 ---
-title: Features Safe to Add and Remove to Fit Your Needs.
+title: Features safe to remove
 ---
 
-# Features safe to remove
+## Features safe to remove
 
 Due to flash size limitation on F1 targets it cannot include all features INAV supports at once.
 

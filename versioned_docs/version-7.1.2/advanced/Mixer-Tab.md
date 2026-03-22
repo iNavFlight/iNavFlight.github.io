@@ -1,8 +1,8 @@
 ---
-title: Mixer Tab
+title: Introduction
 ---
 
-# Introduction
+## Introduction
 
 The mixer tab allows you to adjust the values that tells INAV how to translate stick movements from your radio to the speed of the motors and movement of the control surfaces of your aircraft. For example, on a multi-rotor, when you pull back on your radio's elevator stick, the front two motors will spin faster and the back two motors will slow down. On a flying wing, pulling back on the elevator moves the two elevons servos up. This allows for a giant variety of motor and control surface configurations to be supported.
 

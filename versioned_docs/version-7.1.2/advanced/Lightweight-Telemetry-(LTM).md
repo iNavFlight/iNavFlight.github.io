@@ -1,14 +1,14 @@
 ---
-title: Lightweight Telemetry (LTM)
+title: Overview
 ---
 
-# Overview
+## Overview
 
 LTM was defined by "KipK" for the Ghetto Station antenna tracking project and originally implemented in Taulabs and Baseflight. It was adopted by INAV due to its excellent characteristics for low data rate / high update rate telemetry.
 
 Since its introduction to INAV, a number of extension have been added; these are documented below, in addition to the original frames.
 
-# Protocol Definition
+## Protocol Definition
 
 ## Overview
 
@@ -217,7 +217,7 @@ The sensor hardware failure indication is backwards compatible with versions pri
 
 The LTM_X_counter value is incremented each transmission and rolls over (modulo 256). It is intended to enable consumers to estimate packet loss.
 
-# INAV CLI Support
+## INAV CLI Support
 
 LTM is transmit only, and can work at any supported baud rate. It was designed to operate over 2400 baud and does not benefit from (much) higher rates. It is thus usable on soft serial. The extra frames later introduced by INAV means that 4800 baud is required for the highest update rate.
 
@@ -229,11 +229,11 @@ A CLI variable `ltm_update_rate` may be used to configure the update rate and he
 
 For many telemetry devices, there is direction correlation between the air-speed of the radio link and range; thus a lower value may facilitate longer range links.
 
-# Sample Data
+## Sample Data
 
 A couple of data samples are available from the [mwptools](https://github.com/stronnag/mwptools) project. [Sample1](https://raw.githubusercontent.com/wiki/stronnag/mwptools/data/ltm_2015-11-08.tar.gz) and [Sample2](https://raw.githubusercontent.com/wiki/stronnag/mwptools/data/mwp_2015-12-12-LTM.tar.gz) include raw dumps, structured data logs and READMEs explaining usage.
 
-# Other
+## Other
 
 ## Checksum Calculation
 

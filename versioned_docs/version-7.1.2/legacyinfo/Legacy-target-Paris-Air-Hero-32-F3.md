@@ -1,8 +1,8 @@
 ---
-title: Legacy Target Paris Air Hero 32 F3
+title: Board - Paris Air Hero 32
 ---
 
-# Board - Paris Air Hero 32
+## Board - Paris Air Hero 32
 
 This is the AIR3 PARIS Sirius AirHERO 32 F3 board from MultiWiiCopter
 Source: http://www.multiwiicopter.com/products/inav-air3-fixed-wing

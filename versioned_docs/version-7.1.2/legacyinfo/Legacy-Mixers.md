@@ -1,5 +1,5 @@
 ---
-title: Legacy Mixers
+title: CLI  mmix / smix for legacy mixers
 ---
 
 ## Overview
@@ -11,7 +11,7 @@ In INAV 2.0 (and hence in *development* after the release of inav 1.9.1), all mi
 
 For further exotic mixes, see also https://github.com/iNavFlight/inav/wiki/Custom-mixes-for-exotic-setups
 
-# CLI  mmix / smix for legacy mixers
+## CLI  mmix / smix for legacy mixers
 
 The following captures `mmix` / `smix` values in the FC for 1.9.1 and earlier.
 

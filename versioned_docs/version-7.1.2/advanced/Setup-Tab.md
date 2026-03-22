@@ -1,8 +1,8 @@
 ---
-title: Setup Tab
+title: Introduction
 ---
 
-# Introduction
+## Introduction
 We're assuming you've installed the configurator and have connected to your flight controller (FC). The Setup Tab is the first screen you see once a connection is made. This tab has three main sections:
 - Reset Settings
 - Live 3D Graphic of your Aircraft

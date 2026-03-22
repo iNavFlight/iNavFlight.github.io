@@ -1,8 +1,8 @@
 ---
-title: Legacy Target Sparky
+title: Board - Sparky
 ---
 
-# Board - Sparky
+## Board - Sparky
 
 The Sparky is a very low cost and very powerful board.
 
@@ -23,11 +23,11 @@ Tested with revision 1 & 2 boards.
 * SoftSerial - though having 3 hardware serial ports makes it a little redundant.
 * Airplane PWM mappings.
 
-# Voltage and current monitoring (ADC support)
+## Voltage and current monitoring (ADC support)
 
 Voltage monitoring is possible when enabled via PWM9 pin and current can be monitored via PWM8 pin. The voltage divider and current sensor need to be connected externally. The vbatscale cli parameter need to be adjusted to fit the sensor specification. For more details regarding the sensor hardware you can check here: https://github.com/TauLabs/TauLabs/wiki/User-Guide:-Battery-Configuration
 
-# Flashing
+## Flashing
 
 ## Via Device Firmware Upload (DFU, USB) - Windows
 
@@ -167,7 +167,7 @@ See Sparky schematic for CONN2 pinouts.
 
 Flashing INAV will erase the TauLabs bootloader, this is not a problem and can easily be restored using the st flashloader tool.
 
-# Serial Ports
+## Serial Ports
 
 | Value | Identifier   | RX        | TX         | Notes                                                          |
 | ----- | ------------ | --------- | ---------- | -------------------------------------------------------------- |
@@ -181,7 +181,7 @@ USB VCP *can* be used at the same time as other serial port.
 All USART ports all support automatic hardware inversion which allows direct connection of serial rx receivers like the FrSky X4RSB - no external inverter needed.
 
 
-# Battery Monitoring Connections
+## Battery Monitoring Connections
 
 | Pin  | Signal | Function        |
 | ---- | ------ | --------------- |

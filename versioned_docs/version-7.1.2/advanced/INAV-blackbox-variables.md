@@ -1,8 +1,8 @@
 ---
-title: iNav Blackbox Variables
+title: Overview
 ---
 
-# Overview
+## Overview
 
 Blackbox is a valuable tool for analyzing the flight dynamics of our airborne vehicles and as such it can be useful for troubleshooting and debugging purposes.
 
@@ -46,7 +46,7 @@ set blackbox_rate_num = 1
 set blackbox_rate_denom = 2
 This will make it work and store every second value.
 
-# INAV Logging Intervals
+## INAV Logging Intervals
 
 Blackbox logs several types of frames - flight behaviour is written using I- and P-frames. I-frames are fairly big and contain absolute values, P-frames are delta-encoded to save space. Blackbox denominator only reduces P-frame rate, the I-frame rate is constant.
 

@@ -1,8 +1,8 @@
 ---
-title: Sensor Auto Detect and Hardware Failure Detection
+title: How auto detect works in INAV
 ---
 
-# How auto detect works in INAV
+## How auto detect works in INAV
 
 On INAV when mag_hardware and baro_hardware is set to `AUTO` it tries to auto detect which sensor is connected.
 When it finds a sensor it will change the parameter to the one found, example `BMP280`. If it fails to find any sensor it will set *_hardware to `NONE`
@@ -13,7 +13,7 @@ Default value after a new firmware flash is `AUTO`, this will cause the firmware
 
 If you connect a magnetometer after first boot it will not auto-detect it, then you will have to either specify `mag_hardware` manually, or do a new `mag_hardware = AUTO` to try and auto detect mag. ( This also applies if you already have an external mag connected, but don't have it powered up on first boot )
 
-# Hardware failure detection
+## Hardware failure detection
 
 Since version 1.5 INAV features hardware failure detection. At run time all sensors - GPS, BARO, MAG, ACC, GYRO, SONAR are periodically checked by a diagnostic system. There are 4 cases for each sensor:
 

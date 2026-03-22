@@ -1,5 +1,5 @@
 ---
-title: Custom Mixes for Exotic Setups
+title: mixer
 ---
 
 This page documents custom mixer for exotic platforms. As this page was written prior to inav 2.0, you are advised to verify the `smix` syntax compared to your firmware version. It is also necessary to set the `platform_type` for your platform.
@@ -223,9 +223,9 @@ smix reverse 4 14 r #or if it works based on servo orientation
 servo 5 1000 2000 1500 -100 -1 #My rudder was reversed, again you may not need this rule
 ```
 
-# Setups that were never implemented in Baseflight, Cleanflight or any of its derivatives
+## Setups that were never implemented in Baseflight, Cleanflight or any of its derivatives
 
-# Disabled setups
+## Disabled setups
 
 ## HELI 120 CCPM
 

@@ -1,16 +1,16 @@
 ---
-title: Fixed Wing Tuning for iNav 3.0
+title: Initial Setup
 ---
 
 This is a basic overview of the steps to perform autotune and auto board pitch alignment in INAV 3.0
 
-# Initial Setup
+## Initial Setup
 * Enable "Continuous trim servos on Fixed Wing" in configuration tab
 * Modes Tab
   * Create acro/autotune flight mode. It's recommended to add P,I,FF values on your OSD to see values changing.
   * Create angle mode w/ autolevel.
 
-# Tuning Flight
+## Tuning Flight
 * Take off
 * Fly in acro mode
 * Switch on autotune

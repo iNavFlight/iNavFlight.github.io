@@ -1,8 +1,8 @@
 ---
-title: "iNav Remote Management, Control and Telemetry"
+title: "INAV Remote Management, Control and Telemetry"
 ---
 
-# INAV Remote Management, Control and Telemetry
+## INAV Remote Management, Control and Telemetry
 
 ## Introduction
 

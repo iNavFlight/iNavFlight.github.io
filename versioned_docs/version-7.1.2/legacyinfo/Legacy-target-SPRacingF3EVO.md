@@ -1,8 +1,8 @@
 ---
-title: Legacy Target SPRacingF3EVO
+title: Board - Seriously Pro SP Racing F3 EVO
 ---
 
-# Board - Seriously Pro SP Racing F3 EVO
+## Board - Seriously Pro SP Racing F3 EVO
 
 The Seriously Pro Racing F3 Evo board (SPRacingF3EVO) is the evolution of the first board designed specifically for Cleanflight.
 

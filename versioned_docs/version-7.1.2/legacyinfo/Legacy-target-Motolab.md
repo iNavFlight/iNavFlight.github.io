@@ -1,8 +1,8 @@
 ---
-title: Legacy Target Motolab
+title: Board - MotoLab
 ---
 
-# Board - MotoLab
+## Board - MotoLab
 
 The MOTOLAB build target supports the STM32F3-based boards provided by MotoLab.
 
@@ -27,7 +27,7 @@ Both boards use the STM32F303 microcontroller and have the following features:
 * Direct mounting option for a Pololu switching regulator for up to 6S lipo operation (TornadoFC)
 
 
-# Flashing
+## Flashing
 
 The MotoLab boards use the internal DFU USB interface on the STM32F3 microcontroller which is not compatible with the INAV configurator flashing tool.
 

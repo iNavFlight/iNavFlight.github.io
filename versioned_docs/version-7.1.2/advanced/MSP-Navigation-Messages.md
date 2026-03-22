@@ -1,20 +1,20 @@
 ---
-title: MSP Navigation Messages
+title: MSP NAV Protocol and Types
 ---
 
-# MSP NAV Protocol and Types
+## MSP NAV Protocol and Types
 
 This document describes MSP navigation messages, their usage and implementation details. Both **INAV** and **Multiwii** implementations (which are largely the same) are documented in this article.
 
 Note that all binary values are little endian (MSP standard).
 
-# Implementation and versions
+## Implementation and versions
 
 This document should match the INAV 1.2 (and later) and Multiwii 2.5 flight controller firmware.
 
 Prior to INAV 3.0, the [inav-configurator](https://github.com/iNavFlight/inav-configurator) supported a subset of  MSP Waypoint (WP) types; for INAV 3.0 it supports all WP types. In addition to the inav configurator, the messages described are implemented in [mwp](https://github.com/stronnag/mwptools) (Linux / FreeBSD / Windows (Cygwin,WSL)), ezgui (Android) mission planners / ground station applications and "drone helper" (Windows 10) mission planner. mwp and ezgui support both INAV and Multiwii; WinGui is a legacy Windows / Multiwii only mission planner that also supports this message set.
 
-# WayPoint and Action Attributes
+## WayPoint and Action Attributes
 
 Each  waypoint has a type and takes a number of parameters, as below. These are used in the MSP_WP message. The final column indicated if the message is implemented for INAV 1.2 (and later).
 
@@ -206,7 +206,7 @@ For safety, if no mission is defined, a single RTH action should be sent.
 
 In general, flag is 0, unless it's the last point in a mission, in which case it is set to 0xa5 (165) (or 0x48 (72) for FBH WP). When waypoints are uploaded, the same data can also be requested from he FC, thus enabling the application to verify that the mission has been uploaded correctly.
 
-# Messages (Navigation related)
+## Messages (Navigation related)
 
 | MNEMONIC | Value | Direction (relative to FC) |
 | -------- | ---- | ---- |
@@ -436,16 +436,16 @@ Note that 32bit flight controllers (baseflight, cleanflight) use capability == 1
 | FLAP | 8 |
 | NAV | 16 |
 
-# Implementations
+## Implementations
 
 The MSP NAV message set is implemented by [mwptools](https://github.com/stronnag/mwptools) (Linux, Windows, FreeBSD), ezgui / mission planner for INAV (Android), WinGUI (MS Windows) and the [inav-configurator](https://github.com/iNavFlight/inav-configurator).
 
-# XML Mission Files
+## XML Mission Files
 
 [inav-configurator](https://github.com/iNavFlight/inav-configurator), [mwptools](https://github.com/stronnag/mwptools), ezgui / mp4i (and WinGUI) share a common, interoperable, XML mission file format. A XSD can be found in the [inav developer documenation](
 https://github.com/iNavFlight/inav/tree/master/docs/development/wp_mission_schema).
 
-# Encoding MSP Messages
+## Encoding MSP Messages
 
 In order to send waypoints to the flight controller, they need to be serialised into an `MSP_SET_WP` message. This is a standard MSP message; it may be encoded as either MSPv1 or [MSPv2](MSP-V2). In general, you should use MSPv2 unless you're targeting MultiWii or ancient versions of INAV.
 

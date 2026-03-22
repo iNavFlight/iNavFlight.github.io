@@ -1,8 +1,8 @@
 ---
-title: MSP V2
+title: Multiwii Serial Protocol Version 2
 ---
 
-# Multiwii Serial Protocol Version 2
+## Multiwii Serial Protocol Version 2
 
 ## Overview
 
@@ -132,7 +132,7 @@ As the MSP v1 JUMBO messages is not obviously documented elsewhere:
 
 One could embed a MSP V2 message within a MSP V1 JUMBO frame, but this is not likely to be well supported by consumers. If you need V2, please use it natively.
 
-# MSP V2 Message Catalogue
+## MSP V2 Message Catalogue
 
 For INAV 1.8.0, MSP V2 messages have been defined (0x4242 is a joke, not a land grab). It is hoped that a message catalogue can be cooperatively developed by FC authors to avoid the current fragmentation in MSP V1.
 

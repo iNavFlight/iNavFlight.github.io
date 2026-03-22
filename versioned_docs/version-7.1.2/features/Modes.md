@@ -1,8 +1,8 @@
 ---
-title: Modes
+title: Introduction
 ---
 
-# Introduction
+## Introduction
 Flight Modes in INAV can be categorized into two groups:
 * **Navigation-Modes** which involve GPS and other positional sensors. Refer to the [Navigation-Modes](./Navigation-modes.md) page for more information.
 * **Non-Navigation-Modes** perform actions that may rely on a sensor like the gyro or no sensor at all. See the mode descriptions below.
@@ -13,7 +13,7 @@ Some modes are only available to certain craft types. This is indicated by:
 
 Scroll down to the [AUXILIARY CONFIGURATION](#AUXILIARY-CONFIGURATION) section for how Modes are assigned to channels on your radio.
 
-# Non-Navigation Modes Index:
+## Non-Navigation Modes Index:
 
 - [ACRO MODE](#acro-mode) (default mode)
 - [AIR MODE](#air-mode)
@@ -410,7 +410,7 @@ The four USER selections are generic in nature. But are often used for certain f
 
 This is a Navigation-Mode that allows you to plot a waypoint mission as you fly. See more [details](./Navigation-modes.md#wp-planner---on-the-fly-waypoint-mission-planner)
 
-# AUXILIARY CONFIGURATION
+## AUXILIARY CONFIGURATION
 
 Spare auxiliary receiver channels can be used to enable/disable modes.  Some modes can only be enabled this way.
 

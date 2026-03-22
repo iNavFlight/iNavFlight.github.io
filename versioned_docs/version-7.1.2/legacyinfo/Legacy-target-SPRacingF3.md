@@ -1,8 +1,8 @@
 ---
-title: Legacy Target SPRacingF3
+title: Board - SPRacingF3
 ---
 
-# Board - SPRacingF3
+## Board - SPRacingF3
 
 The Seriously Pro Racing MOF3 board (SPRacingF3) is the first board designed specifically for INAV.
 

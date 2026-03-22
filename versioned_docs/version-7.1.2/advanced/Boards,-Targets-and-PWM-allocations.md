@@ -1,8 +1,8 @@
 ---
-title: "Boards, Targets and PWM Allocations"
+title: "INAV Boards, Targets and PWM allocations"
 ---
 
-# INAV Boards, Targets and PWM allocations
+## INAV Boards, Targets and PWM allocations
 
 It can be difficult for an aircraft builder to determine if a particular board / target will meet their needs.
 

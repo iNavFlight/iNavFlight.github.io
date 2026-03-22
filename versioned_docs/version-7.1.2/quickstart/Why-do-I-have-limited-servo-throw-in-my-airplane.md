@@ -1,8 +1,8 @@
 ---
-title: Why Do I Have Limited Servo Throw in My Airplane
+title: Explanation of why you have limited throw in any stabilisation mode. ( Including Rate / Acro )
 ---
 
-# Explanation of why you have limited throw in any stabilisation mode. ( Including Rate / Acro )
+## Explanation of why you have limited throw in any stabilisation mode. ( Including Rate / Acro )
 
 First basic PIFF controller:
 
@@ -18,7 +18,7 @@ Passthrough bypasses all this an moves servos directly.
 
 In other words, the only thing that will limit passthrough servo limits and rates set up in the Servos tab.
 
-# What is stabilisation? And how do you as the pilot control the airplane in a stabilised mode?
+## What is stabilisation? And how do you as the pilot control the airplane in a stabilised mode?
 
 In passthrough everything is easy, you move sticks on radio, the FC does some mixing according to which airplane/flying wing you have, and then you move the servos directly.
 

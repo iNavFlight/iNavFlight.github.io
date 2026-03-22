@@ -1,8 +1,8 @@
 ---
-title: Receiver Tab
+title: Introduction
 ---
 
-# Introduction
+## Introduction
 This guide assumes you have already [connected your Rx to a Serial UART Port on your flight controller and have set the correct port on the ports tab](https://github.com/iNavFlight/inav/wiki/Ports-Tab). The RC Receiver (Rx) in your aircraft conveys the radio control (RC) commands from your RC Transmitter and sends them to your flight controller over a wire connection using a Serial UART Port and using a particular communication protocol. This tab is where you set the protocol of your receiver and make sure it is communicating with INAV.
 
 ### Binding
