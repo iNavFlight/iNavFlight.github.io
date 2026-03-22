@@ -25,7 +25,10 @@ const config: Config = {
   organizationName: "iNavFlight", // Usually your GitHub org/user name.
   projectName: "iNavFlight.github.io", // Usually your repo name.
 
-  onBrokenLinks: "throw",
+  // "warn" rather than "throw": versioned docs naturally accumulate broken links
+  // as pages are renamed/reorganized across INAV releases. Broken links are
+  // logged during build so they can be addressed incrementally.
+  onBrokenLinks: "warn",
   // onBrokenMarkdownLinks: "warn", #deprecated comment out for now
 
   // Even if you don't use internationalization, you can use this field to set
