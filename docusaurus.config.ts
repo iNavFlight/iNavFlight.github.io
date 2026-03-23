@@ -68,6 +68,8 @@ const config: Config = {
           editUrl:
             "https://github.com/iNavFlight/iNavFlight.github.io/tree/main/",
         },
+        blog: false,
+        /*
         blog: {
           showReadingTime: true,
           feedOptions: {
@@ -83,6 +85,7 @@ const config: Config = {
           onInlineAuthors: "warn",
           onUntruncatedBlogPosts: "warn",
         },
+        */
         theme: {
           customCss: "./src/css/custom.css",
         },
