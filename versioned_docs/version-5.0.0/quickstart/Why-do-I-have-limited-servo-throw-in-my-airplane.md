@@ -40,7 +40,7 @@ Yes, it would have hit 500deg/s instead and overshoot target motion.
 
 Sum up:
 
-You dont **need** full servo throw! It all depends how you want to [tune](/docs/advanced/Tune-INAV-PIFF-controller-for-fixedwing.md) your airplane.
+You dont **need** full servo throw! It all depends how you want to [tune](../advanced/Tune-INAV-PIFF-controller-for-fixedwing.md) your airplane.
 
 IF you want full throw, your rate settings ( deg/s ) should match what your plane is able to do at full servo throw. Then in stabilitation mode you increase your P-gain or FF-gain untill you get full throw on servos.
 

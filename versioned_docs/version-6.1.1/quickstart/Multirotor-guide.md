@@ -41,7 +41,7 @@ You can use RX stick combination to trim the quadcopter: [Controls](https://gith
 
 ## 6. Setup and verify failsafe on TX and iNav
 
-[Guide for setting up failsafe](/docs/features/Failsafe.md)
+[Guide for setting up failsafe](../features/Failsafe.md)
 
 ## 7. Determine and set hover throttle
 
@@ -50,4 +50,4 @@ If your copter jumps/rises when you activate altitude hold, reduce your nav_mc_h
 
 ## 8. Get to know the CLI values.
 
-iNav offers a lot of customization through CLI variables. It is strongly recommended to read through [iNav CLI variables](/docs/advanced/iNav-CLI-variables.md) and [available CLI variables](https://github.com/iNavFlight/inav/blob/master/docs/Cli.md)
+iNav offers a lot of customization through CLI variables. It is strongly recommended to read through [iNav CLI variables](../advanced/iNav-CLI-variables.md) and [available CLI variables](https://github.com/iNavFlight/inav/blob/master/docs/Cli.md)

@@ -33,7 +33,7 @@ When referring to an image in a markdown file, please use absolute paths accordi
 
 ### Linking to Pages
 When linking to local pages, please do not use http urls to link to other markdown documents that are part of the docusaurus site.
-For easier maintenance and organization, use relative paths eg: `../quickstart/Name_of_markdown.md` if not in the `quickstart` directory, which exists one level above.
+For easier maintenance and organization, use relative paths eg: `../quickstart/Name_of_markdown.md` if not in the `quickstart` directory, which exists one level above in this example.
 Autocomplete on VS Code should find the directories automatically. 
 Linking to headings within the document work as well by using `#` following the filename.
 

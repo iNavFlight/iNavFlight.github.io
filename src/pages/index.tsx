@@ -8,7 +8,7 @@ import Heading from "@theme/Heading";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import ThemedImage from "@theme/ThemedImage";
 import BGV from "/img/inavbgv.mp4";
-import Inavsvg from "/img/inav_home_dark.svg"
+import Inavpng from "/img/inav_home.png"
 
 import styles from "./index.module.css";
 
@@ -26,7 +26,7 @@ function HomepageHeader() {
         muted
       />
       <div className={styles.mask}></div>
-      <Inavsvg className={styles.content} />
+      <img src={Inavpng} className={styles.content} />
     </div>
     // <header
     //   className={clsx("hero shadow--lw", styles.heroBanner)}

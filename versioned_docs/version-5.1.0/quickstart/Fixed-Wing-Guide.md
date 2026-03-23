@@ -169,7 +169,7 @@ At this point everything should work as expected.
 
 * Arm and launch your aircraft using prefered mode, example `manual` for the maiden flight launch.
     * If airplane is not flying leveled when in self leveling mode like `Horizon` you need to trim your [board aligment](./Sensor-calibration.md#board-orientation-and-level-calibration)
-    * If airplane flies leveled, do an [Servo Autotrim](/docs/features/Modes.md#servo-autotrim-fw)
+    * If airplane flies leveled, do an [Servo Autotrim](../features/Modes.md#servo-autotrim-fw)
     * Tune your PIFF values, either manually or with [AUTOTUNE](../features/Modes.md#autotune-fw) 
 
 * For GPS features

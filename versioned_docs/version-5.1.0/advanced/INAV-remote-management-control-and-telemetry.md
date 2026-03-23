@@ -81,9 +81,9 @@ INAV supports the following variations:
 
 #### MSP References
 
-[INAV Wiki MSPV2 definition](/docs/advanced/MSP-V2.md).
+[INAV Wiki MSPV2 definition](../advanced/MSP-V2.md).
 
-[INAV Wiki MSP Navigation Messages](/docs/advanced/MSP-Navigation-Messages.md). Detailed explanation of the usage of INAV / MSP Way point definitions.
+[INAV Wiki MSP Navigation Messages](../advanced/MSP-Navigation-Messages.md). Detailed explanation of the usage of INAV / MSP Way point definitions.
 
 For INAV the normative reference for MSP is the source code:
 
@@ -97,7 +97,7 @@ There are numerous open source implementations (libraries and application module
 * Numerous libraries for various platforms (Arduino, generic computer) in numerous languages (e.g. C, C++, Python, Rust). Google is your friend here.
 * Application implementations (mwptools, BulletGCSS, Mobile Flight). Again, Google is your friend here.
 
-There is also a long abandoned (alas) [changelog](/docs/advanced/INAV-MSP-frames-changelog.md) of historic interest only.
+There is also a long abandoned (alas) [changelog](../advanced/INAV-MSP-frames-changelog.md) of historic interest only.
 
 Note that the INAV developers take backwards compatibility seriously; changing a payload is usually not permitted (however, extending it is OK); this is why there are a number of variations on the same basic request (`MSP_STATUS`, `MSP_STATUS_EX`, `MSP2_INAV_STATUS`) as the size of the internal status structure has changed.
 
@@ -112,7 +112,7 @@ Note that the INAV developers take backwards compatibility seriously; changing a
 ### Lightweight Telemetry
 
 LTM offers low data rate / low band width / high update rate telemetry.
-Since its introduction to INAV, a number of extension have been added; these, and the original frames, are [documented in the wiki](https://github.com/iNavFlight/inav/wiki/Lightweight-Telemetry-(LTM)), in detail.
+Since its introduction to INAV, a number of extension have been added; these, and the original frames, are [documented in the wiki](../features/Lightweight-Telemetry.md), in detail.
 
 * INAV source code. [Telemetry](https://github.com/iNavFlight/inav/blob/master/src/main/telemetry/ltm.c).
 
@@ -185,5 +185,5 @@ Potentially a less complex solution, as the piloting of the vehicle is done by t
 
 ## Other References
 
-* [Building custom INAV](/docs/advanced/Building-custom-firmware.md).
-* [Developer Info / Navigation internals](/docs/advanced/Developer-info.md)
+* [Building custom INAV](../advanced/Building-custom-firmware.md).
+* [Developer Info / Navigation internals](../advanced/Developer-info.md)
