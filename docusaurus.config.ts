@@ -68,6 +68,8 @@ const config: Config = {
           editUrl:
             "https://github.com/iNavFlight/iNavFlight.github.io/tree/main/",
         },
+        blog: false,
+        /*
         blog: {
           showReadingTime: true,
           feedOptions: {
@@ -83,6 +85,7 @@ const config: Config = {
           onInlineAuthors: "warn",
           onUntruncatedBlogPosts: "warn",
         },
+        */
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -130,7 +133,6 @@ const config: Config = {
           label: "Download",
           position: "left",
         },
-        { to: "/blog", label: "Blog", position: "left" },
         {
           to: "/about",
           label: "About",
@@ -191,10 +193,6 @@ const config: Config = {
         {
           title: "More",
           items: [
-            {
-              label: "Blog",
-              to: "/blog",
-            },
             {
               label: "GitHub",
               href: "https://github.com/iNavFlight/inav",
