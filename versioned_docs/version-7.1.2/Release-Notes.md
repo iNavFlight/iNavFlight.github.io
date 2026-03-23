@@ -1,0 +1,694 @@
+---
+title: "INAV 7 Release Notes"
+sidebar_position: 2
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+<Tabs>
+<TabItem value="7.1.0" label="7.1.0" default>
+
+![INAV 7.1 Ferocious Falcon](/img/content/inav_7_falcon.png)
+
+## Hello and welcome to INAV 7.1 "Ferocious Falcon"
+
+Please carefully read all of this document for the best possible experience and safety.
+
+Contact other pilots, share experiences, suggestions and ask for help on:
+
+<table>
+  <tbody>
+<tr>
+<td><img width="48" src="https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" /></td>
+<td><a href="https://discord.gg/peg2hhbYwN" target="_blank">INAV Discord Server</a></td>
+</tr>
+    <tr>
+      <td><img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png" width="48" /></td>
+      <td><a href="https://www.facebook.com/groups/INAVOfficial">INAV Official on Facebook</a></td>
+    </tr>
+  </tbody>
+</table>
+
+## Important Notes
+
+> INAV 7 is the last INAV official release available for F411 based flight controllers. The next milestone, INAV 8 will not be available for F411 boards.
+
+> The GPS NMEA protocol is no longer supported. All pilots are required to switch to UBLOX protocol. All modern GPS modules (even as old as from 2015 and earlier) support UBLOX protocol and there is not a single good reason to stick to NMEA nowadays
+
+> Make sure to remove props and check your motor and servo outputs before powering your upgraded flight controller with a battery for the first time. The changes to enable flexible motor and servo allocation may change what outputs your configuration uses by default.
+
+## PosHold, Navigation and RTH without compass PSA
+
+Attention all drone pilots and enthusiasts,
+
+Are you ready to take your flights to new heights with INAV 7.1? We've got some important information to share with you.
+
+INAV 7.1 brings an exciting update to navigation capabilities. Now, you can soar through the skies, navigate waypoints, and even return to home without relying on a compass. Yes, you heard that right! But before you launch into the air, there's something crucial to consider.
+
+While INAV 7.1 may not require a compass for basic navigation functions, we strongly advise you to install one for optimal flight performance. Here's why:
+
+🛰️ Better Flight Precision: A compass provides essential data for accurate navigation, ensuring smoother and more precise flight paths.
+
+🌐 Enhanced Reliability: With a compass onboard, your drone can maintain stability even in challenging environments, low speeds and strong wind.
+
+🚀 Minimize Risks: Although INAV 7.1 can get you where you need to go without a compass, flying without one may result in a bumpier ride and increased risk of drift or inaccurate positioning.
+
+Remember, safety and efficiency are paramount when operating drones. By installing a compass, you're not just enhancing your flight experience, but also prioritizing safety for yourself and those around you.
+
+So, before you take off on your next adventure, make sure to equip your drone with a compass. It's the smart choice for smoother flights and better navigation.
+
+Fly safe, fly smart with INAV 7.1 and a compass by your side!
+
+> Currently, if you wish to fly a multirotor without a compass. You will need to enable a compass (fake is ok) to change navigational modes in Configurator. You should disable the compass after making the changes. This has been fixed for a future release.
+
+## Upgrading from a previous release
+
+## Upgrading from INAV 7.0
+
+1. Backup configuration with CLI `diff all` command
+2. Download and install the new [INAV Configurator 7.1](https://github.com/iNavFlight/inav-configurator/releases)
+3. Flash INAV 7.1 **WITH** _Full Chip Erase_ option enabled
+4. Select _Keep current settings_ from the defaults pop-up
+5. Go to CLI and restore your 7.0 diff
+4. Done
+
+## Upgrading from INAV 6 and 6.1
+
+1. Download and install the new [INAV Configurator 7](https://github.com/iNavFlight/inav-configurator/releases)
+1. Save to a file the current _diff all_ from the CLI.
+1. Upgrade to INAV 7 using the **Full Erase** option in the configurator.
+1. In case of Analog FPV, upload your OSD font of choice from the OSD tab.
+1. Go to the CLI again and paste the above-described contents from the file you previously created and write _save_ , press ENTER.
+1. There are many new, changed, and removed settings. Check carefully that the settings are correct and fix any unrecognized or out-of-range items from the saved configuration.
+1. You should be ready, explore new 7.0 features, and enjoy!
+
+## Upgrading from older versions
+
+Please follow the instructions on [this](https://github.com/iNavFlight/inav/wiki/Upgrading-from-an-older-version-of-INAV-to-the-current-version) page.
+
+## Major changes
+
+## Fixed wing Autoland with landing pattern
+INAV supports advanced automatic landings for fixed wing aircraft from version 7.1. The procedure is based on landings for man-carrying aircraft, so that safe landings at a specific location are possible. Supported are landings at Safehome after "Return to Home" or at a defined LAND waypoint for missions.
+See: [Fixed Wing Landing.md](https://github.com/Scavanger/inav/blob/73be51b3159a0f2df047f094f7d54ac0ed14f7d0/docs/Fixed%20Wing%20Landing.md)
+
+**IMPORTANT**: When updating from an older INAV version with a diff, please change the following settings before using Autoland for better performance.
+
+Plane with no tail: `set nav_wp_radius = 1000`
+
+Plane with tail: `set nav_wp_radius = 800`
+
+## Compass and Barometer changes
+INAV now relies more heavily on GNSS data for navigation than before. This can provide more security if the Barometer fails, or if the multirotor is suffering from Compass interference. By still allowing it to navigate back to home.
+
+> From the release of INAV 7.1. The use of a compass is no longer mandatory for multirotor navigation as it once was. BUT it is still recommended for the best navigation performance, when it comes to maintaining a fixed position for an extended period of time, without heading drift. e.g. in Poshold. Or taking off and immediately starting a Waypoint mission.
+
+If a user does decide to omit the use of a compass for a multirotor, be mindful that any navigation mode (RTH, Failsafe, Poshold, Cruise or a Waypoint mission) will not be operational UNTIL a GPS heading is first obtained, by flying in a straight line until both -
+
+* The OSD Heading and Course over Ground indicators display a valid heading. Then keeping both headings closely aligned for a time.
+* And the OSD Home arrow appears, showing a valid home direction.
+
+Example [Video](https://www.youtube.com/watch?v=iopZfH-DdTI)
+
+For more details see [here](https://github.com/iNavFlight/inav/wiki/GPS-and-Compass-setup#inav-71-changes)
+
+## Tailsitter Support for VTOL
+Tailsitter builds are now natively supported to allow proper Board Orientation switching during transition. [Details](https://github.com/iNavFlight/inav/pull/9347)
+
+## Other changes
+
+## Updated ICM426xx filtering
+The filtering of the ICM426xx gyros has been updated based on changes made to both Ardupilot and BetaFlight and we expect better performance, when comparing to previous INAV versions.
+
+## OSD Changes
+Users can now customize their own OSD messages, by way of the Programming Framework. [Details](https://github.com/iNavFlight/inav/wiki/OSD-custom-messages)
+
+The Artificial Horizon will not properly track the real horizon in the correct way, when the craft is inverted. [Details](https://github.com/iNavFlight/inav/pull/9609)
+
+## New Fixedwing flight mode
+The mode is called **Angle Hold**. For more details see [here](https://github.com/iNavFlight/inav/wiki/Modes#angle-hold-fw)
+
+## New targets
+
+* FLYCOLORF7V2
+
+## CLI
+
+## Changed settings
+
+| Name | Description |
+| ---- | ------ |
+| `gps_dyn_model` | Default:  AIR_2G GPS navigation model: Pedestrian, Automotive, Air\<1g, Air\<2g, Air\<4g. Default is AIR_2G. Use pedestrian/Automotive with caution, can cause flyaways with fast flying. |
+
+## New Items
+
+| Name | Description |
+| ---- | ------ |
+| `ahrs_gps_yaw_weight` | Arhs gps yaw weight when mag is avaliable, 0 means no gps yaw, 100 means equal weight as compass Values: 0 - 500 Default: 100 |
+| `nav_fw_land_approach_length` | Length of the final approach Values: 100 - 100000 Default: 35000 |
+| `nav_fw_land_final_approach_pitch2throttle_mod` | Modifier for pitch to throttle ratio at final approach. In Percent. Values: 100 - 400 Default: 100 |
+| `nav_fw_land_flare_alt` | Initial altitude of the flare phase Values: 0 - 10000 Default: 150 |
+| `nav_fw_land_flare_pitch` | Pitch value for flare phase. In degrees Values: -15 - 45 Default: 8 |
+| `nav_fw_land_glide_alt` | Initial altitude of the glide phase Values: 100 - 5000 Default: 200 |
+| `nav_fw_land_glide_pitch` | Pitch value for glide phase. In degrees. Values: -15 - 45 Default: 0 |
+| `nav_fw_land_max_tailwind` | Max. tailwind (in cm/s) if no landing direction with downwind is available Values: 0 - 3000 Default: 140 |
+| `nav_fw_launch_land_abort_deadband` | Launch and landing abort stick deadband in [r/c points], applied after r/c deadband and expo. The Roll/Pitch stick needs to be deflected beyond this deadband to abort the launch or landing. Values: 2 - 250 Default: 100. Replaces `nav_fw_launch_abort_deadband` |
+| `nav_min_ground_speed` | Minimum ground speed for navigation flight modes [m/s]. Default 7 m/s. Values: 6 - 50 Default: 7 |
+| `nav_rth_fs_landing_delay` | If landing is active on Failsafe and this is above 0. The aircraft will hover or loiter for X seconds before performing the landing. If the battery enters the warning or critical levels, the land will proceed. Default = 0 [seconds] Values: 0 - 1800 Default: 0 |
+| `tailsitter_orientation_offset` | Apply a 90 deg pitch offset in sensor aliment for tailsitter flying mode Default: FALSE |
+
+## Removed Items
+
+| Name | Description |
+| ---- | ------ |
+| `inav_w_xyz_acc_p` |  |
+| `nav_fw_launch_abort_deadband` | Replaced by `nav_fw_launch_land_abort_deadband` |
+
+## TL;DR
+
+The list of most important changes is also available in a video form: https://youtu.be/8Q8t_KwlSAQ
+
+## Changelist
+
+The full list of changes is available [here](https://github.com/iNavFlight/inav/pulls?q=is%3Apr+milestone%3A7.1+is%3Aclosed)
+The full list of INAV Configurator changes is available [here](https://github.com/iNavFlight/inav-configurator/pulls?q=is%3Apr+milestone%3A7.1+is%3Aclosed)
+
+## What's Changed from INAV 7.0
+
+* Update from master by @MrD-RC in https://github.com/iNavFlight/inav/pull/9427
+* Fixed wing attitude stabilisation mode by @breadoven in https://github.com/iNavFlight/inav/pull/9294
+* F411 PSA by @DzikuVx in https://github.com/iNavFlight/inav/pull/9459
+* updates docs, removed vtx_freq artefacts by @RomanLut in https://github.com/iNavFlight/inav/pull/9506
+* GEPRCF405 add IIC2 and change the barometer to IIC2 by @YI-BOYANG in https://github.com/iNavFlight/inav/pull/9510
+* Enable dshot for unofficial BETAFPVF435 by @mmosca in https://github.com/iNavFlight/inav/pull/9532
+* Add VTX power info for MAMBAH743_2022B target by @mmosca in https://github.com/iNavFlight/inav/pull/9539
+* Release 7.0.0 by @DzikuVx in https://github.com/iNavFlight/inav/pull/9432
+* Additional Description for Control Derivative by @MrD-RC in https://github.com/iNavFlight/inav/pull/9521
+* Make min ground speed setable a parameter by @MrD-RC in https://github.com/iNavFlight/inav/pull/9428
+* update f4 vcp in line with BF by @stronnag in https://github.com/iNavFlight/inav/pull/9544
+* Add a parameter to delay landing in the event of a Failsafe by @MrD-RC in https://github.com/iNavFlight/inav/pull/9502
+* Add ICM42688P to KAKUTEH7 by @DzikuVx in https://github.com/iNavFlight/inav/pull/9546
+* Yaw/Altitude estimation sensor fusion by @shota3527 in https://github.com/iNavFlight/inav/pull/9387
+* Navpid back calculation anti-windup can only shrink integrator by @shota3527 in https://github.com/iNavFlight/inav/pull/9224
+* Add active waypoint number to blackbox by @breadoven in https://github.com/iNavFlight/inav/pull/9507
+* SITL: OSD CMS menu does not work by @RomanLut in https://github.com/iNavFlight/inav/pull/9344
+* add some icons for O3 with integra for ESP32 Radar instead of ? by @druckgott in https://github.com/iNavFlight/inav/pull/9499
+* WP mission mode RTH and Manual mode lockout improvements 7.1.0 by @breadoven in https://github.com/iNavFlight/inav/pull/9558
+* tail sitter vtol support by @shota3527 in https://github.com/iNavFlight/inav/pull/9347
+* USB MSC: Fix SCIS mode sense write protection bit by @mluessi in https://github.com/iNavFlight/inav/pull/9572
+* [Multirotor] Fix Sqrt Controller Position Z limits by @JulioCesarMatias in https://github.com/iNavFlight/inav/pull/9575
+* Fix #9562 bmi166 acc readout by @mmosca in https://github.com/iNavFlight/inav/pull/9563
+* Add support crsf baro altitude combined vario sensor by @r1000ru in https://github.com/iNavFlight/inav/pull/9438
+* rebase and re-pr Fix at32 targets  by @shanggl in https://github.com/iNavFlight/inav/pull/9618
+* Allow S9 on SpeedyBee F405 V3 by @DzikuVx in https://github.com/iNavFlight/inav/pull/9614
+* Enable Camera Control modes for MSP DisplayPort by @mmosca in https://github.com/iNavFlight/inav/pull/9626
+* Add option to use display_force_sw_blink in msp displayport by @mmosca in https://github.com/iNavFlight/inav/pull/9627
+* Fix ahi pitch when inverted by @MrD-RC in https://github.com/iNavFlight/inav/pull/9609
+* Fixed wing auto level bug fix by @breadoven in https://github.com/iNavFlight/inav/pull/9641
+* Resolving HAKRCF722V2 anomalies by @hakrc1 in https://github.com/iNavFlight/inav/pull/9650
+* Adjust SW blink interval by @mmosca in https://github.com/iNavFlight/inav/pull/9644
+* FLYCOLORF7V2 by @DzikuVx in https://github.com/iNavFlight/inav/pull/9631
+* Change LPF filter setting for accgyro_icm42605.c and enable/configure hardware AA filter by @mmosca in https://github.com/iNavFlight/inav/pull/9675
+* Delay save settings to prevent ESC lockup on emergency rearm by @MrD-RC in https://github.com/iNavFlight/inav/pull/9681
+* Add PINIO to SPEEDYBEEF405WING by @DzikuVx in https://github.com/iNavFlight/inav/pull/9686
+* Multirotor emergency landing altitude control response detuning by @breadoven in https://github.com/iNavFlight/inav/pull/9687
+* Fix odometer by @MrD-RC in https://github.com/iNavFlight/inav/pull/9716
+* Revert "Delay save settings to prevent ESC lockup on emergency rearm" by @MrD-RC in https://github.com/iNavFlight/inav/pull/9715
+* Update Odo float type by @MrD-RC in https://github.com/iNavFlight/inav/pull/9718
+* Show STOP instead of IDLE if motor stop enabled by @MrD-RC in https://github.com/iNavFlight/inav/pull/9719
+* Fixed Wing Autoland by @Scavanger in https://github.com/iNavFlight/inav/pull/9713
+* Increase the maximum number of addressable LEDs 7.1 by @MrD-RC in https://github.com/iNavFlight/inav/pull/9717
+* Osd custom by @error414 in https://github.com/iNavFlight/inav/pull/9508
+
+## New Contributors
+* @r1000ru made their first contribution in https://github.com/iNavFlight/inav/pull/9438
+* @hakrc1 made their first contribution in https://github.com/iNavFlight/inav/pull/9650
+
+**Full Changelog**: https://github.com/iNavFlight/inav/compare/7.0.0...7.1.0-RC1
+
+</TabItem>
+
+<TabItem value="7.0.0" label="7.0.0">
+
+![INAV 7 Ferocious Falcon](/img/content/inav_7_falcon.png)
+
+## Hello and welcome to INAV 7 "Ferocious Falcon"
+
+Please carefully read all of this document for the best possible experience and safety.
+
+Contact other pilots, share experiences, suggestions and ask for help on:
+
+<table>
+  <tbody>
+<tr>
+<td><img width="48" src="https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" /></td>
+<td><a href="https://discord.gg/peg2hhbYwN" target="_blank">INAV Discord Server</a></td>
+</tr>
+    <tr>
+      <td><img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png" width="48" /></td>
+      <td><a href="https://www.facebook.com/groups/INAVOfficial">INAV Official on Facebook</a></td>
+    </tr>
+  </tbody>
+</table>
+
+## Important Notes
+
+> INAV 7 is the last INAV official release available for F411 based flight controllers. The next milestone, INAV 8 will not be available for F411 boards.
+
+> The GPS NMEA protocol is no longer supported. All pilots are required to switch to UBLOX protocol. All modern GPS modules (even as old as from 2015 and earlier) support UBLOX protocol and there is not a single good reason to stick to NMEA nowadays
+
+> The FrSky D-series telemetry support has been removed. This applies to legacy D4R receivers and some 3rd party whoop boards
+
+> Make sure to remove props and check your motor and servo outputs before powering your upgraded flight controller with a battery for the first time. The changes to enable flexible motor and servo allocation may change what outputs your configuration uses by default.
+
+## Upgrading from a previous release
+
+## Upgrading from INAV 6 and 6.1
+
+1. Download and install the new [INAV Configurator 7](https://github.com/iNavFlight/inav-configurator/releases)
+1. Save to a file the current _diff all_ from the CLI.
+1. Upgrade to INAV 7 using the **Full Erase** option in the configurator.
+1. In case of Analog FPV, upload your OSD font of choice from the OSD tab.
+1. Go to the CLI again and paste the above-described contents from the file you previously created and write _save_ , press ENTER.
+1. There are many new, changed, and removed settings. Check carefully that the settings are correct and fix any unrecognized or out-of-range items from the saved configuration.
+1. You should be ready, explore new 7.0 features, and enjoy!
+
+## Upgrading from older versions
+
+Please follow the instructions on [this](https://github.com/iNavFlight/inav/wiki/Upgrading-from-an-older-version-of-INAV-to-the-current-version) page.
+
+## Major changes
+
+## Flexible motor and servo output allocation
+
+INAV now was a function that allows to flexibly assign functions to PWM outputs directly from INAV Configurator.
+Specific function `AUTO`, `MOTORS` or `SERVOS` can be assigned to each Timer Group. Then, all outputs from this group will perform this function.
+Thanks to this, it's possible to use servos and motors in ways that previously required building a custom targets.
+
+![INAV output assignment](/img/content/inav_output_assignment.png)
+
+Bear in mind:
+* In some rare cases, output assignment might be different than in INAV 6. **This makes it even more important to remove your props and double check your outputs before you power your flight controller with batteries for the first time after applying your old settings or enabling outputs.**
+* It is not possible to assign function to individual outputs. It's a hardware, not software limitation.
+
+## Mixer profiles and VTOL support
+
+This has been a frequent request since PNP VTOL models started becoming more common.
+
+Read more in [Mixer Profile INAV docs](https://github.com/iNavFlight/inav/blob/master/docs/MixerProfile.md) and [VTOL INAV docs](https://github.com/iNavFlight/inav/blob/master/docs/VTOL.md)
+
+## Ez Tune
+
+The **Ez Tune** is a simplified tuning framework similar to Betalight's Simplified Slider Tuning. Instead of setting each PID controller gain, rate, and filter setting separately, Pilot is presented with 8 sliders for:
+
+* Axis ratio
+* Main filter frequency
+* Response
+* Damping
+* Stability
+* Aggressiveness
+* Rate
+* Expo
+
+![INAV Ez Tune](/img/content/inav_ez_tune.png)
+
+> Ez Tune settings are not compatible with Betaflight Slider Tuning setting and cannot be migrated directly.
+
+Read the description in Configurator's Ez Tune tab on what each setting does and how it should be used.
+
+More on the topic of **Ez Tune** can be found [here](https://youtu.be/94foP_mxBLk)
+
+## In-flight Emergency Rearm
+
+With INAV 7.0 came the ability to **Emergency Rearm**. This allows you to rearm in flight when you accidentally disarm. You need to do this within 5 seconds of disarming. Which sounds short, but is actually a pretty long time. Emergency Rearm can be used after a launch and while the aircraft still believes it's flying. It bypasses safety checks (including the throttle position) and doesn't trigger auto launch. Multirotors will also briefly switch to Angle to stabilise and level the flight. You can read all about it at [https://github.com/iNavFlight/inav/pull/9254](https://github.com/iNavFlight/inav/pull/9254?fbclid=IwAR2MDYh2PSmDsxgc58qjcDcNLkOQyzvltO6J4vDPs5ISQsr4jFwQX2h2VzE)
+
+## Timer DMA Burst
+
+INAV 7 adds the DMA Burst mode to selected target as ultimately fixes the problem of DSHOT protocol not working on some boards. Pilots do not have to take any actions, DSHOT is just available on previously affected flight controllers. This applies to:
+
+* Matek F405 TE
+* SpeedyBee F405 V3
+
+## JETI EXBUS fixed
+
+The JETI EXBUS protocol should now not hang the flight controller during operation. The issue was originally fixed in https://github.com/betaflight/betaflight/pull/13130 . Thank you @SteveCEvans and @klutvott123
+
+## Multirotor Cruise Mode
+
+The Cruise Mode for Multirotors allows pilots to let go the radio sticks while UAV flies on a predefined course with predefined speed. Just like with  regular PosHold, Throttle stick sets the altitude and course, while the pitch stick is used to set the horizontal speed. When released INAV will hold set speed, altitude, and course. More information available in here https://youtu.be/4pgDxexuSnU
+
+## NMEA Protocol no longer available
+
+As mentioned in the `Important Notes` section, INAV 7 no longer supports the GPS NMEA protocol. All modern GPS module support one of the UBLOX protocols and as a result pilots must switch to either `UBLOX` or `UBLOX7` protocol.
+
+## GPS Improvements
+
+A number of improvements have been made to GPS support in INAV 7.
+
+It is now possible to select multiple GPS constellations, and not only Galileo. If your GPS modules does not support a particular combination, it will fallback to no extra constellations.
+
+M10 GPS units will now default to 10Hz, like M8 units and a new cli setting has been added to allow overriding the update rate of your `UBLOX7` GPS (`gps_ublox_nav_hz`). This should allow you to fall back to 5Hz or bump it up to the limits of what is supported by your GPS module.
+
+![INAV GPS Improvements](/img/content/inav_gps_improvements.png)
+
+## MSP VTX support
+
+INAV now support MSP VTX when using MSP DisplayPort OSD.
+
+Now it is possible to change VTX power levels and channels via INAV's OSD menu or ELRS backpack without connecting the SmartAudio wire on HD-Zero VTXs.
+
+If you MSP DisplayPort OSD is working, no extra configuration is needed.
+
+## Linear Descent RTH mode changed
+
+`AT_LEAST_LINEAR_DESCENT` is no longer a method for RTH. It has been replaced with a more flexible linear descent option that will work with any RTH method. If previously using `AT_LEAST_LINEAR_DESCENT`, you should now just use `AT_LEAST` as the RTH type. Linear Descent is now a separate option that can be used with any other RTH method. To make this possible, the target altitude of the descent is now the `nav_rth_home_altitude`. In some cases, if flying below the home position, this will work as a linear ascent.
+
+You can also decide when the linear descent will start. Set the `nav_rth_linear_descent_start_distance` parameter to the distance (metres) from the home point, where you want to start descending. Set to `0`, the default setting; the descent will start immediately, as with the pre-7.0 implementation.
+
+These options are available in Configurator.
+
+See the [Navigation Mode: Return to Home wiki](https://github.com/iNavFlight/inav/wiki/Navigation-Mode:-Return-to-Home#linear-descent) for more details.
+
+## Pilot Logos
+
+You can now have custom pilot logos on your OSD and arming screen (HD Only). You will need to create a custom font with your logos to show them on screen. The OSD logo is a 3x1 character symbol. This can be used with both analogue and HD. The arming screen logo is a 10x4 character image, and only works with HD systems.
+
+More details are available in the [OSD Document](https://github.com/iNavFlight/inav/blob/master/docs/OSD.md#pilot-logos).
+
+## Other changes
+
+* The `AUTOLEVEL` mode is renamed to `AUTO LEVEL TRIM`. The functionality remains the same.
+* The `osd_mah_used_precision` parameter has been renamed `osd_mah_precision`.
+* 24 channels available for Jeti systems (not available with F411 or F722 flight controllers).
+* Virtual pitot is enabled by default.
+
+## Other removed functions
+
+* FrSky D-series telemetry
+* `output_mode` setting that allows to reassign all PWM outputs to either MOTORS or SERVOS
+
+## New targets
+
+* SDmodel H7V1
+* Matek H743HD
+* SpeedyBee F405 V4
+* SpeedeBee F405 Mini
+* SpeedyBee F7 Mini V2
+* GEPRCF405
+* GEPRCF722
+* NEUTRONRC F435 Mini AIO
+* DAKEFPV F405
+* DAKEFPV F722
+* AtomRC F405 NAVI Delux
+
+## CLI
+
+## Changed settings
+
+| Name | Description |
+| ---- | ------ |
+| gps_provider | Removed: `NMEA` |
+| gps_sbas_mode | New: `SPAN` |
+| nav_rth_alt_mode | Removed: `AT_LEAST_LINEAR_DESCENT` |
+| pitot_hardware | New: `DLVR-L10D` |
+
+## New Items
+
+| Name | Description |
+| ---- | ------ |
+| ez_aggressiveness | EzTune aggressiveness Values: 0 - 200 Default: 100 |
+| ez_axis_ratio | EzTune axis ratio Values: 25 - 175 Default: 110 |
+| ez_damping | EzTune damping Values: 0 - 200 Default: 100 |
+| ez_enabled | Enables EzTune feature Default: FALSE |
+| ez_expo | EzTune expo Values: 0 - 200 Default: 100 |
+| ez_filter_hz | EzTune filter cutoff frequency Values: 10 - 300 Default: 110 |
+| ez_rate | EzTune rate Values: 0 - 200 Default: 100 |
+| ez_response | EzTune response Values: 0 - 200 Default: 100 |
+| ez_stability | EzTune stability Values: 0 - 200 Default: 100 |
+| gps_auto_baud_max_supported | Max baudrate supported by GPS unit. This is used during autobaud. M8 supports up to 460400, M10 supports up to 921600 and 230400 is the value used before INAV 7.0 Default: 230400 |
+| gps_ublox_nav_hz | Navigation update rate for UBLOX7 receivers. Some receivers may limit the maximum number of satellites tracked when set to a higher rate or even stop sending navigation updates if the value is too high. Some M10 devices can do up to 25Hz. 10 is a safe value for M8 and newer. Values: 5 - 200 Default: 10 |
+| gps_ublox_use_beidou | Enable use of Beidou satellites. This is at the expense of other regional constellations, so benefit may also be regional. Requires gps hardware support [OFF/ON]. Default: FALSE |
+| gps_ublox_use_glonass | Enable use of Glonass satellites. This is at the expense of other regional constellations, so benefit may also be regional. Requires gps haardware support [OFF/ON]. Default: FALSE |
+| led_pin_pwm_mode | PWM mode of LED pin. Values: `SHARED_LOW`, `SHARED_HIGH`, `LOW`, `HIGH`. Default: `SHARED_LOW` |
+| mixer_automated_switch | If set to on, This mixer_profile will try to switch to another mixer_profile when 1.RTH heading home is requested and distance to home is lager than 3*nav_fw_loiter_radius on mixer_profile is a MULTIROTOR or TRICOPTER platform_type. 2. RTH landing is requested on this mixer_profile is a AIRPLANE platform_type Default: FALSE |
+| mixer_pid_profile_linking | If enabled, pid profile_index will follow mixer_profile index. Set to OFF(default) if you want to handle PID profile by your self. Recommend to set to ON on all mixer_profiles to let the mixer_profile handle the PID profile switching on a VTOL or mixed platform type setup. Default: FALSE |
+| mixer_switch_trans_timer | If switch another mixer_profile is scheduled by mixer_automated_switch or mixer_automated_switch. Activate Mixertransion motor/servo mixing for this many decisecond(0.1s) before the actual mixer_profile switch. Values: 0 - 200 Default: 0 |
+| motorstop_on_low | If enabled, motor will stop when throttle is low on this mixer_profile Default: FALSE |
+| nav_cruise_yaw_rate | Max YAW rate when NAV COURSE HOLD/CRUISE mode is enabled. Set to 0 to disable on fixed wing (Note: On multirotor setting to 0 will disable Course Hold/Cruise mode completely) [dps] Values: 0 - 120 Default: 20 |
+| nav_landing_bump_detection | Allows immediate landing detection based on G bump at touchdown when set to ON. Requires a barometer and currently only works for multirotors. Default: FALSE |
+| nav_mc_althold_throttle | If set to STICK the FC remembers the throttle stick position when enabling ALTHOLD and treats it as the neutral midpoint for holding altitude. If set to MID_STICK or HOVER the neutral midpoint is set to the mid stick position or the hover throttle position respectively. Default: STICK |
+| nav_rth_linear_descent_start_distance | The distance [m] away from home to start the linear descent. 0 = immediately (original linear descent behaviour) Values: 0 - 10000 Default: 0 |
+| nav_rth_use_linear_descent | If enabled, the aircraft will gradually descent to the nav_rth_home_altitude en route. The distance from home to start the descent can be set with `nav_rth_linear_descent_start_distance`. Default: FALSE |
+| osd_arm_screen_display_time | Amount of time to display the arm screen [ms] Values: 1000 - 5000 Default: 1500 |
+| osd_inav_to_pilot_logo_spacing | The space between the INAV and pilot logos, if `osd_use_pilot_logo` is `ON`. This number may be adjusted so that it fits the odd/even col width displays. For example, if using an odd column width display, such as Walksnail, and this is set to 4. 1 will be added so that the logos are equally spaced from the centre of the screen. Values: 0 - 20 Default: 8 |
+| osd_joystick_down | PWM value for DOWN key Values: 0 - 100 Default: 0 |
+| osd_joystick_enabled | Enable OSD Joystick emulation Default: FALSE |
+| osd_joystick_enter | PWM value for ENTER key Values: 0 - 100 Default: 75 |
+| osd_joystick_left | PWM value for LEFT key Values: 0 - 100 Default: 63 |
+| osd_joystick_right | PWM value for RIGHT key Values: 0 - 100 Default: 28 |
+| osd_joystick_up | PWM value for UP key Values: 0 - 100 Default: 48 |
+| osd_mah_precision | Number of digits used for mAh precision. Currently used by mAh Used and Battery Remaining Capacity Values: 4 - 6 Default: 4 |
+| osd_use_pilot_logo | Use custom pilot logo with/instead of the INAV logo. The pilot logo must be characters 473 to 511 Default: FALSE |
+| pid_iterm_limit_percent | Limits max/min I-term value in stabilization PID controller. It solves the problem of servo saturation before take-off/throwing the airplane into the air. Or multirotors with low authority. By default, error accumulated in I-term can not exceed 33% of total pid throw (around 165us on deafult pidsum_limit of pitch/roll). Set 0 to disable completely. Values: 0 - 200 Default: 33 |
+| tpa_on_yaw | Throttle PID attenuation also reduces influence on YAW for multi-rotor, Should be set to ON for tilting rotors. Default: FALSE |
+
+## Removed Items
+
+| Name | Description |
+| ---- | ------ |
+| dterm_lpf2_hz |  |
+| dterm_lpf2_type |  |
+| frsky_coordinates_format |  |
+| frsky_default_latitude |  |
+| frsky_default_longitude |  |
+| frsky_unit |  |
+| frsky_vfas_precision |  |
+| fw_iterm_throw_limit |  |
+| moron_threshold |  |
+| nav_fw_cruise_yaw_rate |  |
+| nav_use_midthr_for_althold |  |
+| osd_mah_used_precision |  |
+| output_mode |  |
+
+## Changelist
+
+The full list of changes is available [here](https://github.com/iNavFlight/inav/pulls?q=is%3Apr+milestone%3A7.0+is%3Aclosed)
+The full list of INAV Configurator changes is available [here](https://github.com/iNavFlight/inav-configurator/pulls?q=is%3Apr+milestone%3A7.0+is%3Aclosed)
+
+## What's Changed from INAV 6.1.1
+
+* INAV 7 by @DzikuVx in https://github.com/iNavFlight/inav/pull/8886
+* Enable USE_SERVO_SBUS on all targets by @DzikuVx in https://github.com/iNavFlight/inav/pull/8876
+* Release 6.0 by @DzikuVx in https://github.com/iNavFlight/inav/pull/8763
+* Drop D-term LPF2 as no longer used by @DzikuVx in https://github.com/iNavFlight/inav/pull/8875
+* Drop FrDky D-series telemetry support by @DzikuVx in https://github.com/iNavFlight/inav/pull/8878
+* Allow scheduler to go down to 10us period by @DzikuVx in https://github.com/iNavFlight/inav/pull/8877
+* Drop moron_threshold setting by @DzikuVx in https://github.com/iNavFlight/inav/pull/8859
+* Release 6.0.0 by @DzikuVx in https://github.com/iNavFlight/inav/pull/8912
+* Add target BLACKPILL_F411 by @HKR1987 in https://github.com/iNavFlight/inav/pull/8902
+* Update GCC to 10.3.1 by @DzikuVx in https://github.com/iNavFlight/inav/pull/8917
+* Release 6.1.0 by @DzikuVx in https://github.com/iNavFlight/inav/pull/8887
+* docs: fix documentation of gvar set by @sensei-hacker in https://github.com/iNavFlight/inav/pull/8955
+* Update Building in MSYS2 Doc by @pwnept in https://github.com/iNavFlight/inav/pull/8934
+* Add osd menu option to preview font file by @mmosca in https://github.com/iNavFlight/inav/pull/8932
+* Jh update usb flash doc by @stronnag in https://github.com/iNavFlight/inav/pull/8974
+* Add the "GEPRCF722_BT_HD" target by @YI-BOYANG in https://github.com/iNavFlight/inav/pull/8943
+* Recognize MPU9255 as a valid IMU by @VasilKalchev in https://github.com/iNavFlight/inav/pull/8927
+* Cleanup m25p16 flash detection code by @mmosca in https://github.com/iNavFlight/inav/pull/8985
+* Update from master by @MrD-RC in https://github.com/iNavFlight/inav/pull/8987
+* Add IFLIGHT_BLITZ_F7_AIO target by @mmosca in https://github.com/iNavFlight/inav/pull/8977
+* Mark IFLIGHT_BLITZ_F7_AIO as SKIP_RELEASES by @mmosca in https://github.com/iNavFlight/inav/pull/8988
+* Have you ever wished INAV had a mute switch? by @mmosca in https://github.com/iNavFlight/inav/pull/8989
+* Enhance Linear Descent RTH feature by @MrD-RC in https://github.com/iNavFlight/inav/pull/8810
+* updated battery profile documentation by @RomanLut in https://github.com/iNavFlight/inav/pull/9002
+* INAV capitalization by @ryet9 in https://github.com/iNavFlight/inav/pull/9001
+* Rename AUTO LEVEL by @MrD-RC in https://github.com/iNavFlight/inav/pull/8972
+* fixed pitot sensor by @RomanLut in https://github.com/iNavFlight/inav/pull/9019
+* modify servo and motor and magnetometer for AocodaRC F4V2  by @dlt2018 in https://github.com/iNavFlight/inav/pull/9040
+* Release 6.1.0 mergeback by @DzikuVx in https://github.com/iNavFlight/inav/pull/8957
+* Fix: SpeedyBee F405 V3 uSD card vs OSD interference by @shirase in https://github.com/iNavFlight/inav/pull/9028
+* Update Navigation.md by @RomanLut in https://github.com/iNavFlight/inav/pull/9058
+* Update Aocodarcf7mini by @dlt2018 in https://github.com/iNavFlight/inav/pull/9056
+* Add MPU6000 and MPU6500 support to Foxeer F7 V4 target by @DzikuVx in https://github.com/iNavFlight/inav/pull/9070
+* Cleanup abandoned EXTI code by @DzikuVx in https://github.com/iNavFlight/inav/pull/9071
+* Multirotor WP speed fix when altitude enforce enabled by @breadoven in https://github.com/iNavFlight/inav/pull/9067
+* Update target.h by @pgp69 in https://github.com/iNavFlight/inav/pull/9037
+* updated controls documentation by @RomanLut in https://github.com/iNavFlight/inav/pull/9024
+* remove obsolete static_assert by @stronnag in https://github.com/iNavFlight/inav/pull/9077
+* [SITL OSX] Fix some of the warnings and add macosx SITL build to workflows by @mmosca in https://github.com/iNavFlight/inav/pull/9063
+* Add QUADSPI Support for H7 and M25P16 Flash Driver by @mluessi in https://github.com/iNavFlight/inav/pull/8915
+* Fix bug for DJI O3's altitude when using imperial by @MrD-RC in https://github.com/iNavFlight/inav/pull/9076
+* Switch sensor infrastructure to be float internally by @DzikuVx in https://github.com/iNavFlight/inav/pull/9075
+* [SITL] disable nagle for UART TCP by @stronnag in https://github.com/iNavFlight/inav/pull/9079
+* [SITL OSX] Fix lldb debugging in OSX and improve OSX detection by @mmosca in https://github.com/iNavFlight/inav/pull/9082
+* [SITL] consolidate IP helpers into target.c by @stronnag in https://github.com/iNavFlight/inav/pull/9080
+* [SITL] add missing BSD header from IP consolidation by @stronnag in https://github.com/iNavFlight/inav/pull/9085
+* [Docs] Readme updates by @stronnag in https://github.com/iNavFlight/inav/pull/9090
+* Speedybee F405 WING fixes by @DzikuVx in https://github.com/iNavFlight/inav/pull/9094
+* fix conflicting types by @stronnag in https://github.com/iNavFlight/inav/pull/9097
+* allow HITL to run with HW baro failure by @RomanLut in https://github.com/iNavFlight/inav/pull/9021
+* Set 10Hz update rate for M9 and M10 gps devices by default and allow higher refresh rates by @mmosca in https://github.com/iNavFlight/inav/pull/9103
+* Add board Aocodarcf405aio by @dlt2018 in https://github.com/iNavFlight/inav/pull/9089
+* Update  Borad Aocodarch7dual by @dlt2018 in https://github.com/iNavFlight/inav/pull/9100
+* DSP based gyro operations by @DzikuVx in https://github.com/iNavFlight/inav/pull/9078
+* Acc processing with DSP by @DzikuVx in https://github.com/iNavFlight/inav/pull/9116
+* Remove brew update step for SITL mac build by @mmosca in https://github.com/iNavFlight/inav/pull/9127
+* ICM42605 gyro parsing fix by @erstec in https://github.com/iNavFlight/inav/pull/9125
+* Release 6.1.1 by @MrD-RC in https://github.com/iNavFlight/inav/pull/9106
+* Fix version check and apply GNSS configuration for M8+ gps by @mmosca in https://github.com/iNavFlight/inav/pull/9128
+* Multirotor landing bump detection by @breadoven in https://github.com/iNavFlight/inav/pull/8744
+* Add configuration of Beidou and Glonass to M8, M9 and M10 gps modules by @mmosca in https://github.com/iNavFlight/inav/pull/9124
+* update gpsConfig_t PG version by @stronnag in https://github.com/iNavFlight/inav/pull/9131
+* It looks like UBLOX ROM version 2.01 omits the = sign from PROTVER by @mmosca in https://github.com/iNavFlight/inav/pull/9132
+* reenable LTO for MacOS firmware builds by @stronnag in https://github.com/iNavFlight/inav/pull/9136
+* Flycolor F7 mini by @DzikuVx in https://github.com/iNavFlight/inav/pull/9122
+* updated buzzer documentation by @RomanLut in https://github.com/iNavFlight/inav/pull/9148
+* fixed beeper -ON_USB for 1S setup, fixed beeper -SYSTEM_INIT by @RomanLut in https://github.com/iNavFlight/inav/pull/9147
+* Enable possibility to simulate HW sensor failures in HITL by @RomanLut in https://github.com/iNavFlight/inav/pull/8858
+* Kakute H7 Wing by @erstec in https://github.com/iNavFlight/inav/pull/9145
+* Update target.h by @dlt2018 in https://github.com/iNavFlight/inav/pull/9151
+* fix target's by @dlt2018 in https://github.com/iNavFlight/inav/pull/9149
+* Improve OSD stats page avg efficiency value scaling by @rmaia3d in https://github.com/iNavFlight/inav/pull/9109
+* Fix AOCODARCH7DUAL Buzzer continous beeping issue by @lida2003 in https://github.com/iNavFlight/inav/pull/9143
+* [SITL] suppress spurious linker warning with gcc12+ by @stronnag in https://github.com/iNavFlight/inav/pull/9163
+* How to test a pull request.md - two minor typos by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9170
+* Add some documentation on how to test a PR by @mmosca in https://github.com/iNavFlight/inav/pull/9168
+* fixed enter/exit camera osd stick positions docs by @RomanLut in https://github.com/iNavFlight/inav/pull/9165
+* Fix: Inav 7.0.0 last build not working on SPEEDYBEEF405V3 by @shirase in https://github.com/iNavFlight/inav/pull/9162
+* Foxeer H743 target by @DzikuVx in https://github.com/iNavFlight/inav/pull/9171
+* Add new OSD document by @MrD-RC in https://github.com/iNavFlight/inav/pull/9177
+* Kakute H7 Wing Defaults altered by @erstec in https://github.com/iNavFlight/inav/pull/9185
+* Add more baud rates to auto baud, as listed in m10 integration manual by @mmosca in https://github.com/iNavFlight/inav/pull/9174
+* Use all 8 motor outputs on AXISFLYINGF7PRO by @nmaggioni in https://github.com/iNavFlight/inav/pull/9179
+* MSP VTX support by @mmosca in https://github.com/iNavFlight/inav/pull/9166
+* Repair led strip by @dlt2018 in https://github.com/iNavFlight/inav/pull/9190
+* Get rid of some not needed floating point divisions by @DzikuVx in https://github.com/iNavFlight/inav/pull/9207
+* Restore autobaud for m8 gps by @mmosca in https://github.com/iNavFlight/inav/pull/9219
+* Update SPEEDYBEEF7V3. Fix Sensor VL53L1X by @druckgott in https://github.com/iNavFlight/inav/pull/9221
+* Extend from 4 ADC channels to 6 (Matek H743 and others) by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9180
+* Nav altitude control improvements by @breadoven in https://github.com/iNavFlight/inav/pull/8920
+* fix neutronrcf435mini aio  motor2 output bug by @shanggl in https://github.com/iNavFlight/inav/pull/9226
+* Try to set vscode to play nice with formating style by @mmosca in https://github.com/iNavFlight/inav/pull/9223
+* Fix for #9225, some OSD elements are skipped incorrectly, when GPS is not present. by @mmosca in https://github.com/iNavFlight/inav/pull/9229
+* Block by Runtime calibration of ACC only when ACC is required by @DzikuVx in https://github.com/iNavFlight/inav/pull/9227
+* Fix ADC on FOXEERH743 by @DzikuVx in https://github.com/iNavFlight/inav/pull/9230
+* Update speedybeef405v3 docs, with some common issues by @mmosca in https://github.com/iNavFlight/inav/pull/9231
+* Let M10 GPS disable SBAS and some small fixes changes by @mmosca in https://github.com/iNavFlight/inav/pull/9232
+* Multicopter emergency landing improvement/fix by @breadoven in https://github.com/iNavFlight/inav/pull/9169
+* Fix SITL memory leaks by @psmitty7373 in https://github.com/iNavFlight/inav/pull/9235
+* Add constrain for DynLPF computation by @DzikuVx in https://github.com/iNavFlight/inav/pull/9242
+* Multirotor Althold throttle hover option + altitude adjustment indication by @breadoven in https://github.com/iNavFlight/inav/pull/9220
+* OSD Altitude field fix by @breadoven in https://github.com/iNavFlight/inav/pull/9261
+* Add blackbox target heading + missing Nav auto enabled flight modes by @breadoven in https://github.com/iNavFlight/inav/pull/9249
+* SKYSTARSH743HD remove non-existent S9 & S10. Add servos target by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9214
+* [doc] update serial_printf document iaw current implementation by @stronnag in https://github.com/iNavFlight/inav/pull/9266
+* Change motor/servo assignements for RUSH_BLADE_F7 targets by @mmosca in https://github.com/iNavFlight/inav/pull/9262
+* Pitot DLVR-L10D sensor by @jmajew in https://github.com/iNavFlight/inav/pull/9216
+* Add GEPRCF405 and GEPRCF722 targets by @YI-BOYANG in https://github.com/iNavFlight/inav/pull/9260
+* Multi function OSD utility by @breadoven in https://github.com/iNavFlight/inav/pull/8698
+* Timer DMA burst by @shirase in https://github.com/iNavFlight/inav/pull/9265
+* Add mup6500 for mambaf405us by @jianwwpro in https://github.com/iNavFlight/inav/pull/8827
+* Programming Frameword.md: Update to match Configurator renaming by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9275
+* SpeedyBee F7 Mini V2 target by @DzikuVx in https://github.com/iNavFlight/inav/pull/9272
+* Speedybee F405 mini by @DzikuVx in https://github.com/iNavFlight/inav/pull/9273
+* Multirotor course hold/cruise mode by @breadoven in https://github.com/iNavFlight/inav/pull/9213
+* Bump navConfig PG that was forgotten in #9220 by @DzikuVx in https://github.com/iNavFlight/inav/pull/9278
+* Switch MatekF405TE to use burst DMA by @DzikuVx in https://github.com/iNavFlight/inav/pull/9277
+* Update Building in Windows 10 or 11 with Linux Subsystem.md by @wchnflr in https://github.com/iNavFlight/inav/pull/9279
+* BETAFPVF435 unofficial target by @mmosca in https://github.com/iNavFlight/inav/pull/9281
+* Make PWM allocation a bit smarter. by @mmosca in https://github.com/iNavFlight/inav/pull/9268
+* [sitl] add --version, add git commit to version output by @stronnag in https://github.com/iNavFlight/inav/pull/9286
+* docs/programming user21 typo by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9289
+* Failsafe fixes by @breadoven in https://github.com/iNavFlight/inav/pull/9283
+* Mixer throttle fixes/improvements + more OSD Throttle changes by @breadoven in https://github.com/iNavFlight/inav/pull/9274
+* Ignore tasks.json and use tabs in C files by @MrD-RC in https://github.com/iNavFlight/inav/pull/9295
+* Enable the virtual pitot by default by @MrD-RC in https://github.com/iNavFlight/inav/pull/9299
+* Add DPS310 by @dlt2018 in https://github.com/iNavFlight/inav/pull/9284
+* Drop output_mode setting by @DzikuVx in https://github.com/iNavFlight/inav/pull/9300
+* Throttle related refactor/clean up by @breadoven in https://github.com/iNavFlight/inav/pull/9287
+* docs/ipf: Fix typos and clarify wording by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9298
+* Further simplify timer usage flags. by @mmosca in https://github.com/iNavFlight/inav/pull/9288
+* Bulk update targets with new pwm output assignments by @mmosca in https://github.com/iNavFlight/inav/pull/9309
+* Remove timer compatibility define, since all targets have been updated by @mmosca in https://github.com/iNavFlight/inav/pull/9318
+* DSHOT delay fix by @shirase in https://github.com/iNavFlight/inav/pull/9321
+* [docs] modernise Serial and RX documents by @stronnag in https://github.com/iNavFlight/inav/pull/9322
+* Mixer profile to open the posibility for vtol/mixed platform by @shota3527 in https://github.com/iNavFlight/inav/pull/8555
+* Add SouthPAN SBAS for all my friends in AU/NZ. by @mmosca in https://github.com/iNavFlight/inav/pull/9320
+* Drop NMEA protocol by @DzikuVx in https://github.com/iNavFlight/inav/pull/9302
+* SpeedyBee F405 V4 by @DzikuVx in https://github.com/iNavFlight/inav/pull/9324
+* SpeedyBEEF405WING Change S11 timer, since TIM1 is used by LED by @mmosca in https://github.com/iNavFlight/inav/pull/9325
+* Remove info about F3 mcus from Temperature sensors documentation by @mmosca in https://github.com/iNavFlight/inav/pull/9337
+* Add Rate Dynamics to MSP by @DzikuVx in https://github.com/iNavFlight/inav/pull/9336
+* Update PR test instructions by @mmosca in https://github.com/iNavFlight/inav/pull/9338
+* Flight remaining flight distance value by @MrD-RC in https://github.com/iNavFlight/inav/pull/9333
+* Fix mixer config initialization sequence by @shota3527 in https://github.com/iNavFlight/inav/pull/9339
+* Fix for Rate dynamics MSP layer by @DzikuVx in https://github.com/iNavFlight/inav/pull/9340
+* Add myself to Authors by @mmosca in https://github.com/iNavFlight/inav/pull/9341
+* Add odometer to OSD by @MrD-RC in https://github.com/iNavFlight/inav/pull/9335
+* Update Controls.md by @MrD-RC in https://github.com/iNavFlight/inav/pull/9351
+* IPF: Add yaw operand to go with pitch and roll by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9305
+* Add MatekH743HD variant by @MATEKSYS in https://github.com/iNavFlight/inav/pull/9244
+* additional fixes for mixer profile by @shota3527 in https://github.com/iNavFlight/inav/pull/9363
+* fixed HITL docs by @RomanLut in https://github.com/iNavFlight/inav/pull/9353
+* Add the Aocodarcf722aio file by @dlt2018 in https://github.com/iNavFlight/inav/pull/9314
+* Lower default hover throttle to 30% by @mmosca in https://github.com/iNavFlight/inav/pull/9361
+* Increase channels to 24 for Jeti by @MrD-RC in https://github.com/iNavFlight/inav/pull/9350
+* Add pilot logo to OSD by @MrD-RC in https://github.com/iNavFlight/inav/pull/9332
+* fixes servo output issue by @shota3527 in https://github.com/iNavFlight/inav/pull/9366
+* minor changes on ahrs by @shota3527 in https://github.com/iNavFlight/inav/pull/9360
+* Timer N channel fix by @shirase in https://github.com/iNavFlight/inav/pull/9276
+* Add ICM42605 driver for SKYSTARSF405HD by @DusKing1 in https://github.com/iNavFlight/inav/pull/9370
+* Multirotor coursehold/cruise mode fix by @breadoven in https://github.com/iNavFlight/inav/pull/9380
+* Ez Tune for Multirotors by @DzikuVx in https://github.com/iNavFlight/inav/pull/9354
+* update docker build scripts by @RomanLut in https://github.com/iNavFlight/inav/pull/9346
+* Add SYM_TOTAL and SYM_GFORCE to BFCOMPAT by @mmosca in https://github.com/iNavFlight/inav/pull/9385
+* In flight emergency rearm by @breadoven in https://github.com/iNavFlight/inav/pull/9254
+* Re-enable baro. max chip seems to cause issues by @mmosca in https://github.com/iNavFlight/inav/pull/9400
+* Make it easier to include all baro drivers to target by @mmosca in https://github.com/iNavFlight/inav/pull/9394
+* Make it easier to include all compass drivers to target  by @mmosca in https://github.com/iNavFlight/inav/pull/9401
+* BFCOMPAT - improve wind and airspeed fields and labels by @rmaia3d in https://github.com/iNavFlight/inav/pull/9388
+* HITL/SITL: allow hitl/sitl to arm with uncalibrated accelerometer by @RomanLut in https://github.com/iNavFlight/inav/pull/9345
+* fix mixer_profie configurator issue by @shota3527 in https://github.com/iNavFlight/inav/pull/9364
+* flight/pid.c: fix AngleOverride(yaw) to degrees by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9329
+* HITL: simulate battery voltage with any sensor by @RomanLut in https://github.com/iNavFlight/inav/pull/9212
+* HITL: hd osd support by @RomanLut in https://github.com/iNavFlight/inav/pull/9327
+* Fixed #9399 can't find baro chip on PB6/PB7 I2C1 by @lida2003 in https://github.com/iNavFlight/inav/pull/9412
+* Fix JETI EXBUS overflow by @DzikuVx in https://github.com/iNavFlight/inav/pull/9407
+* Disable ASFR function on ICM426xx driver by @DzikuVx in https://github.com/iNavFlight/inav/pull/9409
+* 16G scale range for bmi270 accelerometer  by @shota3527 in https://github.com/iNavFlight/inav/pull/9410
+* tpa on yaw and i-term limit by @shota3527 in https://github.com/iNavFlight/inav/pull/9408
+* FW Auto level trim bug fix by @breadoven in https://github.com/iNavFlight/inav/pull/9393
+* Enhance mAh remaining OSD element by @MrD-RC in https://github.com/iNavFlight/inav/pull/9334
+* Allow f722 to use mixer profile by @shota3527 in https://github.com/iNavFlight/inav/pull/9416
+* Correct disarm servo throttle by @DzikuVx in https://github.com/iNavFlight/inav/pull/9413
+* SAFETY issue -- servos.c: Correct servo throttle *off* when disarmed (not full throttle at disarm) by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9330
+* OSD Joystick by @RomanLut in https://github.com/iNavFlight/inav/pull/9201
+* New target: ATOMRC Exceed F405 FC V2 by @NickB1 in https://github.com/iNavFlight/inav/pull/8956
+* Add more power options for 1G3 group by @MATEKSYS in https://github.com/iNavFlight/inav/pull/9243
+* New target: SDMODELH7V1 by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9114
+* Framework.md - Note about common error by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9422
+* Update OSD.md by @MrD-RC in https://github.com/iNavFlight/inav/pull/9425
+* comment on how to clone specific INAV releases added by @Daniel-1276 in https://github.com/iNavFlight/inav/pull/9414
+* update vtol documents by @shota3527 in https://github.com/iNavFlight/inav/pull/9426
+* Put getConfigMixerProfile as the last byte in message by @DzikuVx in https://github.com/iNavFlight/inav/pull/9431
+
+## New Contributors
+* @HKR1987 made their first contribution in https://github.com/iNavFlight/inav/pull/8902
+* @VasilKalchev made their first contribution in https://github.com/iNavFlight/inav/pull/8927
+* @ryet9 made their first contribution in https://github.com/iNavFlight/inav/pull/9001
+* @shirase made their first contribution in https://github.com/iNavFlight/inav/pull/9028
+* @pgp69 made their first contribution in https://github.com/iNavFlight/inav/pull/9037
+* @lida2003 made their first contribution in https://github.com/iNavFlight/inav/pull/9143
+* @druckgott made their first contribution in https://github.com/iNavFlight/inav/pull/9221
+* @psmitty7373 made their first contribution in https://github.com/iNavFlight/inav/pull/9235
+* @jianwwpro made their first contribution in https://github.com/iNavFlight/inav/pull/8827
+* @wchnflr made their first contribution in https://github.com/iNavFlight/inav/pull/9279
+* @NickB1 made their first contribution in https://github.com/iNavFlight/inav/pull/8956
+* @Daniel-1276 made their first contribution in https://github.com/iNavFlight/inav/pull/9414
+
+**Full Changelog**: https://github.com/iNavFlight/inav/compare/6.1.1...7.0.0-RC1
+
+</TabItem>
+
+</Tabs>
