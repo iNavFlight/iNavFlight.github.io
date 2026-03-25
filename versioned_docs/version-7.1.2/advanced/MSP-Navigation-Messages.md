@@ -247,7 +247,7 @@ When the craft has a valid position, is armed and the mode `GCS NAV` is asserted
 
 ## MSP_NAV_STATUS
 
-The following data are returned by a MSP_NAV_STATUS message. The usage texts are those defined by Wingui; Multiwii and INAV support this message. Almost the same data is returned by the [inav LTM NFRAME](https://github.com/iNavFlight/inav/wiki/Lightweight-Telemetry-(LTM)#navigation-frame-n)
+The following data are returned by a MSP_NAV_STATUS message. The usage texts are those defined by Wingui; Multiwii and INAV support this message. Almost the same data is returned by the [inav LTM NFRAME](./Lightweight-Telemetry-LTM.md)#navigation-frame-n)
 
 <table>
 <thead>
@@ -447,7 +447,7 @@ https://github.com/iNavFlight/inav/tree/master/docs/development/wp_mission_schem
 
 ## Encoding MSP Messages
 
-In order to send waypoints to the flight controller, they need to be serialised into an `MSP_SET_WP` message. This is a standard MSP message; it may be encoded as either MSPv1 or [MSPv2](MSP-V2). In general, you should use MSPv2 unless you're targeting MultiWii or ancient versions of INAV.
+In order to send waypoints to the flight controller, they need to be serialised into an `MSP_SET_WP` message. This is a standard MSP message; it may be encoded as either MSPv1 or [MSPv2](./MSP-V2.md). In general, you should use MSPv2 unless you're targeting MultiWii or ancient versions of INAV.
 
 The payload comprises the following packed 'C' language structure:
 

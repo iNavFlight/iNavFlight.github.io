@@ -85,7 +85,7 @@ Fly safe, fly smart with INAV 7.1 and a compass by your side!
 
 ## Upgrading from older versions
 
-Please follow the instructions on [this](https://github.com/iNavFlight/inav/wiki/Upgrading-from-an-older-version-of-INAV-to-the-current-version) page.
+Please follow the instructions on [this](./quickstart/Upgrading-from-an-older-version-of-INAV-to-the-current-version.md) page.
 
 ## Major changes
 
@@ -111,7 +111,7 @@ If a user does decide to omit the use of a compass for a multirotor, be mindful 
 
 Example [Video](https://www.youtube.com/watch?v=iopZfH-DdTI)
 
-For more details see [here](https://github.com/iNavFlight/inav/wiki/GPS-and-Compass-setup#inav-71-changes)
+For more details see [here](./quickstart/GPS-and-Compass-setup.md#inav-71-changes)
 
 ## Tailsitter Support for VTOL
 Tailsitter builds are now natively supported to allow proper Board Orientation switching during transition. [Details](https://github.com/iNavFlight/inav/pull/9347)
@@ -122,12 +122,12 @@ Tailsitter builds are now natively supported to allow proper Board Orientation s
 The filtering of the ICM426xx gyros has been updated based on changes made to both Ardupilot and BetaFlight and we expect better performance, when comparing to previous INAV versions.
 
 ## OSD Changes
-Users can now customize their own OSD messages, by way of the Programming Framework. [Details](https://github.com/iNavFlight/inav/wiki/OSD-custom-messages)
+Users can now customize their own OSD messages, by way of the Programming Framework. [Details](./advanced/OSD-custom-messages.md)
 
 The Artificial Horizon will not properly track the real horizon in the correct way, when the craft is inverted. [Details](https://github.com/iNavFlight/inav/pull/9609)
 
 ## New Fixedwing flight mode
-The mode is called **Angle Hold**. For more details see [here](https://github.com/iNavFlight/inav/wiki/Modes#angle-hold-fw)
+The mode is called **Angle Hold**. For more details see [here](./features/Modes.md#angle-hold-fw)
 
 ## New targets
 
@@ -276,7 +276,7 @@ Contact other pilots, share experiences, suggestions and ask for help on:
 
 ## Upgrading from older versions
 
-Please follow the instructions on [this](https://github.com/iNavFlight/inav/wiki/Upgrading-from-an-older-version-of-INAV-to-the-current-version) page.
+Please follow the instructions on [this](./quickstart/Upgrading-from-an-older-version-of-INAV-to-the-current-version.md) page.
 
 ## Major changes
 
@@ -368,7 +368,7 @@ You can also decide when the linear descent will start. Set the `nav_rth_linear_
 
 These options are available in Configurator.
 
-See the [Navigation Mode: Return to Home wiki](https://github.com/iNavFlight/inav/wiki/Navigation-Mode:-Return-to-Home#linear-descent) for more details.
+See the [Navigation Mode: Return to Home wiki](./features/Navigation-Mode:-Return-to-Home.md#linear-descent) for more details.
 
 ## Pilot Logos
 

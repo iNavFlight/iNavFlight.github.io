@@ -1,5 +1,5 @@
 ---
-title: MSP V2
+title: Msp V2
 ---
 
 ## Multiwii Serial Protocol Version 2
@@ -36,7 +36,7 @@ MSP V2 addresses these shortcomings:
 | ---- | ---- | ---- | --- |
 | 0 | $ |  | Same lead-in as V1 |
 | 1 | X |  | 'X' in place of v1 'M' |
-| 2 | type |  | '\<' / '>' / '!' see [Message Types](#Message-Types) |
+| 2 | type |  | '\<' / '>' / '!' see [Message Types](#message-types) |
 | 3 | flag | ✔  | uint8, flag, usage to be defined (set to zero) |
 | 4 | function | ✔  |uint16 (little endian). 0 - 255 is the same function as V1 for backwards compatibility |
 | 6 | payload size | ✔  |uint16 (little endian) payload size in bytes |

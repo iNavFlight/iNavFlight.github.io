@@ -69,7 +69,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/iNavFlight/iNavFlight.github.io/tree/main/",
+            "https://github.com/iNavFlight/iNavFlight.github.io/tree/master/",
         },
         blog: false,
         /*
@@ -82,7 +82,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/iNavFlight/iNavFlight.github.io/tree/main/",
+            "https://github.com/iNavFlight/iNavFlight.github.io/tree/master/",
           // Useful options to enforce blogging best practices
           onInlineTags: "warn",
           onInlineAuthors: "warn",
