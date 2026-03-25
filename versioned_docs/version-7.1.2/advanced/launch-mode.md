@@ -35,7 +35,7 @@ title: Launch Mode
  - [GPS Failsafe and Glitch Protection](../features/GPS-Failsafe-and-Glitch-Protection.md)
  - [INAV blackbox variables](./INAV-blackbox-variables.md)
  - [INAV MSP frames changelog](./INAV-MSP-frames-changelog.md)
- - [Lightweight Telemetry (LTM)](./Lightweight-Telemetry-LTM.md))
+ - [Lightweight Telemetry (LTM)](./Lightweight-Telemetry-LTM.md)
  - [Waypoint types, usage, examples and MSP messages](./MSP-Navigation-Messages.md)
  - [PID Attenuation and scaling](./PID-Attenuation-and-scaling.md)
  - [Tune INAV PIFF controller for fixedwing](./Tune-INAV-PIFF-controller-for-fixedwing.md)

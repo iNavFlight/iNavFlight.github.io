@@ -174,7 +174,7 @@ MSP is the 'native' messaging protocol for INAV. It is well supported by the con
 
 LTM is a 'push' telemetry protocol; that is the FC sends data unsolicited to the GCS. This avoids the 'half-duplex' time penalty of MSP on 3DR radios. Unlike MSP, LTM only provides flight data, thus if you need the GCS to select a vehicle icon based on the multirotor type (QUADX, TRI etc), offer additional functions based in the FC firmware version or upload waypoints, then it is necessary to share the serial port on the FC between MSP and LTM; MSP is used when unarmed and LTM when armed. Both ezgui and [mwp](https://github.com/stronnag/mwptools) handle the switch-over automatically.
 
-You can find documentation / specification for the LTM implementation in Inav in the [INAV Wiki](../advanced/Lightweight-Telemetry-LTM.md)).
+You can find documentation / specification for the LTM implementation in Inav in the [INAV Wiki](../advanced/Lightweight-Telemetry-LTM.md).
 
 LTM will operate effectively over low data rate links. Currently the INAV implementation pushes c. 300 bytes /sec in its fastest rate, so 4800 baud over the air rate would suffice. INAV provides configuration options for 'medium' and 'slow' LTM rates, further reducing the required baud rate, which may in turn increase range for some radio solutions.
 
