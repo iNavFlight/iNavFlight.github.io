@@ -271,7 +271,7 @@ Loss of GPS during navigation will have the following affect on the different mo
 ## Emergency Landing
 An emergency landing will be triggered during WP and RTH modes if navigation sensors fail or in the case of RTH if the craft heads off in the wrong direction.
 
-It is also possible to manually trigger an emergency landing at any time using [MULTIFUNCTION](./Modes.md#multi-function) mode or by using [POSHOLD](#nav-poshold---position-hold) mode. To trigger using POSHOLD mode rapidly toggle the mode ON/OFF at least 5 times. Repeat this action to cancel the emergency landing once started.
+It is also possible to manually trigger an emergency landing at any time using [MULTIFUNCTION](./Modes.md) mode or by using [POSHOLD](#nav-poshold---position-hold) mode. To trigger using POSHOLD mode rapidly toggle the mode ON/OFF at least 5 times. Repeat this action to cancel the emergency landing once started.
 
 ## Mode switch diagram
 

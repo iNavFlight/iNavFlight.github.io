@@ -141,7 +141,7 @@ At this point everything should work as expected.
 
 * Use Airmode mode to get full stabilization and servo throw with no throttle applied.
 
-* [Setting up failsafe with return to home.](../features/Failsafe.md#setting-up-failsafe-for-rth)
+* [Setting up failsafe with return to home.](../features/Failsafe.md)
 
 * If your compass is not 100% properly setup just disable it instead. **A calibrated compass can cause orientation drift during flight that may not show up in the configurator** (especially built-in ones on your FC). Really consider disabling it unless you need it. INAV uses GPS heading normally, Only on ground before GPS speed has been high enough or if error between GPS heading and compass heading exceed 60deg will it use compass heading
 

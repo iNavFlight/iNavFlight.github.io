@@ -154,4 +154,4 @@ It is possible to override the default RTH Altitude and Climb First settings dur
 Allows an emergency landing to be triggered manually as required.
 Landing is started or ended by toggling the POSHOLD mode switch at least 5 times at a minimum rate of 1Hz.
 Provided sensor position data is available. The aircraft will commence descent, holding the target position above which it was activated.
-Failsafe is inhibited during manual emergency landing, to allow the landing to continue if the RX signal is lost. Under this condition, aborting  manual emergency landing must be done before a FS occurs. Manual emergency landing can also be triggered by use of the [multi-function utility](./Modes.md#multi-function)
+Failsafe is inhibited during manual emergency landing, to allow the landing to continue if the RX signal is lost. Under this condition, aborting  manual emergency landing must be done before a FS occurs. Manual emergency landing can also be triggered by use of the [multi-function utility](./Modes.md)
