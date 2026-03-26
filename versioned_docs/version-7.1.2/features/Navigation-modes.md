@@ -258,7 +258,7 @@ So it's not a flight mode itself, and needs to be combined with other flight mod
 
 In order to let the GCS have full control over the aircraft, e.g. 'follow me', the following modes must be activated: `NAV POSHOLD` with `GCS_NAV`. In order to update the home position, no other mode is required.
 
-For more [detail](../advanced/INAV-Remote-Management,-Control-and-Telemetry.md#follow-me-gcs-nav).
+For more [detail](../advanced/INAV-Remote-Management-Control-and-Telemetry.md#follow-me-gcs-nav).
 
 ## GPS loss during navigation
 Loss of GPS during navigation will have the following affect on the different modes:
@@ -271,7 +271,7 @@ Loss of GPS during navigation will have the following affect on the different mo
 ## Emergency Landing
 An emergency landing will be triggered during WP and RTH modes if navigation sensors fail or in the case of RTH if the craft heads off in the wrong direction.
 
-It is also possible to manually trigger an emergency landing at any time using [MULTIFUNCTION](./Modes.md#multi-function) mode or by using [POSHOLD](./Navigation-modes.md#nav-poshold---position-hold) mode. To trigger using POSHOLD mode rapidly toggle the mode ON/OFF at least 5 times. Repeat this action to cancel the emergency landing once started.
+It is also possible to manually trigger an emergency landing at any time using [MULTIFUNCTION](./Modes.md#multi-function) mode or by using [POSHOLD](#nav-poshold---position-hold) mode. To trigger using POSHOLD mode rapidly toggle the mode ON/OFF at least 5 times. Repeat this action to cancel the emergency landing once started.
 
 ## Mode switch diagram
 
