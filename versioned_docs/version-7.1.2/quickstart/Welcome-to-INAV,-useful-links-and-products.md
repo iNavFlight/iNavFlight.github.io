@@ -77,6 +77,6 @@ https://github.com/iNavFlight/inav/wiki/Fixed-Wing-Guide
 * [ViFly ShortSaver 2](https://inavflight.com/shop/s/bg/1788341)
 * [ViFly Finer buzzer](https://inavflight.com/shop/s/bg/1329066)
 
-You can get more suggestions following this [link](./Welcome-to-INAV-useful-links-and-products.md) too.
+You can get more suggestions following this [link](./Welcome-to-INAV,-useful-links-and-products.md) too.
 
 _Thanks, and happy flying!_

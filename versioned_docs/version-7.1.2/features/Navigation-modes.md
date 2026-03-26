@@ -258,7 +258,7 @@ So it's not a flight mode itself, and needs to be combined with other flight mod
 
 In order to let the GCS have full control over the aircraft, e.g. 'follow me', the following modes must be activated: `NAV POSHOLD` with `GCS_NAV`. In order to update the home position, no other mode is required.
 
-For more [detail](../advanced/INAV-Remote-Management-Control-and-Telemetry.md#follow-me-gcs-nav).
+For more [detail](../advanced/INAV-Remote-Management,-Control-and-Telemetry.md#follow-me-gcs-nav).
 
 ## GPS loss during navigation
 Loss of GPS during navigation will have the following affect on the different modes:
