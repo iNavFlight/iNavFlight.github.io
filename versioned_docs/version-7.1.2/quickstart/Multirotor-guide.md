@@ -37,7 +37,7 @@ You can use RX stick combination to trim the quadcopter: [Controls](https://gith
 Having a good compass reading is **crucial** for navigation function to work correctly.
 
 ## 6. Setup and verify failsafe on TX and INAV
-[Guide for setting up failsafe](../features/Failsafe.md)
+[Guide for setting up failsafe](../features/Failsafe.md#setting-up-failsafe-for-rth)
 
 ## 7. Determine and set hover throttle
 To let the altitude hold controller work correctly, you need to input your hover throttle (the throttle you need to apply to make the multirotor hover) into the **nav_mc_hover_thr** CLI variable or just set it via the configurator configuration tab.
