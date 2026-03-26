@@ -1,5 +1,5 @@
 ---
-title: "Howto: CC3D Flight Controller, MinimOSD , Telemetry and GPS for Fixed Wing"
+title: "Howto: CC3D Flight Controller, MinimOSD, GPS and LTM Telemetry for Fixed Wing"
 ---
 
 ## HOWTO setup iNAV for fixed wing
@@ -20,6 +20,8 @@ Port settings
 Configuration
 
 Failsafe
+
+Telemetry (LTM)
 
 Transmitter setup
 
@@ -52,10 +54,12 @@ OSD setup
 
 ## 3. Flashing iNAV firmware to CC3D.
 First you need to download a precompiled firmware for the board [here](https://github.com/iNavFlight/inav/releases). Select one of the releases precompiled for CC3D:
-- _inav_x.x.x_CC3D.hex_ for PWM receiver
-- _inav_x.x.x_CC3D_PPM1.hex_ for PPM receiver
+- _inav_x.x.x_CC3D.hex_
+- _inav_x.x.x_CC3D_PPM1.hex_ (for  PPM input  on Pin 3 and RSSI_ADC  on Pin 8. See Board_CC3D document in /docs)
 
-Next, you can check [numerous guides](https://www.youtube.com/watch?v=eClp-YBeSms&t=0s) how to flash CC3D with third party firmware (Attention, you'll need a FTDI adapter for the purpose). Of course you need to specify the previously downloaded firmware for the flashing. For now, if you have servos, it is not advisable to flash with them attached, because there is high frequency sent with default configuration, and you can burn them (the way -for now- is flash, configure plane and then attach servos).
+You only can flash cc3d through FTDI and MainPort (USART1). Not usb, neither FlexiPort.
+
+Next, you can check [numerous guides](https://www.youtube.com/watch?v=eClp-YBeSms&t=0s) how to flash CC3D with third party firmware (Attention, you'll need a FTDI adapter for the purpose). Of course you need to specify the previously downloaded firmware for the flashing.
 
 ## 4. Basic settings
 
@@ -69,7 +73,8 @@ It is done using Ports tab ![Ports tab](http://s8.hostingkartinok.com/uploads/im
 On the Configuration tab in the Mixer group select the Airplane or Flying Wing depending on the airframe you are using.
 ![Airplane](http://s8.hostingkartinok.com/uploads/images/2017/02/cbcafe5219dcc85798b0cf2e2a86fcde.png)
 Do not pay attention on the servo numbering! It will be described later.
-Now you need to make the accelerometer calibration. It is mandatory to fulfill it and it is better to do it before installing the FC into airframe. Please follow the [instructions](../quickstart/Calibration-Tab.md) to perform the 6 point accelerometer calibration.
+Now you need to make the accelerometer calibration. It is mandatory to fulfill it and it is better to do it before installing the FC into airframe. Please follow the [instructions](./Calibration-Tab.md) to perform the 6 point accelerometer calibration.
+Do not activate "enable motor and servo otput" until you are sure the kind of airplane has been selected correctly. Otherwise, servos can receive high frecuencies (as for ESCs) and burn.
 
 ### Flight controller orientation.
 After the calibration is done you may select the sutable board orientation
@@ -90,7 +95,7 @@ Of course, according to the receiver used you need to use the aproppriate firmwa
 
 I usually don't like the motor rotation on arm, so I switch on the "Don't spin motors when armed" feature.
 
-The new INAV firmware has all PWM outputs disable until you switch on the "Enable motor and servo output"
+The new iNAV firmware has all PWM outputs disable until you switch on the "Enable motor and servo output"
 
 Switch on the GPS feature, and select the protocol.
 ![GPS and other settings](http://s8.hostingkartinok.com/uploads/images/2017/02/299f7c79a6293db997088e129a696caf.png)
@@ -116,7 +121,7 @@ On the Modes tab set up the flight modes according to the position of the AUX ch
 
 Check [this link](../features/Failsafe.md) for RTH failsafe
 
-Starting from iNav 1.6 the Filesafe feature is very transparent and clear. For the failsafe to work you'll need:
+Starting from INAV 1.6 the Filesafe feature is very transparent and clear. For the failsafe to work you'll need:
 * Setup the receiver output no signal when your TX is off
 * OR assign the Failsafe mode to one of the channels and force it to trigger when your TX is off
 
@@ -219,9 +224,18 @@ AIRCRAFT/INSTALLATION TYPE settings
 
 `#define FIXEDWING`
 
+TELEMETRY LTM settings
+
+`#define FORCE_MSP`                 // Uncomment to enable use of MSP as well as telemetry. Uses more memory
+
+`#define PROTOCOL_LTM`              // To use LTM protocol instead of MSP
+
+`#define BAUDRATE 9600`
+
+
 Usualy it is enough.
 
-You may enable also rather helpful '#define MAPMODE' under FEATURES that allows you to see the map indication of relative positions of home and aircraft.
+You may enable also rather helpful `#define MAPMODE` under FEATURES that allows you to see the map indication of relative positions of home and aircraft.
 
 Configure config.h allowing LTM if you want to share USART1 with your telemetry system, as explained above.
 

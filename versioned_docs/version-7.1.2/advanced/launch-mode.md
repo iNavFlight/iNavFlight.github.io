@@ -11,7 +11,7 @@ title: Launch Mode
  - [Fixed-Wing Guide](../quickstart/Fixed-Wing-Guide.md)
  - [YouTube video guides](../quickstart/YouTube-video-guides.md)
  - [Setting up Failsafe for RTH](../features/Failsafe.md)
- - [Tested & Suggested Hardware](./Welcome-to-INAV-useful-links-and-products.md)
+ - [Tested & Suggested Hardware](../quickstart/Welcome-to-INAV-useful-links-and-products.md)
  - [Arming is disabled / WPs don't execute](https://github.com/iNavFlight/inav/wiki/%22Something%22-is-disabled----Reasons)
  - [Sensor auto detection and Hardware Failure detection](../features/Sensor-auto-detect-and-hardware-failure-detection.md)
  - [Sensor calibration](../quickstart/Sensor-calibration.md)
@@ -48,4 +48,4 @@ title: Launch Mode
 
 ## Vintage area
 
- - [Howto: CC3D flight controller, minimOSD, GPS and LTM telemetry for fixed wing](./Howto:-CC3D-flight-controller-minimOSD-GPS-and-LTM-telemetry-for-fixed-wing.md)
+ - [Howto: CC3D flight controller, minimOSD, GPS and LTM telemetry for fixed wing](../quickstart/Howto:-CC3D-flight-controller-minimOSD-GPS-and-LTM-telemetry-for-fixed-wing.md)
