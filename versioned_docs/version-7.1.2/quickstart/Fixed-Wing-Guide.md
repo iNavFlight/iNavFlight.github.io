@@ -33,7 +33,7 @@ Some of the most popular flight controllers for fixed wing are:
 
 The image below shows the standard wiring for both a flying wing and for a normal fixed wing model with ailerons, elevator & rudder. You connect each servo to the corresponding PWM output on your flight controller.
 
-**Note:** If you are using INAV with a Mini Talon you'll need a [Custom Mix](../advanced/Custom-mixes-for-exotic-setups.md#v-tail-fixed-wing) so that the servos move correctly or if using a Skyhunter (Nano, Micro, Mini & full sized) then there is also a custom mix available [here](../advanced/Custom-mixes-for-exotic-setups.md#skyhunter-nano-no-rudder).
+**Note:** If you are using INAV with a Mini Talon you'll need a [Custom Mix](../advanced/Custom-mixes-for-exotic-setups.md#v-tail-fixed-wing) so that the servos move correctly or if using a Skyhunter (Nano, Micro, Mini & full sized) then there is also a custom mix available [here](../advanced/Custom-mixes-for-exotic-setups.md#skyhunter-nano-no-rudder---172-onwards).
 
 <img src="/img/content/d7ffbef4-3f92-11e7-8997-242fa990d50c.png"/>
 
