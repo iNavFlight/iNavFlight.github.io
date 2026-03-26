@@ -224,7 +224,7 @@ Only when you're content that the compass reads correctly for all throttle setti
 
  * INAV does provide an automatic declination setting, based on GNSS coordinates, which is enabled by default `inav_auto_mag_decl = ON`. But if you want to change magnetic declination manually `set inav_auto_mag_decl = OFF`. You have to set correct declination of your specific location, which can be found here: www.magnetic-declination.com. If your magnetic declination readings are e.g. +3° 34' , the value entered in the INAV configurator is 3.34 (3,34 in some locales). In the CLI, the same effect would be `set mag_declination = 334`. For west declination, use a minus value, e.g. for 1° 32' W, `set mag_declination = -132`. In all cases (both CLI and GUI), the least significant digits are **minutes**, not decimal degrees.
 
-* Calibrate your compass according to [compass calibration](./Sensor-calibration.md#compass-calibration)
+* Calibrate your compass according to [compass calibration](../advanced/Calibration-Tab.md#compass-calibration)
 
 
 Some FC boards may not provide 4.5V power on USB supply. In order to power the GPS it is necessary to connect the battery or use another power source (a 4.5V source may be powered by USB). The onboard 3.3V will be powered by USB, but may not provide adequate voltage, as the GPS regulator typically requires 3.6V minimum.
@@ -258,7 +258,7 @@ If it is the first time you have connected the GNSS unit, then it can take sever
 
 
  * Inav since 1.5 version and newer uses default automatic magnetic declination, if your on old verion or want to change magnetic declination manually you have to set correct declination of your specific location, which can be found here: www.magnetic-declination.com. If your magnetic declination readings are e.g. +3° 34' , the value entered in the INAV configurator is 3.34 (3,34 in some locales). In the CLI, the same effect would be `set mag_declination = 334`. For west declination, use a minus value, e.g. for 1° 32' W, `set mag_declination = -132`. In all cases (both CLI and GUI), the least significant digits are **minutes**, not decimal degrees.
- * Calibrate your compass according to [compass calibration](./Sensor-calibration.md#compass-calibration)
+ * Calibrate your compass according to [compass calibration](../advanced/Calibration-Tab.md#compass-calibration)
 
 
 ## SBAS
@@ -281,22 +281,6 @@ If you use a regional specific setting you may achieve a faster GPS lock than us
 
 This setting only works when `gps_auto_config= ON`
 
-## AssistNow Online/Offline
-
-INAV 8.0 adds support for AssitNow Online and AssistNow Offline GPS assistance services, which is a proprietary A-GNSS service that can reduce Time To First Fix (TTFF) but requires access to the internet to fetch data. AssistNow Online data is valid for a few hours, while AssistNow Offline data can be valid for weeks. It can be specially beneficial for new GPS units and for units without flash or battery backed ram (BBR).
-
-In order to use the service, you have to create a thingstream account and register applications to use AssistNow Online and Offline service. The process is described here: https://developer.thingstream.io/guides/location-services/assistnow-getting-started-guide
-
-Once you have your AssitNow service token, you need to configure INAV Configurator to use it, by clicking on the gear cog on the top right of the Configurator window.
-![image](https://github.com/iNavFlight/inav/assets/23555060/1b0baf83-2306-4e19-a321-110ba480a9aa)
-
-Once INAV Configurator has your token, you can use the buttons on the bottom of the GPS tab to upload AssistNow data to your GPS unit.
-
-![image](https://github.com/iNavFlight/inav/assets/23555060/2bd2a160-5756-4f4e-8550-04962b19acaf)
-
-AssistNow Online data requires an active internet connection, while AssistNow Offline will cache the data for 3 days, and will not need internet connection, unless the data is expired.
-
-If you have internet access, it is recommended to use both AssistNow Online and Offline services.
 
 ## Issues
 - **`X!`** in the OSD `GPS Satellites` field indicates the flight controller isn't receiving a valid data signal from the GPS.

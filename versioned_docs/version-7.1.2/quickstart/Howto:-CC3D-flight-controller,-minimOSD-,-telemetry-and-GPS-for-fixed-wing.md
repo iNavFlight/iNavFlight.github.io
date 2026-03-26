@@ -69,7 +69,7 @@ It is done using Ports tab ![Ports tab](http://s8.hostingkartinok.com/uploads/im
 On the Configuration tab in the Mixer group select the Airplane or Flying Wing depending on the airframe you are using.
 ![Airplane](http://s8.hostingkartinok.com/uploads/images/2017/02/cbcafe5219dcc85798b0cf2e2a86fcde.png)
 Do not pay attention on the servo numbering! It will be described later.
-Now you need to make the accelerometer calibration. It is mandatory to fulfill it and it is better to do it before installing the FC into airframe. Please follow the [instructions](./Sensor-calibration.md) to perform the 6 point accelerometer calibration.
+Now you need to make the accelerometer calibration. It is mandatory to fulfill it and it is better to do it before installing the FC into airframe. Please follow the [instructions](../advanced/Calibration-Tab.md) to perform the 6 point accelerometer calibration.
 
 ### Flight controller orientation.
 After the calibration is done you may select the sutable board orientation

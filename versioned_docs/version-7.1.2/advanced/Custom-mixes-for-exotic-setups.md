@@ -164,7 +164,7 @@ smix 6 6 8 -100 0         # servo 6 takes RC AUX 1 (camera yaw)
 smix 7 7 9 -100 0         # servo 7 takes RC AUX 2 (drop bomb :-))
 ```
 
-## Skyhunter Nano (no rudder) - 1.7.2 onwards
+## Skyhunter Nano (no rudder)
 
 ```
 mmix reset

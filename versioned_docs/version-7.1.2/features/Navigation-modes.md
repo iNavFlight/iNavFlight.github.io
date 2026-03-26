@@ -16,7 +16,7 @@ This page lists and explains all the different navigational flight modes of INAV
 - [GCS NAV - Ground control station](#gcs_nav---ground-control-station)
 
 For safety reasons, INAV’s navigation modes can be activated only if:
-- ACC and MAG (multirotor only) are [calibrated](../quickstart/Sensor-calibration.md) properly
+- ACC and MAG (multirotor only) are [calibrated](../advanced/Calibration-Tab.md) properly
 - a valid 3D GPS fix is available
 - a valid altitude source is available
 - the FC is armed
@@ -198,7 +198,7 @@ RTH will attempt to bring copter/plane to launch position. Launch position is de
 
 With default settings RTH will land immediately if you are closer than 5 meters from launch position. If further away it will make sure to have at least 10 meters of altitude, then start going home at 3m/s, and land. It will disarm itself if so configured, otherwise you will have to manually disarm once on the ground.
 
-There are many different modes for Altitude, see the [RTH mode page](./Navigation-Mode:-Return-to-Home.md#rth-altitude-control-modes) for details.
+There are many different modes for Altitude, see the [RTH mode page](./Navigation-Mode:-Return-to-Home.md) for details.
 
 Activated by **RTH** flight mode.
 

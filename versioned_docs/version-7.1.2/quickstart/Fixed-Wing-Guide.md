@@ -25,7 +25,7 @@ Some of the most popular flight controllers for fixed wing are:
 
 * Flash the latest version of INAV using the [INAV Configurator](https://github.com/iNavFlight/inav-configurator/releases)
 
-* Do an entire [sensor calibration](./Sensor-calibration.md). Level should be the angle of the plane itself when flying straight. **Do not skip this step**.
+* Do an entire [sensor calibration](../advanced/Calibration-Tab.md). Level should be the angle of the plane itself when flying straight. **Do not skip this step**.
 
 * Select a preset from the INAV presets tab that fits your aircraft the best, then press "Save & Reboot"
 
@@ -141,7 +141,7 @@ At this point everything should work as expected.
 
 * Use Airmode mode to get full stabilization and servo throw with no throttle applied.
 
-* [Setting up failsafe with return to home.](../features/Failsafe.md#setting-up-failsafe-with-return-to-home)
+* [Setting up failsafe with return to home.](../features/Failsafe.md#setting-up-failsafe-for-rth)
 
 * If your compass is not 100% properly setup just disable it instead. **A calibrated compass can cause orientation drift during flight that may not show up in the configurator** (especially built-in ones on your FC). Really consider disabling it unless you need it. INAV uses GPS heading normally, Only on ground before GPS speed has been high enough or if error between GPS heading and compass heading exceed 60deg will it use compass heading
 
@@ -153,7 +153,7 @@ At this point everything should work as expected.
 
 * Adjust ``set roll_rate`` and ``set pitch_rate`` to the flight characteristics of your plane. For a race wing values like ``set roll_rate = 36`` and ``set pitch_rate = 18`` are a good starting point.
 
-* Set your [RTH mode](../features/Navigation-modes.md#rth-altitude-control-modes) to your liking
+* Set your [RTH mode](../features/Navigation-modes.md#rth---return-to-home) to your liking
 
 * Increase ``set nav_fw_bank_angle`` for tighter turns.
 
@@ -167,9 +167,9 @@ At this point everything should work as expected.
     * Enable `Angle` / `Horizon` mode and verify the control surfaces moves correctly when moving aircraft by hand and by sticks on TX
 
 * Arm and launch your aircraft using prefered mode, example `manual` for the maiden flight launch.
-    * If airplane is not flying leveled when in self leveling mode like `Horizon` you need to trim your [board aligment](./Sensor-calibration.md#board-orientation-and-level-calibration)
-    * If airplane flies leveled, do an [Servo Autotrim](../features/Modes.md#servo-autotrim)
-    * Tune your PIFF values, either manually or with [AUTOTUNE](../features/Modes.md#autotune)
+    * If airplane is not flying leveled when in self leveling mode like `Horizon` you need to trim your [board aligment](../advanced/Calibration-Tab.md#board-orientation-and-level-calibration)
+    * If airplane flies leveled, do an [Servo Autotrim](../features/Modes.md#servo-autotrim-fw)
+    * Tune your PIFF values, either manually or with [AUTOTUNE](../features/Modes.md#autotune-fw)
 
 * For GPS features
     * Test `NAV ALTHOLD` and see that it holds altitude.

@@ -133,7 +133,7 @@ A number of the WP types (JUMP, SET_POI, SET_HEAD, RTH) act as modifiers to the 
 ### JUMP
 JUMP facilitates adding loop to mission, the first parameter is the WP to jump to, and the second parameter is the number of times the JUMP is executed. A parameter2 value of `-1` means JUMP indefinitely (i.e. the pilot must eventually manually abort the mission and take control). For Multiwii, the jump target (parameter 1) must be prior to the jump WP, for INAV, forward and backward jumps are permitted. In general, forward jumps are less useful and will usually need a backward jump to be useful.
 
-INAV validates JUMP WPs prior to arming; the following conditions will cause a "Navigation Unsafe" [arming blocker](https://github.com/iNavFlight/inav/wiki/%22Something%22-is-disabled----Reasons/_edit).
+INAV validates JUMP WPs prior to arming; the following conditions will cause a "Navigation Unsafe" [arming blocker](https://github.com/iNavFlight/inav/wiki/%22Something%22-is-disabled----Reasons).
 
 * First item can't be JUMP (can't calculate 1st WP distance, impossible for backward jumps)
 * Can't jump to immediately adjacent WPs (pointless)
