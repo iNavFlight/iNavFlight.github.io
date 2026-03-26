@@ -25,9 +25,6 @@ const config: Config = {
   organizationName: "iNavFlight", // Usually your GitHub org/user name.
   projectName: "iNavFlight.github.io", // Usually your repo name.
 
-  // "warn" rather than "throw": versioned docs naturally accumulate broken links
-  // as pages are renamed/reorganized across INAV releases. Broken links are
-  // logged during build so they can be addressed incrementally.
   onBrokenLinks: "warn",
   // onBrokenMarkdownLinks: "warn", #deprecated comment out for now
 
@@ -69,26 +66,24 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/iNavFlight/iNavFlight.github.io/tree/main/",
+            "https://github.com/iNavFlight/iNavFlight.github.io/tree/master/",
         },
         blog: false,
-        /*
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ["rss", "atom"],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/iNavFlight/iNavFlight.github.io/tree/main/",
-          // Useful options to enforce blogging best practices
-          onInlineTags: "warn",
-          onInlineAuthors: "warn",
-          onUntruncatedBlogPosts: "warn",
-        },
-        */
+        // blog: {
+        //   showReadingTime: true,
+        //   feedOptions: {
+        //     type: ["rss", "atom"],
+        //     xslt: true,
+        //   },
+        //   // Please change this to your repo.
+        //   // Remove this to remove the "edit this page" links.
+        //   editUrl:
+        //     "https://github.com/iNavFlight/iNavFlight.github.io/tree/master/",
+        //   // Useful options to enforce blogging best practices
+        //   onInlineTags: "warn",
+        //   onInlineAuthors: "warn",
+        //   onUntruncatedBlogPosts: "warn",
+        // },
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -136,6 +131,7 @@ const config: Config = {
           label: "Download",
           position: "left",
         },
+        // { to: "/blog", label: "Blog", position: "left" },
         {
           to: "/about",
           label: "About",
@@ -196,6 +192,10 @@ const config: Config = {
         {
           title: "More",
           items: [
+            // {
+            //   label: "Blog",
+            //   to: "/blog",
+            // },
             {
               label: "GitHub",
               href: "https://github.com/iNavFlight/inav",

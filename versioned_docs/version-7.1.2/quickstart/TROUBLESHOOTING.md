@@ -1,5 +1,5 @@
 ---
-title: TROUBLESHOOTING
+title: Troubleshooting
 ---
 
 ## UAV won't arm
@@ -16,7 +16,7 @@ If none of the above work, verify in your goggles or CLI "status" command the ca
 
 ## POS HOLD drifting
 (moving in circle a.k.a Toilet bowling or running away)
-1. SETTINGS: go inside configuration and verify that your MAG alignment is [set properly](./GPS--and-Compass-setup.md)
+1. SETTINGS: go inside configuration and verify that your MAG alignment is [set properly](./GPS-and-Compass-setup.md)
 2. CALIBRATION: redo MAG calibration
 3. TEST MAG INSULATION: on the bench, add headings to OSD then props off, connect battery, motor tabs rev up your motors and see in your goggles if the headings changes. If it changes you have bad insulation so move the mag away from your quad's electricals or apply copper tape between mag and main power lines. If you want to test this with flight condition current, fly your quad outside in ACRO, doing punch-through with no yaw movement.
 

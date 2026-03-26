@@ -114,7 +114,7 @@ Note that the INAV developers take backwards compatibility seriously; changing a
 ### Lightweight Telemetry
 
 LTM offers low data rate / low band width / high update rate telemetry.
-Since its introduction to INAV, a number of extension have been added; these, and the original frames, are [documented in the wiki](https://github.com/iNavFlight/inav/wiki/Lightweight-Telemetry-(LTM)), in detail.
+Since its introduction to INAV, a number of extension have been added; these, and the original frames, are [documented in the wiki](./Lightweight-Telemetry-LTM.md), in detail.
 
 * INAV source code. [Telemetry](https://github.com/iNavFlight/inav/blob/master/src/main/telemetry/ltm.c).
 
