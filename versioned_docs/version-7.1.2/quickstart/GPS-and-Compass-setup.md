@@ -224,7 +224,7 @@ Only when you're content that the compass reads correctly for all throttle setti
 
  * INAV does provide an automatic declination setting, based on GNSS coordinates, which is enabled by default `inav_auto_mag_decl = ON`. But if you want to change magnetic declination manually `set inav_auto_mag_decl = OFF`. You have to set correct declination of your specific location, which can be found here: www.magnetic-declination.com. If your magnetic declination readings are e.g. +3° 34' , the value entered in the INAV configurator is 3.34 (3,34 in some locales). In the CLI, the same effect would be `set mag_declination = 334`. For west declination, use a minus value, e.g. for 1° 32' W, `set mag_declination = -132`. In all cases (both CLI and GUI), the least significant digits are **minutes**, not decimal degrees.
 
-* Calibrate your compass according to [compass calibration](../advanced/Calibration-Tab.md#compass-calibration)
+* Calibrate your compass according to [compass calibration](./Calibration-Tab.md#compass-calibration)
 
 
 Some FC boards may not provide 4.5V power on USB supply. In order to power the GPS it is necessary to connect the battery or use another power source (a 4.5V source may be powered by USB). The onboard 3.3V will be powered by USB, but may not provide adequate voltage, as the GPS regulator typically requires 3.6V minimum.
@@ -258,7 +258,7 @@ If it is the first time you have connected the GNSS unit, then it can take sever
 
 
  * Inav since 1.5 version and newer uses default automatic magnetic declination, if your on old verion or want to change magnetic declination manually you have to set correct declination of your specific location, which can be found here: www.magnetic-declination.com. If your magnetic declination readings are e.g. +3° 34' , the value entered in the INAV configurator is 3.34 (3,34 in some locales). In the CLI, the same effect would be `set mag_declination = 334`. For west declination, use a minus value, e.g. for 1° 32' W, `set mag_declination = -132`. In all cases (both CLI and GUI), the least significant digits are **minutes**, not decimal degrees.
- * Calibrate your compass according to [compass calibration](../advanced/Calibration-Tab.md#compass-calibration)
+ * Calibrate your compass according to [compass calibration](./Calibration-Tab.md#compass-calibration)
 
 
 ## SBAS

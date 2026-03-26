@@ -16,7 +16,7 @@ This page lists and explains all the different navigational flight modes of INAV
 - [GCS NAV - Ground control station](#gcs_nav---ground-control-station)
 
 For safety reasons, INAV’s navigation modes can be activated only if:
-- ACC and MAG (multirotor only) are [calibrated](../advanced/Calibration-Tab.md) properly
+- ACC and MAG (multirotor only) are [calibrated](../quickstart/Calibration-Tab.md) properly
 - a valid 3D GPS fix is available
 - a valid altitude source is available
 - the FC is armed

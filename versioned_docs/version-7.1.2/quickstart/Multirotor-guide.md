@@ -10,7 +10,7 @@ title: Multirotor Guide
 
 * Download latest configurator from [here](https://github.com/iNavFlight/inav-configurator/releases)
 * Flash newest INAV with full chip erase option selected
-* Do the advanced 6-point [sensor calibration](../advanced/Calibration-Tab.md)
+* Do the advanced 6-point [sensor calibration](./Calibration-Tab.md)
 * Select your Mixer. Most common ones are already available as presets. For exotic setups, see [Custom mixes for exotic setups](../advanced/Custom-mixes-for-exotic-setups.md#setups-that-can-be-implemented-with-custom-mixer); if you don't do this, you will not see any motors in the motors tab.
 * Be sure the model moves on the configurator as it is moving on the bench. If not, adjust board alignment from the Configuration tab
 * If you have a magnetometer, you may need to attach a battery for magnetometer calibration. Rotate the quadcopter 360 degrees on all 3 axes.

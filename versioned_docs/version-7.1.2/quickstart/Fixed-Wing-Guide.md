@@ -25,7 +25,7 @@ Some of the most popular flight controllers for fixed wing are:
 
 * Flash the latest version of INAV using the [INAV Configurator](https://github.com/iNavFlight/inav-configurator/releases)
 
-* Do an entire [sensor calibration](../advanced/Calibration-Tab.md). Level should be the angle of the plane itself when flying straight. **Do not skip this step**.
+* Do an entire [sensor calibration](./Calibration-Tab.md). Level should be the angle of the plane itself when flying straight. **Do not skip this step**.
 
 * Select a preset from the INAV presets tab that fits your aircraft the best, then press "Save & Reboot"
 
@@ -167,7 +167,7 @@ At this point everything should work as expected.
     * Enable `Angle` / `Horizon` mode and verify the control surfaces moves correctly when moving aircraft by hand and by sticks on TX
 
 * Arm and launch your aircraft using prefered mode, example `manual` for the maiden flight launch.
-    * If airplane is not flying leveled when in self leveling mode like `Horizon` you need to trim your [board aligment](../advanced/Calibration-Tab.md#board-orientation-and-level-calibration)
+    * If airplane is not flying leveled when in self leveling mode like `Horizon` you need to trim your [board aligment](./Calibration-Tab.md#board-orientation-and-level-calibration)
     * If airplane flies leveled, do an [Servo Autotrim](../features/Modes.md#servo-autotrim-fw)
     * Tune your PIFF values, either manually or with [AUTOTUNE](../features/Modes.md#autotune-fw)
 
