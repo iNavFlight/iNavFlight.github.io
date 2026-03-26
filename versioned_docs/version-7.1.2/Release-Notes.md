@@ -111,7 +111,7 @@ If a user does decide to omit the use of a compass for a multirotor, be mindful 
 
 Example [Video](https://www.youtube.com/watch?v=iopZfH-DdTI)
 
-For more details see [here](./quickstart/GPS-and-Compass-setup.md)
+For more details see [here](./quickstart/GPS-and-Compass-setup.md#inav-71-changes)
 
 ## Tailsitter Support for VTOL
 Tailsitter builds are now natively supported to allow proper Board Orientation switching during transition. [Details](https://github.com/iNavFlight/inav/pull/9347)

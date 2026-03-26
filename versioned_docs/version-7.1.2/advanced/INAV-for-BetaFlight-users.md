@@ -23,7 +23,7 @@ Let's then review the differences:
 * The accelerometer and gyroscope calibration is mandatory on INAV, and it’s a 6-step process (different from BetaFlight, which is an optional single-step process). Follow the on-screen instructions and you’ll be fine.
 * For a fully autonomous multirotor (with automatic navigation capabilities like RTH, Poshold and WP Missions). The Flight Controller board should have an onboard barometer sensor. INAV's multicopter navigation altitude precision will suffer without one.
 * Also, you have to cover the barometer sensor with a small piece of open-cell foam, because the wind affects the sensor readings. This is the most common cause of altitude holding problems.
-* Prior to 7.1 release. The GNSS module should be fitted with a magnetometer sensor for best navigation precision. GNSS modules without a mag sensor will work from 7.1 on-wards for copter navigation. [See requirements](../quickstart/GPS-and-Compass-setup.md)
+* Prior to 7.1 release. The GNSS module should be fitted with a magnetometer sensor for best navigation precision. GNSS modules without a mag sensor will work from 7.1 on-wards for copter navigation. [See requirements](../quickstart/GPS-and-Compass-setup.md#inav-71-changes)
 
 * The GPS module should be mounted on a small mast pole to avoid magnetic interference from motors on the compass; 5 or 6 centimeters above motors should be fine.
 
