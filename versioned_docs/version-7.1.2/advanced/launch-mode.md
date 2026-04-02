@@ -15,13 +15,13 @@ title: Launch Mode
  - [Arming is disabled / WPs don't execute](https://github.com/iNavFlight/inav/wiki/%22Something%22-is-disabled----Reasons)
  - [Sensor auto detection and Hardware Failure detection](../features/Sensor-auto-detect-and-hardware-failure-detection.md)
  - [Sensor calibration](../quickstart/Sensor-calibration.md)
- - [GPS and Compass setup](../quickstart/GPS--and-Compass-setup.md)
+ - [GPS and Compass setup](../quickstart/GPS-and-Compass-setup.md)
 
 ## Additional Information
 
  - [INAV Flight Modes](../features/Modes.md)
  - [INAV Navigation Modes](../features/Navigation-modes.md)
- - [INAV Return to Home](../features/Navigation-Mode-Return-to-Home.md)
+ - [INAV Return to Home](../features/Navigation-Mode:-Return-to-Home.md)
  - [INAV Missions / Waypoint flying](../features/iNavFlight-Missions.md)
  - [INAV CLI variables](./iNav-CLI-variables.md)
  - [Upgrading from an older version](../quickstart/Upgrading-from-an-older-version-of-INAV-to-the-current-version.md)
@@ -35,7 +35,7 @@ title: Launch Mode
  - [GPS Failsafe and Glitch Protection](../features/GPS-Failsafe-and-Glitch-Protection.md)
  - [INAV blackbox variables](./INAV-blackbox-variables.md)
  - [INAV MSP frames changelog](./INAV-MSP-frames-changelog.md)
- - [Lightweight Telemetry (LTM)](https://github.com/iNavFlight/inav/wiki/Lightweight-Telemetry-(LTM))
+ - [Lightweight Telemetry (LTM)](./Lightweight-Telemetry-LTM.md)
  - [Waypoint types, usage, examples and MSP messages](./MSP-Navigation-Messages.md)
  - [PID Attenuation and scaling](./PID-Attenuation-and-scaling.md)
  - [Tune INAV PIFF controller for fixedwing](./Tune-INAV-PIFF-controller-for-fixedwing.md)

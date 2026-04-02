@@ -3,7 +3,7 @@ title: Receiver Tab
 ---
 
 ## Introduction
-This guide assumes you have already [connected your Rx to a Serial UART Port on your flight controller and have set the correct port on the ports tab](https://github.com/iNavFlight/inav/wiki/Ports-Tab). The RC Receiver (Rx) in your aircraft conveys the radio control (RC) commands from your RC Transmitter and sends them to your flight controller over a wire connection using a Serial UART Port and using a particular communication protocol. This tab is where you set the protocol of your receiver and make sure it is communicating with INAV.
+This guide assumes you have already [connected your Rx to a Serial UART Port on your flight controller and have set the correct port on the ports tab](./Ports-Tab.md). The RC Receiver (Rx) in your aircraft conveys the radio control (RC) commands from your RC Transmitter and sends them to your flight controller over a wire connection using a Serial UART Port and using a particular communication protocol. This tab is where you set the protocol of your receiver and make sure it is communicating with INAV.
 
 ### Binding
 Be sure to bind your Rx to your RC transmitter. This is a huge troubleshooting step that can save hours of frustration. Check and double check this. You can follow the binding process outlined in the manual for your radio equipment. It may be a blinking light pattern or an indicator on the radio, but you need some way to confirm it is bound every time you turn your radio on. If you have a Spektrum serial receiver, you might have to [set the Spektrum bind in the cli](https://github.com/iNavFlight/inav/blob/master/docs/Spektrum%20bind.md). Without a bind, you receiver may appear dead even though it is connected fine and all the INAV settings are correct.

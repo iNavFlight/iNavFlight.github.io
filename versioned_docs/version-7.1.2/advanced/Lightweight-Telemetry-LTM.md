@@ -18,7 +18,7 @@ The LTM protocol starts with "$T", followed by a function byte, the payload and 
 | -------- | ---- |
 |   0      |   $  |
 |   1      |   T  |
-|   2      |   G/A/S/O/N/X |
+|   2      |   G/A/S/O/N/X/T |
 |   3..n   | n bytes payload |
 |   n + 3  | CRC |
 
@@ -39,11 +39,11 @@ The follow telemetry frames are supported:
 | N | Navigation Frame (INAV extension) | ~4 Hz rate |
 | X | GPS eXended data (INAV extension) | 1 Hz rate |
 
-In addition, LTM was used by NRF24L01 / deviationtx INAV protocol, which defines an additional frame for in-TX tuning. This frame is not transmitted by INAV for telemetry.
+In addition, LTM is used by NRF24L01 / deviationtx INAV protocol, which defines an additional frame for in-TX tuning. This frame is not transmitted for telemetry.
 
 | Function Byte | Usage |
 | ------------- | ----- |
-| T | Tuning frame (radio testing extension) |
+| T | Tuning frame (INAV extension) |
 
 ## GPS Frame (G)
 
@@ -234,6 +234,24 @@ For many telemetry devices, there is direction correlation between the air-speed
 A couple of data samples are available from the [mwptools](https://github.com/stronnag/mwptools) project. [Sample1](https://raw.githubusercontent.com/wiki/stronnag/mwptools/data/ltm_2015-11-08.tar.gz) and [Sample2](https://raw.githubusercontent.com/wiki/stronnag/mwptools/data/mwp_2015-12-12-LTM.tar.gz) include raw dumps, structured data logs and READMEs explaining usage.
 
 ## Other
+
+## Tuning Frame (T)
+
+The payload is 12 bytes. This frame is not transmitted by INAV telemetry.
+
+| Data | Format |
+| ---- | ---- |
+| P-roll | uint8 |
+| I-roll | uint8 |
+| D-roll | uint8 |
+| P-pitch | uint8 |
+| P-pitch | uint8 |
+| I-pitch | uint8 |
+| D-yaw | uint8 |
+| I-yaw | uint8 |
+| rates-roll | uint8 |
+| rates-pitch | uint8 |
+| rates-yaw | uint8 |
 
 ## Checksum Calculation
 

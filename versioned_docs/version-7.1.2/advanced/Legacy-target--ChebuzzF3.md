@@ -2,7 +2,6 @@
 title: Legacy Target    ChebuzzF3
 ---
 
-
 ## Connections
 
 Board orientation.
