@@ -12,7 +12,7 @@ title: Link to YouTube video guides.
 * [How to use presets](https://www.youtube.com/watch?v=tOXe_VHxVLg)
 * [Gyroscope and filtering part 1](https://www.youtube.com/watch?v=Bv5ajMgdsno)
 * [Gyroscope and filtering part 2](https://www.youtube.com/watch?v=G_XxKeLL4-k)
-<!-- * [Gyroscope and filtering part 3](www.youtube.com/watch?v=78uEphLFUUw) -->
+* [Gyroscope and filtering part 3](www.youtube.com/watch?v=78uEphLFUUw)
 * [Gyroscope and filtering part 4](https://www.youtube.com/watch?v=0WTEbQ8hOx4)
 * [INAV Troubleshooting: why INAV is not arming](https://www.youtube.com/watch?v=7MAdgGkBkXs)
 * [INAV Troubleshooting: magnetometer is not working](https://www.youtube.com/watch?v=-zaIE-s8aHQ)
