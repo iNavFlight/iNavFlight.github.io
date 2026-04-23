@@ -117,6 +117,23 @@ const sortContributors = (contributors: Contributor[]) =>
     return b.contributions - a.contributions;
   });
 
+const fetchStaticCache = async (): Promise<{ contributors: Contributor[]; timestamp: number } | null> => {
+  try {
+    const response = await fetch('/contributors-cache.json');
+    if (!response.ok) {
+      return null;
+    }
+    const data = await response.json();
+    if (!data.contributors || !Array.isArray(data.contributors) || !data.generatedAt) {
+      return null;
+    }
+    const timestamp = new Date(data.generatedAt).getTime();
+    return { contributors: data.contributors, timestamp };
+  } catch {
+    return null;
+  }
+};
+
 const Contributors: React.FC = () => {
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,13 +141,6 @@ const Contributors: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const cached = getCache();
-    const shouldRefresh = !cached || isStale(cached.timestamp);
-
-    if (cached) {
-      setContributors(sortContributors(cached.contributors));
-      setLoading(false);
-    }
 
     const fetchContributors = async () => {
       try {
@@ -157,23 +167,46 @@ const Contributors: React.FC = () => {
         if (isMounted) {
           setContributors(sorted);
           setError(null);
-          setLoading(false);
         }
 
         setCache(sorted);
       } catch (err) {
-        if (!cached) {
+        // If fetch fails, keep current data or set error if no data
+        if (contributors.length === 0) {
           setError(err instanceof Error ? err.message : 'Unable to load contributors');
+        }
+      }
+    };
+
+    const loadData = async () => {
+      // First, try static cache
+      const staticData = await fetchStaticCache();
+      if (staticData && isMounted) {
+        setContributors(sortContributors(staticData.contributors));
+        setLoading(false);
+        // If static is stale, try to update with dynamic
+        if (isStale(staticData.timestamp)) {
+          fetchContributors();
+        }
+      } else {
+        // Fallback to localStorage
+        const cached = getCache();
+        if (cached && isMounted) {
+          setContributors(sortContributors(cached.contributors));
+          setLoading(false);
+          // If stale, fetch
+          if (isStale(cached.timestamp)) {
+            fetchContributors();
+          }
+        } else {
+          // No cache, fetch dynamic
+          await fetchContributors();
           setLoading(false);
         }
       }
     };
 
-    if (shouldRefresh) {
-      fetchContributors();
-    } else {
-      setLoading(false);
-    }
+    loadData();
 
     return () => {
       isMounted = false;
