@@ -28,7 +28,7 @@ Note that the following tables only document PWM outputs that have at least a MO
 
 See project [Cli](https://github.com/iNavFlight/inav/blob/master/docs/Cli.md) and [ESC and servo outputs](https://github.com/iNavFlight/inav/blob/master/docs/ESC%20and%20servo%20outputs.md) documentation.
 
-*List generated 2024-11-18 from the [INAV 8.0.0-RC1 branch](https://github.com/iNavFlight/inav/) by [`parse_targets.rb`](assets/parse_targets.rb). Some targets may not be available in official or prior releases.* **E&OE.**
+*List generated 2024-11-18 from the [INAV 8.0.0-RC1 branch](https://github.com/iNavFlight/inav/) by [`parse_targets.rb`](/img/content/parse_targets.rb). Some targets may not be available in official or prior releases.* **E&OE.**
 
 You are strongly advised to check the board documentation as to the suitability of any particular board.
 

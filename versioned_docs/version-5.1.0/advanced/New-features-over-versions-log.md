@@ -96,4 +96,4 @@ Every released version of INAV brings some changes on funcionality that is alrea
 
 ## Enjoy the newer features!
 
-If you have an older version of INAV on your aircraft, upgrade now and enjoy the newer features! We have a guide to help you to do that. [Check it out now](/docs/quickstart/Upgrading-from-an-older-version-of-INAV-to-the-current-version.md)!
+If you have an older version of INAV on your aircraft, upgrade now and enjoy the newer features! We have a guide to help you to do that. [Check it out now](../quickstart/Upgrading-from-an-older-version-of-INAV-to-the-current-version.md)!

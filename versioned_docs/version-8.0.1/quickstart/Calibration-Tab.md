@@ -1,5 +1,5 @@
 ---
-title: Calibration Tab Head
+title: Calibration Tab
 ---
 
 :::info
@@ -54,7 +54,7 @@ Without an accurate heading the drone will not move in the correct direction in 
 
 The magnetometer (_basically a compass_) measures magnetic field strength so it should be placed a**way from any sources of magnetic interference** - power wires, ESCs, motors, beepers, metal parts of the frame, video transmitters, Llamas & so on...
 
-The best way is to place the compass on a mast along with GPS module. When an external compass is used remember to set correct "align_mag", see the [INAV CLI variables](https://github.com/iNavFlight/inav/blob/master/docs/Cli.md) for more information. Compass must be mounted parallel to f/c. If not please follow the guide in [setting-up-the-compass-alignment](./quickstart/GPS-and-Compass-setup.md#setting-up-the-compass-alignment).
+The best way is to place the compass on a mast along with GPS module. When an external compass is used remember to set correct "align_mag", see the [INAV CLI variables](https://github.com/iNavFlight/inav/blob/master/docs/Cli.md) for more information. Compass must be mounted parallel to f/c. If not please follow the guide in [setting-up-the-compass-alignment](../quickstart/GPS-and-Compass-setup.md#setting-up-the-compass-alignment).
 
 When using an external magnetometer 9/10 times you need to physically remove (_remove chip from board or cut a trace_) the internal one if you have on.
 

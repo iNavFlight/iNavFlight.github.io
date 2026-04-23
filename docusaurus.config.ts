@@ -160,11 +160,15 @@ const config: Config = {
       // style: "dark",
       links: [
         {
-          title: "Docs",
+          title: "INAV Extras",
           items: [
             {
-              label: "Documentation",
-              to: "/docs/welcome",
+              label: "Downloads",
+              to: "/download",
+            },
+            {
+              label: "About",
+              to: "/about",
             },
           ],
         },

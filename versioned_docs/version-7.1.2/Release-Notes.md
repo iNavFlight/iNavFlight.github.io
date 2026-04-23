@@ -17,18 +17,6 @@ Please carefully read all of this document for the best possible experience and 
 
 Contact other pilots, share experiences, suggestions and ask for help on:
 
-<table>
-  <tbody>
-<tr>
-<td><img width="48" src="https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" /></td>
-<td><a href="https://discord.gg/peg2hhbYwN" target="_blank">INAV Discord Server</a></td>
-</tr>
-    <tr>
-      <td><img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png" width="48" /></td>
-      <td><a href="https://www.facebook.com/groups/INAVOfficial">INAV Official on Facebook</a></td>
-    </tr>
-  </tbody>
-</table>
 
 ## Important Notes
 
@@ -89,7 +77,7 @@ Please follow the instructions on [this](./quickstart/Upgrading-from-an-older-ve
 
 ## Major changes
 
-## Fixed wing Autoland with landing pattern
+### Fixed wing Autoland with landing pattern
 INAV supports advanced automatic landings for fixed wing aircraft from version 7.1. The procedure is based on landings for man-carrying aircraft, so that safe landings at a specific location are possible. Supported are landings at Safehome after "Return to Home" or at a defined LAND waypoint for missions.
 See: [Fixed Wing Landing.md](https://github.com/Scavanger/inav/blob/73be51b3159a0f2df047f094f7d54ac0ed14f7d0/docs/Fixed%20Wing%20Landing.md)
 
@@ -99,7 +87,7 @@ Plane with no tail: `set nav_wp_radius = 1000`
 
 Plane with tail: `set nav_wp_radius = 800`
 
-## Compass and Barometer changes
+### Compass and Barometer changes
 INAV now relies more heavily on GNSS data for navigation than before. This can provide more security if the Barometer fails, or if the multirotor is suffering from Compass interference. By still allowing it to navigate back to home.
 
 > From the release of INAV 7.1. The use of a compass is no longer mandatory for multirotor navigation as it once was. BUT it is still recommended for the best navigation performance, when it comes to maintaining a fixed position for an extended period of time, without heading drift. e.g. in Poshold. Or taking off and immediately starting a Waypoint mission.
@@ -113,35 +101,35 @@ Example [Video](https://www.youtube.com/watch?v=iopZfH-DdTI)
 
 For more details see [here](./quickstart/GPS-and-Compass-setup.md#inav-71-changes)
 
-## Tailsitter Support for VTOL
+### Tailsitter Support for VTOL
 Tailsitter builds are now natively supported to allow proper Board Orientation switching during transition. [Details](https://github.com/iNavFlight/inav/pull/9347)
 
 ## Other changes
 
-## Updated ICM426xx filtering
+### Updated ICM426xx filtering
 The filtering of the ICM426xx gyros has been updated based on changes made to both Ardupilot and BetaFlight and we expect better performance, when comparing to previous INAV versions.
 
-## OSD Changes
+### OSD Changes
 Users can now customize their own OSD messages, by way of the Programming Framework. [Details](./advanced/OSD-custom-messages.md)
 
 The Artificial Horizon will not properly track the real horizon in the correct way, when the craft is inverted. [Details](https://github.com/iNavFlight/inav/pull/9609)
 
-## New Fixedwing flight mode
+### New Fixedwing flight mode
 The mode is called **Angle Hold**. For more details see [here](./features/Modes.md#angle-hold-fw)
 
-## New targets
+### New targets
 
 * FLYCOLORF7V2
 
 ## CLI
 
-## Changed settings
+### Changed settings
 
 | Name | Description |
 | ---- | ------ |
 | `gps_dyn_model` | Default:  AIR_2G GPS navigation model: Pedestrian, Automotive, Air\<1g, Air\<2g, Air\<4g. Default is AIR_2G. Use pedestrian/Automotive with caution, can cause flyaways with fast flying. |
 
-## New Items
+### New Items
 
 | Name | Description |
 | ---- | ------ |
@@ -158,7 +146,7 @@ The mode is called **Angle Hold**. For more details see [here](./features/Modes.
 | `nav_rth_fs_landing_delay` | If landing is active on Failsafe and this is above 0. The aircraft will hover or loiter for X seconds before performing the landing. If the battery enters the warning or critical levels, the land will proceed. Default = 0 [seconds] Values: 0 - 1800 Default: 0 |
 | `tailsitter_orientation_offset` | Apply a 90 deg pitch offset in sensor aliment for tailsitter flying mode Default: FALSE |
 
-## Removed Items
+### Removed Items
 
 | Name | Description |
 | ---- | ------ |
@@ -169,7 +157,7 @@ The mode is called **Angle Hold**. For more details see [here](./features/Modes.
 
 The list of most important changes is also available in a video form: https://youtu.be/8Q8t_KwlSAQ
 
-## Changelist
+### Changelist
 
 The full list of changes is available [here](https://github.com/iNavFlight/inav/pulls?q=is%3Apr+milestone%3A7.1+is%3Aclosed)
 The full list of INAV Configurator changes is available [here](https://github.com/iNavFlight/inav-configurator/pulls?q=is%3Apr+milestone%3A7.1+is%3Aclosed)
@@ -239,18 +227,6 @@ Please carefully read all of this document for the best possible experience and 
 
 Contact other pilots, share experiences, suggestions and ask for help on:
 
-<table>
-  <tbody>
-<tr>
-<td><img width="48" src="https://discord.com/assets/f9bb9c4af2b9c32a2c5ee0014661546d.png" /></td>
-<td><a href="https://discord.gg/peg2hhbYwN" target="_blank">INAV Discord Server</a></td>
-</tr>
-    <tr>
-      <td><img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png" width="48" /></td>
-      <td><a href="https://www.facebook.com/groups/INAVOfficial">INAV Official on Facebook</a></td>
-    </tr>
-  </tbody>
-</table>
 
 ## Important Notes
 
@@ -264,7 +240,7 @@ Contact other pilots, share experiences, suggestions and ask for help on:
 
 ## Upgrading from a previous release
 
-## Upgrading from INAV 6 and 6.1
+### Upgrading from INAV 6 and 6.1
 
 1. Download and install the new [INAV Configurator 7](https://github.com/iNavFlight/inav-configurator/releases)
 1. Save to a file the current _diff all_ from the CLI.
@@ -274,13 +250,13 @@ Contact other pilots, share experiences, suggestions and ask for help on:
 1. There are many new, changed, and removed settings. Check carefully that the settings are correct and fix any unrecognized or out-of-range items from the saved configuration.
 1. You should be ready, explore new 7.0 features, and enjoy!
 
-## Upgrading from older versions
+### Upgrading from older versions
 
 Please follow the instructions on [this](./quickstart/Upgrading-from-an-older-version-of-INAV-to-the-current-version.md) page.
 
 ## Major changes
 
-## Flexible motor and servo output allocation
+### Flexible motor and servo output allocation
 
 INAV now was a function that allows to flexibly assign functions to PWM outputs directly from INAV Configurator.
 Specific function `AUTO`, `MOTORS` or `SERVOS` can be assigned to each Timer Group. Then, all outputs from this group will perform this function.
@@ -292,13 +268,13 @@ Bear in mind:
 * In some rare cases, output assignment might be different than in INAV 6. **This makes it even more important to remove your props and double check your outputs before you power your flight controller with batteries for the first time after applying your old settings or enabling outputs.**
 * It is not possible to assign function to individual outputs. It's a hardware, not software limitation.
 
-## Mixer profiles and VTOL support
+### Mixer profiles and VTOL support
 
 This has been a frequent request since PNP VTOL models started becoming more common.
 
 Read more in [Mixer Profile INAV docs](https://github.com/iNavFlight/inav/blob/master/docs/MixerProfile.md) and [VTOL INAV docs](https://github.com/iNavFlight/inav/blob/master/docs/VTOL.md)
 
-## Ez Tune
+### Ez Tune
 
 The **Ez Tune** is a simplified tuning framework similar to Betalight's Simplified Slider Tuning. Instead of setting each PID controller gain, rate, and filter setting separately, Pilot is presented with 8 sliders for:
 
@@ -319,30 +295,30 @@ Read the description in Configurator's Ez Tune tab on what each setting does and
 
 More on the topic of **Ez Tune** can be found [here](https://youtu.be/94foP_mxBLk)
 
-## In-flight Emergency Rearm
+### In-flight Emergency Rearm
 
 With INAV 7.0 came the ability to **Emergency Rearm**. This allows you to rearm in flight when you accidentally disarm. You need to do this within 5 seconds of disarming. Which sounds short, but is actually a pretty long time. Emergency Rearm can be used after a launch and while the aircraft still believes it's flying. It bypasses safety checks (including the throttle position) and doesn't trigger auto launch. Multirotors will also briefly switch to Angle to stabilise and level the flight. You can read all about it at [https://github.com/iNavFlight/inav/pull/9254](https://github.com/iNavFlight/inav/pull/9254?fbclid=IwAR2MDYh2PSmDsxgc58qjcDcNLkOQyzvltO6J4vDPs5ISQsr4jFwQX2h2VzE)
 
-## Timer DMA Burst
+### Timer DMA Burst
 
 INAV 7 adds the DMA Burst mode to selected target as ultimately fixes the problem of DSHOT protocol not working on some boards. Pilots do not have to take any actions, DSHOT is just available on previously affected flight controllers. This applies to:
 
 * Matek F405 TE
 * SpeedyBee F405 V3
 
-## JETI EXBUS fixed
+### JETI EXBUS fixed
 
 The JETI EXBUS protocol should now not hang the flight controller during operation. The issue was originally fixed in https://github.com/betaflight/betaflight/pull/13130 . Thank you @SteveCEvans and @klutvott123
 
-## Multirotor Cruise Mode
+### Multirotor Cruise Mode
 
 The Cruise Mode for Multirotors allows pilots to let go the radio sticks while UAV flies on a predefined course with predefined speed. Just like with  regular PosHold, Throttle stick sets the altitude and course, while the pitch stick is used to set the horizontal speed. When released INAV will hold set speed, altitude, and course. More information available in here https://youtu.be/4pgDxexuSnU
 
-## NMEA Protocol no longer available
+### NMEA Protocol no longer available
 
 As mentioned in the `Important Notes` section, INAV 7 no longer supports the GPS NMEA protocol. All modern GPS module support one of the UBLOX protocols and as a result pilots must switch to either `UBLOX` or `UBLOX7` protocol.
 
-## GPS Improvements
+### GPS Improvements
 
 A number of improvements have been made to GPS support in INAV 7.
 
@@ -352,7 +328,7 @@ M10 GPS units will now default to 10Hz, like M8 units and a new cli setting has 
 
 ![INAV GPS Improvements](/img/content/inav_gps_improvements.png)
 
-## MSP VTX support
+### MSP VTX support
 
 INAV now support MSP VTX when using MSP DisplayPort OSD.
 
@@ -360,7 +336,7 @@ Now it is possible to change VTX power levels and channels via INAV's OSD menu o
 
 If you MSP DisplayPort OSD is working, no extra configuration is needed.
 
-## Linear Descent RTH mode changed
+### Linear Descent RTH mode changed
 
 `AT_LEAST_LINEAR_DESCENT` is no longer a method for RTH. It has been replaced with a more flexible linear descent option that will work with any RTH method. If previously using `AT_LEAST_LINEAR_DESCENT`, you should now just use `AT_LEAST` as the RTH type. Linear Descent is now a separate option that can be used with any other RTH method. To make this possible, the target altitude of the descent is now the `nav_rth_home_altitude`. In some cases, if flying below the home position, this will work as a linear ascent.
 
@@ -370,7 +346,7 @@ These options are available in Configurator.
 
 See the [Navigation Mode: Return to Home wiki](./features/Navigation-Mode:-Return-to-Home.md#linear-descent) for more details.
 
-## Pilot Logos
+### Pilot Logos
 
 You can now have custom pilot logos on your OSD and arming screen (HD Only). You will need to create a custom font with your logos to show them on screen. The OSD logo is a 3x1 character symbol. This can be used with both analogue and HD. The arming screen logo is a 10x4 character image, and only works with HD systems.
 
@@ -383,12 +359,12 @@ More details are available in the [OSD Document](https://github.com/iNavFlight/i
 * 24 channels available for Jeti systems (not available with F411 or F722 flight controllers).
 * Virtual pitot is enabled by default.
 
-## Other removed functions
+### Other removed functions
 
 * FrSky D-series telemetry
 * `output_mode` setting that allows to reassign all PWM outputs to either MOTORS or SERVOS
 
-## New targets
+### New targets
 
 * SDmodel H7V1
 * Matek H743HD
@@ -404,7 +380,7 @@ More details are available in the [OSD Document](https://github.com/iNavFlight/i
 
 ## CLI
 
-## Changed settings
+### Changed settings
 
 | Name | Description |
 | ---- | ------ |
@@ -413,7 +389,7 @@ More details are available in the [OSD Document](https://github.com/iNavFlight/i
 | nav_rth_alt_mode | Removed: `AT_LEAST_LINEAR_DESCENT` |
 | pitot_hardware | New: `DLVR-L10D` |
 
-## New Items
+### New Items
 
 | Name | Description |
 | ---- | ------ |
@@ -453,7 +429,7 @@ More details are available in the [OSD Document](https://github.com/iNavFlight/i
 | pid_iterm_limit_percent | Limits max/min I-term value in stabilization PID controller. It solves the problem of servo saturation before take-off/throwing the airplane into the air. Or multirotors with low authority. By default, error accumulated in I-term can not exceed 33% of total pid throw (around 165us on deafult pidsum_limit of pitch/roll). Set 0 to disable completely. Values: 0 - 200 Default: 33 |
 | tpa_on_yaw | Throttle PID attenuation also reduces influence on YAW for multi-rotor, Should be set to ON for tilting rotors. Default: FALSE |
 
-## Removed Items
+### Removed Items
 
 | Name | Description |
 | ---- | ------ |

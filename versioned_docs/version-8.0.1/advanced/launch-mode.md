@@ -14,18 +14,18 @@ title: Launch Mode
  - [Tested & Suggested Hardware](../quickstart/Welcome-to-INAV,-useful-links-and-products.md)
  - [Arming is disabled / WPs don't execute](https://github.com/iNavFlight/inav/wiki/%22Something%22-is-disabled----Reasons)
  - [Sensor auto detection and Hardware Failure detection](../features/Sensor-auto-detect-and-hardware-failure-detection.md)
- - [Sensor calibration](../quickstart/Sensor-calibration.md)
- - [GPS and Compass setup](../quickstart/GPS--and-Compass-setup.md)
+ - [Sensor calibration](../quickstart/Calibration-Tab.md)
+ - [GPS and Compass setup](../quickstart/GPS-and-Compass-setup.md)
 
 # Additional Information
 
  - [INAV Flight Modes](../features/Modes.md)
  - [INAV Navigation Modes](../features/Navigation-modes.md)
- - [INAV Return to Home](../features/Navigation-Mode-Return-to-Home.md)
- - [INAV Missions / Waypoint flying](../features/iNavFlight-Missions.md)
+ - [INAV Return to Home](../features/Navigation-Mode:-Return-to-Home.md)
+ - [INAV Missions / Waypoint flying](../features/INAV-Missions.md)
  - [INAV CLI variables](./iNav-CLI-variables.md)
  - [Upgrading from an older version](../quickstart/Upgrading-from-an-older-version-of-INAV-to-the-current-version.md)
- - [INAV Version History](./New-features-over-versions-log.md)
+ - [INAV Version History](./Older-Release-Notes.md)
  - [Fixed Wing Tuning for INAV 3.0](../legacyinfo/Fixed-Wing-Tuning-for-INAV-3.0.md)
 
 # Additional Links

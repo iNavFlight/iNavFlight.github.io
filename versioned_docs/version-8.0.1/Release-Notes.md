@@ -1,34 +1,26 @@
 ---
-title: Official Release 8.0.0
-slug: 8.0.0
-authors: INAV
+title: INAV 8 Release Notes
+sidebar_position: 2
 ---
 
-# INAV 8.0.0 - Gallant Goshawk
+![INAV 8.0.0 Gallant Goshawk](/img/content/inav_7_falcon.png)
 
-![INAV 8.0.0 Gallant Goshawk](/img/inav_banner.png)
+## Hello and welcome to INAV 8.0.0 "Gallant Goshawk"
 
-# Hello and welcome to INAV 8.0.0 "Gallant Goshawk"
+Please carefully read all of this document for the best possible experience and safety.
 
-Please carefully read the release notes for the best possible experience and safety.
+Contact other pilots, share experiences, suggestions and ask for help on:
 
-:::info
-INAV 8 no longer includes F411 targets as part of the official release.
-:::
 
-:::note
-GPS: `UBLOX7` and `UBLOX` have been merged into a single `UBLOX` option, and units with older firmware are now deprecated. Only M8 and newer will be supported in the future.
-:::
+> INAV 8 no longer includes F411 targets as part of the official release. 
 
-:::warning
-Make sure to remove props and check your motor and servo outputs before powering your upgraded flight controller with a battery for the first time. The changes to enable flexible motor and servo allocation may change what outputs your configuration uses by default.
-:::
+> GPS: ```UBLOX7``` and ```UBLOX``` have been merged into a single ```UBLOX``` option, and units with older firmware are now deprecated. Only M8 and newer will be supported in the future.
 
-{/*  truncate */}
+> Make sure to remove props and check your motor and servo outputs before powering your upgraded flight controller with a battery for the first time. The changes to enable flexible motor and servo allocation may change what outputs your configuration uses by default.
 
 ## Known Issues in 8.0
 
-- **Fixedwing Altitude Velocity controller tuning**. Requiring a more precise Autotune to be conducted. Read [below](https://github.com/iNavFlight/inav/wiki/8.0.0-Release-Notes#fixed-wing-altitude-velocity-controller)
+- None
 
 ## Upgrading from a previous release
 
@@ -44,9 +36,9 @@ Make sure to remove props and check your motor and servo outputs before powering
 
 <a href="https://www.mrd-rc.com/iNav/INAV-8.0-CLI-Update.php" target="_blank">This tool</a> can help migrate your INAV 7.x diff over to INAV 8.0.0. It will take care of the major changes that have been highlighted in these release notes.
 
-### Upgrading from older versions
+## Upgrading from older versions
 
-Please follow the instructions on [this](https://github.com/iNavFlight/inav/wiki/Upgrading-from-an-older-version-of-INAV-to-the-current-version) page.
+Please follow the instructions on [this](./quickstart/Upgrading-from-an-older-version-of-INAV-to-the-current-version.md) page.
 
 ## Highlights
 
@@ -90,7 +82,7 @@ It is now possible to connect an ADSB receiver to your flight controller and get
 
 ### I-Term Lock for Fixed Wing
 
-The Fixed Wing PIDFF Controller was reworked. The PIDs are now attenuated based in the amount of Setpoint (Stick deflection in Acro Mode) for a more "Manual" flight feel during aggressive inputs while keeping the locked in feel of a PID-Assisted flight. This allows the Pilot to have a PID tune with very high P and I values for a locked in flight feel, while keeping a good manual feeling of the plane's flight characteristics, especially when flying slow. Additionally the Attenuation fixes the Bounce-Back caused by the Integral of the PID controller, after sharp roll or pitch inputs. [Details Here](https://github.com/iNavFlight/inav/pull/9905) and [here](https://github.com/iNavFlight/inav/wiki/Tune-INAV-PID%E2%80%90FF-controller-for-fixedwing#fixedwing-i-term-lock)
+The Fixed Wing PIDFF Controller was reworked. The PIDs are now attenuated based in the amount of Setpoint (Stick deflection in Acro Mode) for a more "Manual" flight feel during aggressive inputs while keeping the locked in feel of a PID-Assisted flight. This allows the Pilot to have a PID tune with very high P and I values for a locked in flight feel, while keeping a good manual feeling of the plane's flight characteristics, especially when flying slow. Additionally the Attenuation fixes the Bounce-Back caused by the Integral of the PID controller, after sharp roll or pitch inputs. [Details Here](https://github.com/iNavFlight/inav/pull/9905)
 
 ### U-Blox AssistNow Support in INAV Configurator
 
@@ -129,26 +121,15 @@ There are two possible workaround for the arming issues:
 
 With the added workarounds, setup in INAV should be the same as O3.
 
-### Fixed wing altitude velocity controller
-
-The altitude VELOCITY controller replaces the old POSITION control method. It is still considered somewhat experimental. Being that it requires the `fw_ff_pitch` and `pitch_rate` to be tuned more precisely with [AutoTune](https://github.com/iNavFlight/inav/wiki/Modes#autotune-fw). Or pitch oscillation may occur in modes that hold altitude, with your older DIFF settings.
-
-> [!Tip]
-> Ensure the control surface servo throws are set correctly before you tune the Rates and Feedforwards by the Autotune process.   
-Any adjustments made to the servo Mixer or Output travels after you have tuned the Rates and Feedforwards, will negatively effect performance. Requiring you to run the tuning process again.  
-
-Please also read [here](https://github.com/iNavFlight/inav/wiki/Navigation-PID-tuning-(FW)) for advise on the tuning of this controller. And things that can influence behavior.
-
-Also follow this issue report if required  https://github.com/iNavFlight/inav/pull/9471 
-
 ### Other important changes: 
 
 - Multirotor inverted crash detection https://github.com/iNavFlight/inav/pull/10099
 - Waypoint tracking improvements https://github.com/iNavFlight/inav/pull/10278 (Note usage change for `nav_fw_wp_tracking_accuracy` may require change of setting)
+- Fixed wing altitude velocity control https://github.com/iNavFlight/inav/pull/9471 (see know issues above related to this change)
 
-### Diff breaking changes
+## Diff breaking changes
 
-#### Profile consolidation
+### Profile consolidation
 The `profile` CLI command has been renamed to `control_profile`. When updating from an older version of INAV. You will need to edit your `diff` with this change. For example:
 
 ```
@@ -173,7 +154,7 @@ set fw_ff_pitch = 137
 ...
 ```
 
-#### OSD Custom Elements
+### OSD Custom Elements
 If you have previously used OSD Custom Elements. You will need to update the diff for these, so that they continue to work in the same way. The system has been expanded to allow the use of logic condition results and have more numerical variations. To keep your OSD Custom Elements working, you will need to change the element type IDs, if they are 4, 5, 6, or 7. The table below shows the old and new IDs.
 
 | Numeric format | Old name                                                        | Old ID | New name                                                 | New ID |
@@ -265,7 +246,7 @@ osd_custom_elements 0 3 0 1 0 0 0 0 0 "FLAPS"
 | `nav_fw_manual_climb_rate` | Maximum climb/descent rate firmware is allowed when processing pilot input for ALTHOLD control mode [cm/s] Values: 10 - 2500 Default: 300 |
 | `nav_fw_pos_z_ff` | FF gain of altitude PID controller (Fixedwing) Values: 0 - 255 Default: 10 |
 | `nav_mc_auto_climb_rate` | Maximum climb/descent rate that UAV is allowed to reach during navigation modes. [cm/s] Values: 10 - 2000 Default: 500 |
-| `nav_mc_inverted_crash_detection` | Setting a value > 0 enables inverted crash detection for multirotors. It will auto disarm in situations where the multirotor has crashed inverted on the ground and can't be manually disarmed due to loss of control or for some other reason. When enabled this setting defines the additional number of seconds before disarm beyond a minimum fixed time delay of 3s. Requires a barometer to work. Values: 0 - 15 Default: 0 |
+| `nav_mc_inverted_crash_detection` | Setting a value \> 0 enables inverted crash detection for multirotors. It will auto disarm in situations where the multirotor has crashed inverted on the ground and can't be manually disarmed due to loss of control or for some other reason. When enabled this setting defines the additional number of seconds before disarm beyond a minimum fixed time delay of 3s. Requires a barometer to work. Values: 0 - 15 Default: 0 |
 | `nav_mc_manual_climb_rate` | Maximum climb/descent rate firmware is allowed when processing pilot input for ALTHOLD control mode [cm/s] Values: 10 - 2000 Default: 200 |
 | `osd_adsb_distance_alert` | Distance inside which ADSB data flashes for proximity warning Values: 1 - 64000 Default: 3000 |
 | `osd_adsb_distance_warning` | Distance in meters of ADSB aircraft that is displayed Values: 1 - 64000 Default: 20000 |
@@ -300,7 +281,7 @@ osd_custom_elements 0 3 0 1 0 0 0 0 0 "FLAPS"
 | `pidsum_limit` |  |
 | `pidsum_limit_yaw` |  |
 
-### What's Changed
+## What's Changed
 * GPS Fix estimation (dead reconing, RTH without GPS fix) for fixed wing by @RomanLut in https://github.com/iNavFlight/inav/pull/8347
 * Boards.md: Add link to full list of boards by @sensei-hacker in https://github.com/iNavFlight/inav/pull/9509
 * Dzikuvx 7.1 mergeback 1 by @DzikuVx in https://github.com/iNavFlight/inav/pull/9550
@@ -683,5 +664,4 @@ osd_custom_elements 0 3 0 1 0 0 0 0 0 "FLAPS"
 * @HGLRC-T made their first contribution in https://github.com/iNavFlight/inav/pull/10417
 * @villivateur made their first contribution in https://github.com/iNavFlight/inav/pull/10600
 
-## **Full Changelog**: 
-https://github.com/iNavFlight/inav/compare/7.1.2...8.0.0
+**Full Changelog**: https://github.com/iNavFlight/inav/compare/7.1.2...8.0.0

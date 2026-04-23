@@ -1,8 +1,8 @@
 {
-    "label": "Advanced",
-    "position": 5,
-    "link": {
-      "type": "generated-index",
-      "description": "Advanced configuration"
-    }
+  "label": "Advanced",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Advanced configuration"
   }
+}

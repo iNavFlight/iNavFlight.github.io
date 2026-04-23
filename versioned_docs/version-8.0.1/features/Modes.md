@@ -1,8 +1,9 @@
 ---
 title: Modes
+description: All the modes available
 ---
 
-# Introduction
+## Introduction
 Flight Modes in INAV can be categorized into two groups:
 * **Navigation-Modes** which involve GPS and other positional sensors. Refer to the [Navigation-Modes](./Navigation-modes.md) page for more information.
 * **Non-Navigation-Modes** perform actions that may rely on a sensor like the gyro or no sensor at all. See the mode descriptions below.
@@ -11,9 +12,9 @@ Some modes are only available to certain craft types. This is indicated by:
 * **FW** = Fixed Wing
 * **MC** = Multi-Copter
 
-Scroll down to the [AUXILIARY CONFIGURATION](#AUXILIARY-CONFIGURATION) section for how Modes are assigned to channels on your radio.
+Scroll down to the [AUXILIARY CONFIGURATION](#auxiliary-configuration) section for how Modes are assigned to channels on your radio.
 
-# Non-Navigation Modes Index:
+## Non-Navigation Modes Index:
 
 - [ACRO MODE](#acro-mode) (default mode)
 - [AIR MODE](#air-mode)
@@ -23,14 +24,14 @@ Scroll down to the [AUXILIARY CONFIGURATION](#AUXILIARY-CONFIGURATION) section f
 - [ALTHOLD](#althold)
 - [AUTO LEVEL TRIM](#auto-level-trim-fw) **FW**
 - [AUTOTUNE](#autotune-fw) **FW**
-- [BEEPER](#BEEPER)
-- [BEEPER MUTE](#BEEPER-MUTE)
+- [BEEPER](#beeper)
+- [BEEPER MUTE](#beeper-mute)
 - [BLACKBOX](#blackbox)
 - [CAMERA CONTROL](#camera-control)
-- [CAMSTAB](#CAMSTAB)
+- [CAMSTAB](#camstab)
 - [FAILSAFE](#failsafe)
 - [FLAPERON](#flaperon-fw) **FW**
-- [FPV ANGLE MIX](#FPV-ANGLE-MIX-mc) **MC**
+- [FPV ANGLE MIX](#fpv-angle-mix-mc) **MC**
 - [HEADADJ](#headadj-mc) **MC**
 - [HEADFREE](#headfree-mc) **MC**
 - [HEADING HOLD](#heading-hold)
@@ -55,8 +56,8 @@ Scroll down to the [AUXILIARY CONFIGURATION](#AUXILIARY-CONFIGURATION) section f
 - [TELEMETRY](#telemetry)
 - [TURN ASSIST](#turn-assist)
 - [TURTLE](#turtle-mc) **MC**
-- [USER1 & USER2 & USER3 & USER4](#USER)  (aka PinIO)
-- [WAYPOINT PLANNER](#WP-Planner)
+- [USER1 & USER2 & USER3 & USER4](#user)  (aka PinIO)
+- [WAYPOINT PLANNER](#wp-planner)
 
 ### ACRO MODE
 NOTE: This is **default** flight mode. It is only active when no other mode is active. There is no mode selection for ACRO in the configurator, only an ACRO box that highlights when no other mode is active.
@@ -429,7 +430,7 @@ The four USER selections are generic in nature. But are often used for certain f
 
 This is a Navigation-Mode that allows you to plot a waypoint mission as you fly. See more [details](./Navigation-modes.md#wp-planner---on-the-fly-waypoint-mission-planner)
 
-# AUXILIARY CONFIGURATION
+## AUXILIARY CONFIGURATION
 
 Spare auxiliary receiver channels can be used to enable/disable modes.  Some modes can only be enabled this way.
 

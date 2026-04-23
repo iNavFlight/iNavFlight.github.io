@@ -27,7 +27,7 @@ With the default INAV settings, INAV will configure the ublox GPS for you. There
 
 Also be aware that some of our flight controllers can cause interference with the GPS, causing low satellites, or even no satellites at all. Keep the GPS as far away from the flight controller as possible. Either shield your GPS, or flight controller from any equipment that could cause interference.
 
-You can learn how to setup your GPS unit for use with INAV on [on this page](./GPS--and-Compass-setup.md).
+You can learn how to setup your GPS unit for use with INAV on [on this page](./GPS-and-Compass-setup.md).
 
 ## Notes / Common issues
 
