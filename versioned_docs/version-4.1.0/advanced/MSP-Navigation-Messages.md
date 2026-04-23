@@ -306,7 +306,7 @@ Landing is in progress, check attitude if possible. </td>
 
 The following data are returned from a MSP_NAV_CONFIG message. Values are from multiwii config.h. Values may also be set by MSP_SET_NAV_CONFIG.
 
-<!-- <table>
+{/*  <table>
 <thead>
 <tr class="header">
 <th>Name</th>
@@ -392,7 +392,7 @@ b1 : Baro takeover</td>
 <td>maximum number of waypoints possible (read only)</td>
 </tr>
 </tbody>
-</table> -->
+</table> */}
 
 ### MSP_RADIO
 

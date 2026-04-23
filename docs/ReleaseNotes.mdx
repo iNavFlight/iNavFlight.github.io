@@ -1,0 +1,343 @@
+---
+title: INAV 9 Release Notes
+sidebar_position: 2
+---
+
+![INAV 9.0.0](/img/inav_banner.png)
+
+
+# Hello and welcome to INAV 9.0.0 
+
+Please carefully read all of this document for the best possible experience and safety.
+
+:::note
+Make sure to remove props and check your motor and servo outputs before powering your upgraded flight controller with a battery for the first time. The changes to enable flexible motor and servo allocation may change what outputs your configuration uses by default.
+:::
+
+## Known Issues in 9.0
+
+* Please read INAV Github [issue](https://github.com/iNavFlight/inav/issues) reports for outstanding problems that were not resolved in time for the release.
+
+## Upgrading from a previous release
+
+### Upgrading from INAV 8.0 
+
+1. Download and install the new [INAV Configurator 9.0](https://github.com/iNavFlight/inav-configurator/releases)
+2. Backup configuration with CLI `diff all` command or use the _Diff All_ and _Save to file_ buttons.
+3. Flash INAV 9.0 **WITH** _Full Chip Erase_ option enabled 
+4. Load your 8.0 `Diff` settings in to the CLI. Then take a note or write down the incompatible settings changes marked in RED. 
+5. Then copy your 8.0 `Diff` file and rename it 9.0. And edit the old incompatible settings.
+6. Go to CLI and load your edited INAV 9.0 `Diff`
+7. Done
+
+:::tip
+> **Concerning step 6**.   
+> It can be a safer option to load your `Diff All` settings in two parts if you are using multiple Profiles. e.g. _Control, Mixer or Battery_.   
+>This can be done by copying and loading the `Diff All` text setting from the top, down to the bottom of the `# master` settings category. Then load that into the CLI and press enter. Once it has written, press the _Save Settings_ button.   
+>Wait until it reboots and go back to the CLI tab again, then copy and load the rest of the `Diff All` text file. Starting from the `# Control_profile 1` settings category, down to the bottom. Press enter. Once written, it will save by itself.
+:::
+
+### Diff update tool
+Rather than steps 4 and 5 above. You can try this diff update tool. This is a work in progress. Currently it will try to update version 7 or later diffs to version 8 or later. Just paste your full `diff all` (not `dump`) in to the tool. Select the INAV version you're upgrading to. Then press the button. It will create a new `diff` for you and give you warnings about anything you should check.
+
+[INAV CLI Update Tool](https://mrd-rc.com/iNav/INAV-CLI-Update.php)
+
+### Upgrading from older versions
+
+Please follow the instructions on [this](https://github.com/iNavFlight/inav/wiki/Upgrading-from-an-older-version-of-INAV-to-the-current-version) page.
+
+## Highlights
+
+### Fixedwing airspeed APA and pitch angle enhanced TPA support
+Fixeding aircraft can now use a pitot sensor or virtual airspeed to dynamically adjust the PIDFF gains inflight. This adds the advantage of a tighter stabilization response across the whole flight speed envelope.   
+Full details of setup and tuning can be found [here](https://github.com/iNavFlight/inav/wiki/PID-Attenuation-and-scaling). Under the topics `APA` and `TPA and Pitch angle`.
+
+
+### Minimum ground speed flexibility
+Via the [Programming Framework](https://github.com/iNavFlight/inav/blob/master/docs/Programming%20Framework.md). It allows the user to have more flexibility when flying in higher wind conditions. To ensure the airplane makes headway.   
+In addition, you can program it to dynamically adjust the minimum ground speed according to the Wind direction and Wind speed.     
+More information can be found in this [link](https://github.com/iNavFlight/inav/pull/10720). 
+
+
+### OSD throttle gauge 
+Allows the pilot to see the throttle as a vertical digital gauge.  
+Functional information can be found here in the [PR link](https://github.com/iNavFlight/inav/pull/10725)
+
+### Fixed wing altitude controller
+Changes have been made to improve its operation on a broader range of airframes. One of two methods can be selected to better suited different climb rate conditions.    
+* Altitude Velocity controller `nav_fw_alt_use_position = OFF` (default)    
+* Altitude Position controller `nav_fw_alt_use_position = ON`
+  
+See [here](https://github.com/iNavFlight/inav/wiki/Navigation-PID-tuning-(FW)#altitude-control-methods) for more information. And the _required_ PID tune settings for either control method.
+
+### Position estimator improvements
+Changes to the position estimator are mainly intended to improve issues with Z velocity accuracy but also includes code clean-ups and fixes.   
+There has also been setting changes added with the code alterations. Depending on the sensor data quality. It may be beneficial in some cases to revert your settings back to the old ones, or somewhere in between the two.
+|    Name CLI      | Old | New  |
+|    ----------    | --- | ---- |
+| `w_z_baro_v`     | 0.1 | 0.35 |
+| `inav_w_z_gps_p` | 0.2 | 0.35 |
+| `inav_w_z_gps_v` | 0.1 | 0.35 |
+
+More information directly related to the changes can be found [here](https://github.com/iNavFlight/inav/pull/10818).
+
+
+### Sensor addition
+QMC5883P magnetometer driver
+
+
+## Other changes: 
+* Barometer altitude added to CRSF telemetry.
+* Better Fixed wing flight detection to handle auto disarm on landing. [PR link](https://github.com/iNavFlight/inav/pull/10621)
+* Lulu filter fixes and improvements. [PR Link](https://github.com/iNavFlight/inav/pull/10416)
+* Accelerometer and Barometer temperature compensation for better altitude control - [Calibration](https://github.com/iNavFlight/inav/blob/master/docs/Sensors.md) method and [PR link](https://github.com/iNavFlight/inav/pull/10382).
+* Add flights counter to stats [PR link](https://github.com/iNavFlight/inav/pull/10020)
+* Servo speed filter for tilt-rotor VTOL. [PR link](https://github.com/iNavFlight/inav/pull/10986)
+* Enhance VTOL tilt-rotor support. To assist transition smoothness [PR link](https://github.com/iNavFlight/inav/pull/10996)
+* Better air cushion compensation for multicopters and rangefinder fix. [PR link](https://github.com/iNavFlight/inav/pull/10925) 
+* Improved yaw estimation for magless multicopter operation. [PR link](https://github.com/iNavFlight/inav/pull/11114) - _The default `ahrs_acc_ignore_rate` setting has also been lowered from 20 to 15._
+* Mavlink clean-ups and fixes - [11060](https://github.com/iNavFlight/inav/pull/11060) [11061](https://github.com/iNavFlight/inav/pull/11061) [11062](https://github.com/iNavFlight/inav/pull/11062) 
+* MSP changes - [11146](https://github.com/iNavFlight/inav/pull/11146) [11171](https://github.com/iNavFlight/inav/pull/11171) [11093](https://github.com/iNavFlight/inav/pull/11093) [11032](https://github.com/iNavFlight/inav/pull/11032) [10571](https://github.com/iNavFlight/inav/pull/10571) [11099](https://github.com/iNavFlight/inav/pull/11099)
+* JavaScript support tab for INAV programming framework. [PR link](https://github.com/iNavFlight/inav/pull/11143) [Docs update](https://github.com/iNavFlight/inav/blob/master/docs/Programming%20Framework.md#javascript-based-programming-alternative)
+
+### OSD/CMS changes
+
+|Name | Function|
+| ---- | ------ |
+|OSD_VERTICAL_SPEED_INDICATOR | New name for OSD vario |
+|OSD_ADSB_WARNING             | CMS stick menu         |
+|OSD_ADSB_INFO                | CMS stick menu         |
+|OSD_THROTTLE_GAUGE           | OSD                    |
+|OSD_NAV_MIN_GROUND_SPEED     | OSD                    |
+
+### Font changes
+
+The **Minimum Ground Speed** and  **Throttle Gauge** additions to the OSD require new font symbols. The analogue fonts are up-to-date. However, there may be time needed for this to propagate to the digital systems. For HDZero and Walksnail Avatar fonts should be available soon. However DJI may take longer as they need to update the font built in to their firmware.
+
+> [!TIP]
+> Manufacturers. You can be alerted of changes that may affect your products by subscribing to the `#technical-changes` channel on the [INAV Discord Server](https://discord.com/channels/791437907478577172/1454733421048893605)
+
+## Functions
+
+|Function | Name | Values |
+| ---- | ------ | ------- |
+| Battery | SMARTPORT | `vbat_meter_type` , `current_meter_type` |
+| Programming Framework | Gimbal Sensitivity  | Scales `Operand A` from [`-16` : `15`]
+| Programming Framework | Override Minimum Ground Speed | When active, sets the minimum ground speed to the value specified in `Operand A` [m/s]. Minimum allowed value is set in `nav_min_ground_speed`. Maximum value is `150` |
+| Programming Framework | Minimum Ground Speed [m/s]    | The current minimum ground speed allowed in navigation flight modes |
+| Programming Framework | Horizontal Wind Speed [cm/s]  | Estimated wind speed. If the wind estimator is unavailable or the wind estimation is invalid, -1 is returned |
+| Programming Framework | Wind Direction [deg]          | Estimated wind direction. If the wind estimator is unavailable or the wind estimation is invalid, -1 is returned |
+| Programming Framework | Relative Wind Offset [deg]    | The relative offset between the heading of the aircraft and the heading of the wind. 0 indicates flying directly into a headwing. Negative numbers are a left offset. For example, if -20° is shown, turning right will correct towards 0. If the wind estimator is unavailable or the wind estimation is invalid, 0 is returned |
+
+## CLI
+
+### Incompatible Settings Changes
+
+The first three CLI settings have been renamed or changed in INAV 9.0. When loading an older `diff all`, these will show errors:
+
+### New Settings
+
+| Name | Description |
+| ---- | ------ |
+| [use_control_profile](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#use_control_profile) | Renames old `controlrate_profile` |
+| [mixer_control_profile_linking](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#mixer_control_profile_linking ) | Renames old `mixer_pid_profile_linking` |
+| [osd_pan_servo_range_decadegrees](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#osd_pan_servo_range_decadegrees)| Renames old `osd_pan_servo_pwm2centideg`|
+| [blackbox_arm_control](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#blackbox_arm_control) | Can extend blackbox logging up to 60 seconds after disarming |
+| [acc_temp_correction](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#acc_temp_correction)   |  Accelerometer temperature correction factor to compensate for acceleromter drift |
+| [baro_temp_correction](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#baro_temp_correction) | Baro temperature correction factor to compensate for Baro altitude drift |
+| [osd_adsb_warning_style](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#osd_adsb_warning_style) | ADSB warning element style - COMPACT or EXTENDED |
+| [nav_fw_alt_use_position](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_alt_use_position) | Use position for fixed wing altitude control rather than velocity |
+| [mavlink_autopilot_type](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#mavlink_autopilot_type) | Sets the Mavlink telemetry type - GENERIC or ARDUPILOT |
+| [transition_pid_mmix_multiplier_pitch](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#transition_pid_mmix_multiplier_pitch) | Intended to solve pitch coupling in transtion mode on tilting rotor VTOL |
+| [transition_pid_mmix_multiplier_roll]()| intended to solve roll/yaw coupling oscillation in transtion mode on tilting rotor VTOL|
+| [transition_pid_mmix_multiplier_yaw](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#transition_pid_mmix_multiplier_yaw) | Intended to solve yaw/roll coupling oscillation in transtion mode on tilting rotor VTOL |
+| [apa_pow](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#apa_pow) | Sets the strength and speed range of dynamic airspeed PID scaling |
+| [tpa_pitch_compensation](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#tpa_pitch_compensation) | Sets the strength which pitch angle will override the throttle dynamic PID scaling |
+
+## New targets
+* BLUEBERRYF435WING
+* BLUEBERRYF435WING_SD
+* BOTWINGF405 
+* BOTWINGF722
+* BRAHMA_F405
+* BROTHERHOBBYH743
+* BROTHERHOBBYF405V3
+* CORVON743V1
+* CORVON743V1
+* CORVON405V2
+* DAKEFPVF722X8
+* DAKEFPVH743PRO
+* DAKEFPVF435
+* HAPPYMODELF405
+* HUMMINGBIRD_FC305
+* FLYINGRCF4WINGMINI
+* FLYCOLORF4
+* FLYSPARKF4V4
+* FOXEERF405V2
+* JHEMCUF435
+* JHEMF435AIO
+* MICOAIR743AIO
+* ORBITH743
+* ORBITF435
+* ORBITF435_SD
+* RADIOLINKF405
+* RADIOLINKF722 : Add W25Q128 flash chip support
+* SKYSTARSF405V2
+* TBS_LUCID_H7_WING
+* TBS_LUCID_H7_WING_MINI
+* SPEEDYBEEF405WINGV2
+* VANTAC_RF007 : Add new FrSky/Rotorflight Vantac RF007 target with magnetometer support
+* WARPF7
+
+## What's Changed
+* Update Aocodarcf7mini by @dlt2018 in https://github.com/iNavFlight/inav/pull/9312
+* Add a template for new target PR by @mmosca in https://github.com/iNavFlight/inav/pull/9946
+* Add flights counter to stats by @ TransientTetra in https://github.com/iNavFlight/inav/pull/10020
+* Update Buzzer.md by @wchnflr in https://github.com/iNavFlight/inav/pull/10121
+* Added Zerodrag WARP7 by @vishnumda in https://github.com/iNavFlight/inav/pull/10262
+* Enable MSP override build flag by default by @xznhj8129 in https://github.com/iNavFlight/inav/pull/10330
+* Accelerometer and Barometer temperature compensation by @breadoven in https://github.com/iNavFlight/inav/pull/10382
+* Change gimbal sensitivity from programming framework by @error414 in https://github.com/iNavFlight/inav/pull/10405
+* MSP DisplayPort add DJI Native video system by @mmosca in https://github.com/iNavFlight/inav/pull/10440
+* Lulu fixes and improvements by @pjpei in https://github.com/iNavFlight/inav/pull/10416
+* Add new targets: MicoAir743AIO and MicoAir743v2 by @Minderring in https://github.com/iNavFlight/inav/pull/10557
+* MSP command to get radar position of other planes from esp32radar by jeffhendrix in https://github.com/iNavFlight/inav/pull/10571
+* Add new target ORBITF435 by @orbittechnologyx in https://github.com/iNavFlight/inav/pull/10578
+* Update libraries - pre-req for H7A3 by @mmosca in https://github.com/iNavFlight/inav/pull/10593
+* Fixed wing flight detection fix by @breadoven in https://github.com/iNavFlight/inav/pull/10621
+* Matekf405 spi flash blackbox fix by @mmosca in https://github.com/iNavFlight/inav/pull/10630
+* TBS_LUCID_H7: fix gyro2 by @bkleiner in https://github.com/iNavFlight/inav/pull/10678
+* fix LTM attitude (mis-cast) by @stronnag in https://github.com/iNavFlight/inav/pull/10680
+* Enable second dynamic gyro only if primary is enabled by @DzikuVx in https://github.com/iNavFlight/inav/pull/10687
+* Add barometer altitude to CRSF telemetry by @her01n in https://github.com/iNavFlight/inav/pull/10694
+* improve cli status NAV reasons by @stronnag in https://github.com/iNavFlight/inav/pull/10696
+* Updates to Iterm Lock for better readability by @DzikuVx in https://github.com/iNavFlight/inav/pull/10699
+* Add more flexibility for minimum ground speed by @MrD-RC in https://github.com/iNavFlight/inav/pull/10720
+* Update OSD.md by @MrD-RC in https://github.com/iNavFlight/inav/pull/10722
+* Add throttle gauge option to OSD by @MrD-RC in https://github.com/iNavFlight/inav/pull/10725
+* Update VTOL.md by DanielOBenson in [10775](https://github.com/iNavFlight/inav/pull/10775), [10779](https://github.com/iNavFlight/inav/pull/10779), [10780](https://github.com/iNavFlight/inav/pull/10780)
+* fixed crash: Firmware crash when OSD is disabled but MSP Display UART is allocated by @RomanLut in https://github.com/iNavFlight/inav/pull/10792
+* Brother h743 by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10805
+* Add new target: DAKEFPVF722X8 by @ThanYangFPV in https://github.com/iNavFlight/inav/pull/10811
+* Position estimator improvements by @breadoven in https://github.com/iNavFlight/inav/pull/10818
+* Add ADSB to CMS menu by @P-I-Engineer in https://github.com/iNavFlight/inav/pull/10820
+* New target JHEMCUF435 (non-AIO) by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10825
+* Change the spelling error by @shivam-daksh in https://github.com/iNavFlight/inav/pull/10827
+* Docs: LED pin PWM as PINIO by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10831
+* DAKEFPVF722X8: Add UART3 by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10832
+* dmesg: log init messages to RAM until serial init by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10836
+* Add new target CORVON743V1 by @holydust in https://github.com/iNavFlight/inav/pull/10839
+* F435 correct uart->tx_af by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10840
+* New target DAKEFPVH743 by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10843
+* Programming Framework.md - typo by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10861
+* Use Nav max bank angle for multirotor ATTI mode by @breadoven in https://github.com/iNavFlight/inav/pull/10866
+* Fix cardinal OSD icon for DJI by @error414 in https://github.com/iNavFlight/inav/pull/10871
+* Add functions to serial.md by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10880
+* Fix osd.md, add missing OSD_NAV_FW_ALT_CONTROL_RESPONSE by @druckgott in https://github.com/iNavFlight/inav/pull/10882
+* Add support for SKYSTARSF405V2 by @DusKing1 in https://github.com/iNavFlight/inav/pull/10884
+* Add new target ORBITH743 by @orbittechnologyx in https://github.com/iNavFlight/inav/pull/10889
+* Reversible motor fixes by @breadoven in https://github.com/iNavFlight/inav/pull/10890
+* Extend msp_override_mask to 32bits / channels by @stronnag in https://github.com/iNavFlight/inav/pull/10891
+* Removed dead links from the beepers list by @medvedev in https://github.com/iNavFlight/inav/pull/10894
+* Add custom targets for BOTWINGF405 and BOTWINGF722 flight controllers by @PrateekShanker99 in https://github.com/iNavFlight/inav/pull/10895
+* Add new target CORVON405V2 by @holydust in https://github.com/iNavFlight/inav/pull/10897
+* Corrected approach length marker by @b14ckyy in https://github.com/iNavFlight/inav/pull/10899
+* For burst mode dmar, define as DMA_REQUEST_TIMx_UP by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10900
+* Update Bug_report.md by @b14ckyy in https://github.com/iNavFlight/inav/pull/10902
+* Option to use position for fixed wing nav altitude control by @breadoven in https://github.com/iNavFlight/inav/pull/10903
+* Docs: create contributing.md by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10905
+* Nav RTH climb first fix by @breadoven in https://github.com/iNavFlight/inav/pull/10908
+* Add TBS_LUCID_H7_WING by @bkleiner in https://github.com/iNavFlight/inav/pull/10909
+* Add TBS_LUCID_H7_WING_MINI by @bkleiner in https://github.com/iNavFlight/inav/pull/10910
+* LED pin PWM.md: update link to screenshot by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10914
+* Nav position estimator baro air cushion compensation fix by @breadoven in https://github.com/iNavFlight/inav/pull/10925
+* ADSB - Use extended OSD glyphs for dot in numbers and improve aircraft warning by @error414 in https://github.com/iNavFlight/inav/pull/10927
+* Branches clean up : merge docs from master to maintenance-8.x.x by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10932
+* Add New Target: DAKEFPVH743PRO by @ThanYangFPV in https://github.com/iNavFlight/inav/pull/10940
+* Backport #10382 baro temp compensation to maintenance-8.x.x by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10946
+* 8.1 change gimbal sensitivity from programming framework by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10950
+* CADDXF4_AIO_ELRS baro uses i2c2 by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10951
+* 8.1 JH fix matek f405 variants by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10952
+* ADD NEW TARGET HUMMINGBIRD_FC305 by @LYNHQQ in https://github.com/iNavFlight/inav/pull/10954
+* Blackbox logging arm behaviour setting option by @breadoven in https://github.com/iNavFlight/inav/pull/10955
+* Add New Target DAKEFPVF435 by @ThanYangFPV in https://github.com/iNavFlight/inav/pull/10956
+* Create Building in Github Codespace.md by @WizzardDr in https://github.com/iNavFlight/inav/pull/10957
+* Flycolorf4 target by @DzikuVx in https://github.com/iNavFlight/inav/pull/10963
+* Foxeer F405V2 by @DzikuVx in https://github.com/iNavFlight/inav/pull/10964
+* Targets for darkmatter BRAHMA boards by @DzikuVx in https://github.com/iNavFlight/inav/pull/10965
+* Fix changing msp receiver crash by @stronnag in https://github.com/iNavFlight/inav/pull/10971
+* Jh fix gcc15 warnings by @stronnag in https://github.com/iNavFlight/inav/pull/10972
+* SpeedyBeeF405Wing V2 target by @DzikuVx in https://github.com/iNavFlight/inav/pull/10976
+* Fixes Building in Docker by @Lebensgefahr in https://github.com/iNavFlight/inav/pull/10982
+* Better default display i2c bus by @sensei-hacker in https://github.com/iNavFlight/inav/pull/10984
+* Allow servo speed filter carry over on the mixer profile switch by @shota3527 in https://github.com/iNavFlight/inav/pull/10986
+* Fixes for Brahma targets: F405 and F722 by @DzikuVx in https://github.com/iNavFlight/inav/pull/10987
+* Add New Target HAPPYMODELF405 by @githubDLG in https://github.com/iNavFlight/inav/pull/10989
+* Add QMC5883P driver by @BortEngineerDude in https://github.com/iNavFlight/inav/pull/10994
+* Fix some typos by @valeriyvan in https://github.com/iNavFlight/inav/pull/11003
+* Add target RADIOLINKF405 by @radiolinkW in https://github.com/iNavFlight/inav/pull/11006
+* Blackbox servos fix by @breadoven in https://github.com/iNavFlight/inav/pull/11010
+* Added ICM42605 IMU support for SKYSTARSH743HD by @DusKing1 in https://github.com/iNavFlight/inav/pull/11014
+* Fix Mac SITL CI by @Scavanger in https://github.com/iNavFlight/inav/pull/11017
+* DAKEFPVF722 SPL06 support by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11022
+* Lucid_h7: add pc13 for 9v en by @bkleiner in https://github.com/iNavFlight/inav/pull/11023
+* DAKEFPVF722 support for DPS310 by @ThanYangFPV in https://github.com/iNavFlight/inav/pull/11041
+* New feature: SmartPort battery sensor by @functionpointer in https://github.com/iNavFlight/inav/pull/11045
+* Ublox: include array index to set satellites with no signal as unused by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11064
+* Dakefpvf435 by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11066
+* Update (fixed spelling mistakes in the page) GPS_fix_estimation.md by @Fire18Parrot in [11068](https://github.com/iNavFlight/inav/pull/11068) and [11071](https://github.com/iNavFlight/inav/pull/11071)
+* Brotherhobbyf405 v3 - tested correct by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11073
+* Add new target blueberryF435wing by @sunyanmeng963 in https://github.com/iNavFlight/inav/pull/11074
+* Replace "exposition" with "exponential" in Settings.md by @jp39 in https://github.com/iNavFlight/inav/pull/11084
+* Rename numeric vario to vertical speed indicator by @MrD-RC in https://github.com/iNavFlight/inav/pull/11085
+* Fix typo in Control Profiles documentation by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11086
+* Update external mag I2C driver registration for HUMMINGBIRD_FC305 @LYNHQQ in https://github.com/iNavFlight/inav/pull/11090
+* Update CRSF telemetry modes sensor to better reflect INAV modes by @MrD-RC in https://github.com/iNavFlight/inav/pull/11094
+* Update Geofence AUTO mode to GEO by @MrD-RC in https://github.com/iNavFlight/inav/pull/11096
+* Corrected mode display ordering by @MrD-RC in https://github.com/iNavFlight/inav/pull/11097
+* Fix buffer overflow from deprecated MSP2_INAV_LOGIC_CONDITIONS by @MrD-RC in https://github.com/iNavFlight/inav/pull/11099
+* Update throttle gauge skip by @MrD-RC in https://github.com/iNavFlight/inav/pull/11101
+* Made SITL ports configurable by @xznhj8129 in https://github.com/iNavFlight/inav/pull/11103
+* Update SmartPort telemetry to reflect latest flight modes by @MrD-RC in https://github.com/iNavFlight/inav/pull/11104
+* Update status flag check for QMC5883 by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11105
+* Updates to wind in the IPF by @MrD-RC in https://github.com/iNavFlight/inav/pull/11109
+* Update cygwin ci script for the sitl by @stronnag in https://github.com/iNavFlight/inav/pull/11111
+* Update "Building SITL" document by @stronnag in https://github.com/iNavFlight/inav/pull/11113
+* Add scaling to pan servo offset by @MrD-RC in https://github.com/iNavFlight/inav/pull/11072
+* Vtol.md: s/pid_profile/control_profile/ by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11108
+* Raise the limit to display CRSF SNR values on OSD by @rmaia3d in https://github.com/iNavFlight/inav/pull/9793
+* Better yaw estimation for mulitirotor(magless operation) by @shota3527 in https://github.com/iNavFlight/inav/pull/11114
+* MSP2 via CSFR/SmartPort telemetry by @error414 in https://github.com/iNavFlight/inav/pull/11093
+* MSP protocol JSON definition file + derived documentation generation by @xznhj8129 in https://github.com/iNavFlight/inav/pull/11088
+* Remove legacy option of rebooting fc without using MSP by @mmosca in https://github.com/iNavFlight/inav/pull/9970
+* Fix ADSB cardinal for broken mag direction by @error414 in https://github.com/iNavFlight/inav/pull/11076
+* Mavlink systemid cli by @xznhj8129 in https://github.com/iNavFlight/inav/pull/11062
+* MAV_CMD_DO_REPOSITION to WP#255 for GCS NAV by @xznhj8129 in https://github.com/iNavFlight/inav/pull/11061
+* Regen mavlink headers + add missing values to funcs in mavlink.c by @xznhj8129 in https://github.com/iNavFlight/inav/pull/11060
+* Add options to adjust motor RPY when transition mode is activate(vtol) by @shota3527 in https://github.com/iNavFlight/inav/pull/10996
+* MSP json rev2 by @xznhj8129 in https://github.com/iNavFlight/inav/pull/11115
+* Battery control profile off by 1 by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11118
+* Update references to that should be control_profile by @MrD-RC in https://github.com/iNavFlight/inav/pull/11122
+* New target: FlyingRC F4wing mini by @dixi83 in https://github.com/iNavFlight/inav/pull/11092
+* Update FlyingRC F4Wing Mini target by @MrD-RC in https://github.com/iNavFlight/inav/pull/11131
+* NEXUSX: USE_DSHOT_DMAR, use TIM2 instead of TIM5 by @functionpointer in https://github.com/iNavFlight/inav/pull/11129
+* Add I2C compass driver registration for HUMMINGBIRD FC305 by @LYNHQQ in https://github.com/iNavFlight/inav/pull/11134
+* Normalize line endings to LF in src/main/target/FLYSPARKF4V4 in https://github.com/iNavFlight/inav/pull/11137
+* Revert #11025 "[crsf] add temperature, RPM and AirSpeed telemetry" in https://github.com/iNavFlight/inav/pull/11139
+* Add JavaScript programming documentation by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11143
+* Add flyspark target by @FlySparkfpv in https://github.com/iNavFlight/inav/pull/10788
+* Dynamic Custom OSD Elements position changing by companion computer by @Ahmed-hadzi in https://github.com/iNavFlight/inav/pull/11095
+* Add JHEMCU F435 AIO target board support by @jhemcu in https://github.com/iNavFlight/inav/pull/10740
+* MSP2 message exposing 3D attitude, position, and velocity by @yakorch in https://github.com/iNavFlight/inav/pull/11032
+* Fix H743 USB MSC regression and SDIO reliability issues by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11194
+* Add airspeed TPA support by @shota3527 in https://github.com/iNavFlight/inav/pull/11042
+* Improve APA safety: pitot validation, reduced gains, safe defaults by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11222
+* Add optional DFU mode parameter to MSP_REBOOT command by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11238
+* Fix blackbox corruption when no motors defined in mixer by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11220
+* Improve blackbox DEBUG documentation by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11239
+* Add prominent download links to README by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11221
+* Add maintenance-9.x to nightly build workflow by @sensei-hacker in https://github.com/iNavFlight/inav/pull/11204
+* 8226 deprecated, enum parse fix, enums json by @xznhj8129 in https://github.com/iNavFlight/inav/pull/11185
+
+
+**Full Changelog**: https://github.com/iNavFlight/inav/compare/8.0.1...9.0.0

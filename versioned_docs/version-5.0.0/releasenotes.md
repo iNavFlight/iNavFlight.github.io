@@ -9,7 +9,7 @@ sidebar_position: 2
 
 Please carefully read all of this document for the best possible experience and safety.
 
-<!-- truncate -->
+{/*  truncate */}
 
 ## Important Notes
 

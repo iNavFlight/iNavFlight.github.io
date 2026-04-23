@@ -36,8 +36,8 @@ MSP V2 addresses these shortcomings:
 | ---- | ---- | ---- | --- |
 | 0 | $ |  | Same lead-in as V1 |
 | 1 | X |  | 'X' in place of v1 'M' |
-| 2 | type |  | '\<' / '>' / '!' see [Message Types](#Message-Types) |
-| 3 | flag | ✔  | uint8, flag, See [Message Flags](#Message-Flags) |
+| 2 | type |  | '\<' / '>' / '!' see [Message Types](#message-types) |
+| 3 | flag | ✔  | uint8, flag, See [Message Flags](#message-flags) |
 | 4 | function | ✔  |uint16 (little endian). 0 - 255 is the same function as V1 for backwards compatibility |
 | 6 | payload size | ✔  |uint16 (little endian) payload size in bytes |
 | 8 | payload |  ✔ | n (up to 65535 bytes) payload |
@@ -176,7 +176,7 @@ For new developments targeting modern INAV, MSPV2 is the recommended message for
 | ---- | ---- | ---- | --- |
 | 0 | $ |  | Lead in  |
 | 1 | M |  | 'M' in place of v2 'X' |
-| 2 | type |  | '\<' / '>' / '!' see [Message Types](#Message-Types) |
+| 2 | type |  | '\<' / '>' / '!' see [Message Types](#message-types) |
 | 3 | payload size | ✔  | uint8 payload size in bytes |
 | 4 | function | ✔  | uint8 |
 | 5 | payload |  ✔ | uint8 payload size in bytes |

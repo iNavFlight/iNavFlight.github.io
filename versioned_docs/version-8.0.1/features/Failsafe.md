@@ -2,7 +2,7 @@
 title: Failsafe
 ---
 
-# Setting up Failsafe for RTH
+## Setting up Failsafe for RTH
 
 :::warning
 Warning: one can assign a RC switch to simulate a FAILSAFE condition. Bear in mind that while the mode is activated, the FC will behave as if radio link is lost. This means that disarming the model will not work. To regain control one will have to 1) cancel the FAILSAFE with the RC assigned switch 2) move the roll / pitch sticks 3) possibly DISARM. Not to say that in case of emergency this procedure has to be well known. Therefore, it is wise to not assign FAILSAFE to a switch, but rather assign RTH.
@@ -49,7 +49,7 @@ For fixed wing set `failsafe_throttle_low_delay = 0` or else it will disarm the 
 
 The behavior of `RTH` can also be configured.
 
- - [INAV Flight modes / Navigation Modes](./Navigation-modes.md#rth-altitude-control-modes)
+ - [INAV Flight modes / Navigation Modes](../features/Navigation-modes.md#rth---return-to-home)
 
 Loss of GPS during Failsafe RTH will result in an emergency landing so make sure the following are set to avoid surprises:
 - `nav_emerg_landing_speed` - default is 5 m/s. Reduce for a fixed wing.

@@ -127,7 +127,7 @@ A number of the WP types (JUMP, SET_POI, SET_HEAD, RTH) act as modifiers to the 
 
 JUMP facilitates adding loop to mission, the first parameter is the WP to jump to, and the second parameter is the number of times the JUMP is executed. A parameter2 value of `-1` means JUMP indefinitely (i.e. the pilot must eventually manually abort the mission and take control). For MultiWii, the jump target (parameter 1) must be prior to the jump WP, for inav, forward and backward jumps are permitted. In general, forward jumps are less useful and will usually need a backward jump to be useful.
 
-INAV validates JUMP WPs prior to arming; the following conditions will cause a "Navigation Unsafe" [arming blocker](/docs/quickstart/Something-is-disabled----Reasons.md).
+INAV validates JUMP WPs prior to arming; the following conditions will cause a "Navigation Unsafe" [arming blocker](../quickstart/Something-is-disabled----Reasons.md).
 
 - First item can't be JUMP (can't calculate 1st WP distance, impossible for backward jumps)
 - Can't jump to immediately adjacent WPs (pointless)
@@ -238,7 +238,7 @@ Note that altitude is measured from the "home" location, not absolute above mean
 
 ### MSP_NAV_STATUS
 
-The following data are returned by a MSP_NAV_STATUS message. The usage texts are those defined by Wingui; multiwii and inav support this message. Almost the same data is returned by the [inav LTM NFRAME](/docs/features/Lightweight-Telemetry.md)
+The following data are returned by a MSP_NAV_STATUS message. The usage texts are those defined by Wingui; multiwii and inav support this message. Almost the same data is returned by the [inav LTM NFRAME](../features/Lightweight-Telemetry.md)
 
 <table>
 <thead>

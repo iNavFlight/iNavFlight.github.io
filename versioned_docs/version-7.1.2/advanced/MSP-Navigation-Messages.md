@@ -22,7 +22,7 @@ Each  waypoint has a type and takes a number of parameters, as below. These are 
 | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
 | 1 | WAYPOINT      | Speed (cm/s) [1] (exception [6]) | | Altitude Mode & Actions [7] | ✔ | ✔ | ✔ | ✔ |
 | 2 | POSHOLD_UNLIM |          | | | ✔ | ✔ | ✔ | ✘ [5] |
-| 3 | POSHOLD_TIME  | Wait time (seconds) | [speed (cm/s](1)) | Altitude Mode & Actions [7] | ✔ | ✔ | ✔ | ✔ 2.5 and later |
+| 3 | POSHOLD_TIME  | Wait time (seconds) | speed (cm/s) | Altitude Mode & Actions [7] | ✔ | ✔ | ✔ | ✔ 2.5 and later |
 | 4 | RTH [4]       | Land if non-zero | | |    |    | ✔ [2] | ✔ |
 | 5 | SET_POI [3]   |          | | | ✔ | ✔ | | ✔ 2.6 and later |
 | 6 | JUMP          | Target WP#      | No. of repeats (-1 = forever) | | | | | ✔ 2.5 and later |
@@ -133,7 +133,7 @@ A number of the WP types (JUMP, SET_POI, SET_HEAD, RTH) act as modifiers to the 
 ### JUMP
 JUMP facilitates adding loop to mission, the first parameter is the WP to jump to, and the second parameter is the number of times the JUMP is executed. A parameter2 value of `-1` means JUMP indefinitely (i.e. the pilot must eventually manually abort the mission and take control). For Multiwii, the jump target (parameter 1) must be prior to the jump WP, for INAV, forward and backward jumps are permitted. In general, forward jumps are less useful and will usually need a backward jump to be useful.
 
-INAV validates JUMP WPs prior to arming; the following conditions will cause a "Navigation Unsafe" [arming blocker](https://github.com/iNavFlight/inav/wiki/%22Something%22-is-disabled----Reasons).
+INAV validates JUMP WPs prior to arming; the following conditions will cause a "Navigation Unsafe" [arming blocker](../advanced/Something-is-disabled--Reasons.md).
 
 * First item can't be JUMP (can't calculate 1st WP distance, impossible for backward jumps)
 * Can't jump to immediately adjacent WPs (pointless)
@@ -202,7 +202,7 @@ For safety, if no mission is defined, a single RTH action should be sent.
 | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
 | RTH | 0 | 0 | 0 | 0 | 0 | 25m [1] | 0xa5 |
 
-1. your choice, really.
+[1]: your choice, really.
 
 In general, flag is 0, unless it's the last point in a mission, in which case it is set to 0xa5 (165) (or 0x48 (72) for FBH WP). When waypoints are uploaded, the same data can also be requested from he FC, thus enabling the application to verify that the mission has been uploaded correctly.
 

@@ -40,7 +40,7 @@ Now set a little P and I gain as a starting point, for example: 10 P-gain and 15
 
 ### Other tuning tips:
 
-- Setup your TPA correctly. [PID Attenuation and scaling](/docs/advanced/PID-Attenuation-and-scaling.md)
+- Setup your TPA correctly. [PID Attenuation and scaling](../advanced/PID-Attenuation-and-scaling.md)
 
 - If your plane over corrects when RTH is engaged (symptom is a wave-like flight path), try increasing `nav_fw_pos_xy_p` and/or increasing `nav_fw_pos_xy_i`. Good values to start: `set nav_fw_pos_xy_p = 50`, `set nav_fw_pos_xy_i = 5`. You can also try lowering `nav_fw_pos_xy_d`.  
   When P & I are too high the symptom is fast wandering left-right by a small amount (less than 5 deg). In that case you should try to decrease `nav_fw_pos_xy_p` and/or `nav_fw_pos_xy_i` or increase `nav_fw_pos_xy_d`. The behaviour of the plane is very different with or w/o wind, so it is necessary to test and tweak parameters in both scenarios.

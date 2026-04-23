@@ -15,15 +15,15 @@ These boards are well tested with INAV and are known to be of good quality and r
 | [Matek F405-WING](https://inavflight.com/shop/s/bg/1292190)   |     F4     |  MATEKF405SE   | All |   All   |    All    |    All    | All | SERIAL, SD |
 | [Matek F722-SE](https://inavflight.com/shop/p/MATEKF722SE)    |     F7     |  MATEKF722SE   | All |   All   |    All    |    All    | All | SERIAL, SD |
 
-It's possible to find more supported and tested boards [here](/docs/quickstart/Welcome-to-INAV,-useful-links-and-products.md)
+It's possible to find more supported and tested boards [here](../quickstart/Welcome-to-INAV,-useful-links-and-products.md)
 
 ### Boards documentation
 
 See the [docs](https://github.com/iNavFlight/inav/tree/master/docs) folder for additional information regards to many targets in INAV, to example help in finding pinout and features. _Feel free to help improve the docs._
 
-This [wiki article](/docs/advanced/Boards-Targets-and-PWM-allocations.md) lists all boards supported by INAV, together with their supported PWM allocation (motors / servos).
+This [wiki article](../advanced/Boards-Targets-and-PWM-allocations.md) lists all boards supported by INAV, together with their supported PWM allocation (motors / servos).
 
-This [wiki article](/docs/advanced/Target-and-Sensor-support.md) lists all boards supported by INAV, together with their supported sensors.
+This [wiki article](../advanced/Target-and-Sensor-support.md) lists all boards supported by INAV, together with their supported sensors.
 
 ### Boards based on F405/F745/F765 CPUs
 

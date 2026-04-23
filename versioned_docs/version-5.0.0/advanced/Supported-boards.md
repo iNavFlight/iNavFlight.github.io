@@ -21,9 +21,9 @@ It's possible to find more supported and tested boards [here](https://github.com
 
 See the [docs](https://github.com/iNavFlight/inav/tree/master/docs) folder for additional information regards to many targets in INAV, to example help in finding pinout and features. _Feel free to help improve the docs._
 
-This [wiki article](/docs/advanced/Boards-Targets-and-PWM-allocations.md) lists all boards supported by INAV, together with their supported PWM allocation (motors / servos).
+This [wiki article](../advanced/Boards-Targets-and-PWM-allocations.md) lists all boards supported by INAV, together with their supported PWM allocation (motors / servos).
 
-This [wiki article](/docs/advanced/Target-and-Sensor-support.md) lists all boards supported by INAV, together with their supported sensors.
+This [wiki article](../advanced/Target-and-Sensor-support.md) lists all boards supported by INAV, together with their supported sensors.
 
 ### Boards based on F405/F745/F765 CPUs
 

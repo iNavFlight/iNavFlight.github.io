@@ -7,7 +7,7 @@ title: Navigation Modes
 This page lists and explains all the different navigational flight modes of INAV:
 
 - [NAV ALTHOLD - Altitude hold](#althold---altitude-hold)
-- [NAV POSHOLD - Horizontal position hold](#nav-poshold---Position-hold)
+- [NAV POSHOLD - Horizontal position hold](#nav-poshold---position-hold)
 - [NAV COURSE HOLD - Course Hold](#nav-course-hold---course-hold)
 - [NAV CRUISE - Course Hold + Altitude Hold](#nav-cruise---course-hold--altitude-hold)
 - [NAV RTH - Return to home](#rth---return-to-home)
@@ -16,7 +16,7 @@ This page lists and explains all the different navigational flight modes of INAV
 - [GCS NAV - Ground control station](#gcs_nav---ground-control-station)
 
 For safety reasons, INAV’s navigation modes can be activated only if:
-- ACC and MAG (multirotor only) are [calibrated](../quickstart/Sensor-calibration.md) properly
+- ACC and MAG (multirotor only) are [calibrated](../quickstart/Calibration-Tab.md) properly
 - a valid 3D GPS fix is available
 - a valid altitude source is available
 - the FC is armed
@@ -198,7 +198,7 @@ RTH will attempt to bring copter/plane to launch position. Launch position is de
 
 With default settings RTH will land immediately if you are closer than 5 meters from launch position. If further away it will make sure to have at least 10 meters of altitude, then start going home at 3m/s, and land. It will disarm itself if so configured, otherwise you will have to manually disarm once on the ground.
 
-There are many different modes for Altitude, see the [RTH mode page](./Navigation-Mode-Return-to-Home.md#rth-altitude-control-modes) for details.
+There are many different modes for Altitude, see the [RTH mode page](./Navigation-Mode:-Return-to-Home.md) for details.
 
 Activated by **RTH** flight mode.
 
@@ -258,7 +258,7 @@ So it's not a flight mode itself, and needs to be combined with other flight mod
 
 In order to let the GCS have full control over the aircraft, e.g. 'follow me', the following modes must be activated: `NAV POSHOLD` with `GCS_NAV`. In order to update the home position, no other mode is required.
 
-For more [detail](../advanced/INAV-remote-management-control-and-telemetry.md#follow-me-gcs-nav).
+For more [detail](../advanced/INAV-Remote-Management,-Control-and-Telemetry.md#follow-me-gcs-nav).
 
 ## GPS loss during navigation
 Loss of GPS during navigation will have the following affect on the different modes:
@@ -271,7 +271,7 @@ Loss of GPS during navigation will have the following affect on the different mo
 ## Emergency Landing
 An emergency landing will be triggered during WP and RTH modes if navigation sensors fail or in the case of RTH if the craft heads off in the wrong direction.
 
-It is also possible to manually trigger an emergency landing at any time using [MULTIFUNCTION](./Modes.md#multi-function) mode or by using [POSHOLD](./Navigation-modes.md#nav-poshold---Position-hold) mode. To trigger using POSHOLD mode rapidly toggle the mode ON/OFF at least 5 times. Repeat this action to cancel the emergency landing once started.
+It is also possible to manually trigger an emergency landing at any time using [MULTIFUNCTION](./Modes.md#multi-function) mode or by using [POSHOLD](./Navigation-modes.md#nav-poshold---position-hold) mode. To trigger using POSHOLD mode rapidly toggle the mode ON/OFF at least 5 times. Repeat this action to cancel the emergency landing once started.
 
 ## Mode switch diagram
 

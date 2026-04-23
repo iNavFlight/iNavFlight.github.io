@@ -2,19 +2,19 @@
 title: MSP Navigation Messages
 ---
 
-# MSP NAV Protocol and Types
+## MSP NAV Protocol and Types
 
 This document describes MSP navigation messages, their usage and implementation details. Both **INAV** and **Multiwii** implementations (which are largely the same) are documented in this article.
 
 Note that all binary values are little endian (MSP standard).
 
-# Implementation and versions
+## Implementation and versions
 
 This document should match the INAV 1.2 (and later) and Multiwii 2.5 flight controller firmware.
 
 Prior to INAV 3.0, the [inav-configurator](https://github.com/iNavFlight/inav-configurator) supported a subset of  MSP Waypoint (WP) types; for INAV 3.0 it supports all WP types. In addition to the inav configurator, the messages described are implemented in [mwp](https://github.com/stronnag/mwptools) (Linux / FreeBSD / Windows (Cygwin,WSL)), ezgui (Android) mission planners / ground station applications and "drone helper" (Windows 10) mission planner. mwp and ezgui support both INAV and Multiwii; WinGui is a legacy Windows / Multiwii only mission planner that also supports this message set.
 
-# WayPoint and Action Attributes
+## WayPoint and Action Attributes
 
 Each  waypoint has a type and takes a number of parameters, as below. These are used in the MSP_WP message. The final column indicated if the message is implemented for INAV 1.2 (and later).
 
@@ -22,7 +22,7 @@ Each  waypoint has a type and takes a number of parameters, as below. These are 
 | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
 | 1 | WAYPOINT      | Speed (cm/s) [1] (exception [6]) | | Altitude Mode & Actions [7] | ✔ | ✔ | ✔ | ✔ |
 | 2 | POSHOLD_UNLIM |          | | | ✔ | ✔ | ✔ | ✘ [5] |
-| 3 | POSHOLD_TIME  | Wait time (seconds) | [speed (cm/s](1)) | Altitude Mode & Actions [7] | ✔ | ✔ | ✔ | ✔ 2.5 and later |
+| 3 | POSHOLD_TIME  | Wait time (seconds) | speed (cm/s) | Altitude Mode & Actions [7] | ✔ | ✔ | ✔ | ✔ 2.5 and later |
 | 4 | RTH [4]       | Land if non-zero | | |    |    | ✔ [2] | ✔ |
 | 5 | SET_POI [3]   |          | | | ✔ | ✔ | | ✔ 2.6 and later |
 | 6 | JUMP          | Target WP#      | No. of repeats (-1 = forever) | | | | | ✔ 2.5 and later |
@@ -133,7 +133,7 @@ A number of the WP types (JUMP, SET_POI, SET_HEAD, RTH) act as modifiers to the 
 ### JUMP
 JUMP facilitates adding loop to mission, the first parameter is the WP to jump to, and the second parameter is the number of times the JUMP is executed. A parameter2 value of `-1` means JUMP indefinitely (i.e. the pilot must eventually manually abort the mission and take control). For Multiwii, the jump target (parameter 1) must be prior to the jump WP, for INAV, forward and backward jumps are permitted. In general, forward jumps are less useful and will usually need a backward jump to be useful.
 
-INAV validates JUMP WPs prior to arming; the following conditions will cause a "Navigation Unsafe" [arming blocker](https://github.com/iNavFlight/inav/wiki/%22Something%22-is-disabled----Reasons/_edit).
+INAV validates JUMP WPs prior to arming; the following conditions will cause a "Navigation Unsafe" [arming blocker](../quickstart/Something-is-disabled----Reasons.md).
 
 * First item can't be JUMP (can't calculate 1st WP distance, impossible for backward jumps)
 * Can't jump to immediately adjacent WPs (pointless)
@@ -436,16 +436,16 @@ Note that 32bit flight controllers (baseflight, cleanflight) use capability == 1
 | FLAP | 8 |
 | NAV | 16 |
 
-# Implementations
+## Implementations
 
 The MSP NAV message set is implemented by [mwptools](https://github.com/stronnag/mwptools) (Linux, Windows, FreeBSD), ezgui / mission planner for INAV (Android), WinGUI (MS Windows) and the [inav-configurator](https://github.com/iNavFlight/inav-configurator).
 
-# XML Mission Files
+## XML Mission Files
 
 [inav-configurator](https://github.com/iNavFlight/inav-configurator), [mwptools](https://github.com/stronnag/mwptools), ezgui / mp4i (and WinGUI) share a common, interoperable, XML mission file format. A XSD can be found in the [inav developer documenation](
 https://github.com/iNavFlight/inav/tree/master/docs/development/wp_mission_schema).
 
-# Encoding MSP Messages
+## Encoding MSP Messages
 
 In order to send waypoints to the flight controller, they need to be serialised into an `MSP_SET_WP` message. This is a standard MSP message; it may be encoded as either MSPv1 or [MSPv2](MSP-V2). In general, you should use MSPv2 unless you're targeting MultiWii or ancient versions of INAV.
 
