@@ -42,7 +42,9 @@ Linking to headings within the document work as well by using `#` following the 
 * Search plugin: https://github.com/easyops-cn/docusaurus-search-local
 * Image zoom plugin: https://github.com/gabrielcsapo/docusaurus-plugin-image-zoom
 
-## Recent Features
+## Contributors Page
 
-The Contributors component now automatically fetches and caches contributor data from GitHub, sorting by last contribution date while preserving total contributions. It refreshes weekly using a CORS proxy for seamless updates even after the site is built and deployed.
+There is now a `Contributors.tsx` component that automatically fetches the top 100 most recent contributors and caches that data in `/static/contributors-cache.json` on build.
+Contributors are sorted by the last contribution date while preserving total contributions. 
+Post build, the list refreshes weekly using a CORS proxy for seamless updates even after the site is built and deployed.
 
