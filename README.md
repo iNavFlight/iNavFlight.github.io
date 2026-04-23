@@ -41,3 +41,8 @@ Linking to headings within the document work as well by using `#` following the 
 
 * Search plugin: https://github.com/easyops-cn/docusaurus-search-local
 * Image zoom plugin: https://github.com/gabrielcsapo/docusaurus-plugin-image-zoom
+
+## Recent Features
+
+The Contributors component now automatically fetches and caches contributor data from GitHub, sorting by last contribution date while preserving total contributions. It refreshes weekly using a CORS proxy for seamless updates even after the site is built and deployed.
+
