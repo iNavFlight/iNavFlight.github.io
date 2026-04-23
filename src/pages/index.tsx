@@ -8,9 +8,17 @@ import Heading from "@theme/Heading";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import ThemedImage from "@theme/ThemedImage";
 import BGV from "/img/inavbgv.mp4";
-import Inavpng from "/img/inav_home.png"
+import Inavpng from "/img/inav_home.png";
+
+import Carousel from "../components/Carousel";
 
 import styles from "./index.module.css";
+
+// Image array for the carousel component
+const images = [
+  ["/img/inav_home.png", "/img/inav_home_dark.svg", "/img/inav_home_light.svg"],
+  ["/img/assets/airplane.svg", "/img/assets/blackbox-screenshot-1.jpg"],
+];
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
@@ -72,7 +80,7 @@ function HomepageHeader() {
     //       </div>
     //         </div>
     //       </div>
-          
+
     //     </div>
     //   </div>
     // </header>
@@ -92,6 +100,7 @@ export default function Home(): ReactNode {
           {/* <Heading as="h1">At a Glance</Heading> */}
         </div>
         <HomepageFeatures />
+        {/* <Carousel slides={images} interval={5000} /> */}
       </main>
     </Layout>
   );
