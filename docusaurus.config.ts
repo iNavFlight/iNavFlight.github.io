@@ -100,7 +100,7 @@ const config: Config = {
     announcementBar: {
       id: "the_news",
       content:
-        '<a href="https://github.com/iNavFlight/inav/releases">🎉 INAV 9.0.1 is out now! 🎉</a>',
+        '<a href="https://github.com/iNavFlight/inav/releases">🎉 INAV 9.1 is out now! 🎉</a>',
       backgroundColor: "#ff9999",
       isCloseable: true,
     },

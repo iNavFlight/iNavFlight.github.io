@@ -1,0 +1,342 @@
+---
+title: Navigation PID Tuning (MC)
+description: Tune the navigation PID controller for multicopters
+---
+
+**This page is a work in progress until this message is removed**
+
+The aim of this page is to separate the tuning of the MC Navigation PIDs from the [Navigation modes](../05-core-features/flight-modes-navigation.mdx) page.
+Its goal is also to have MC Nav PID tuning separate from FW Nav PID tuning.
+To de-clutter and make for easier reading.
+
+:::tip
+There is also a companion wiki page [Compass setup](../05-core-features/compass.mdx), that is essential reading beforehand.
+The _Installation location_, _Setup_ and _Calibration_ of the GNSS/Magnetometer module, to providing the best navigation performance achievable, is of absolute importance.
+Accounting for this detail can make your build a great success, or a disappointment if not done correctly.
+:::
+
+## Contents
+
+- [ALTITUDE PID TUNING](./navigation-pid-tuning-mc.mdx#tuning-altitude-controller---z-axis)
+- [POSITION PID TUNING](./navigation-pid-tuning-mc.mdx#tuning-position-controller---xy-axis)
+- [LEVEL PID TUNING](./navigation-pid-tuning-mc.mdx#tuning-level-controller)
+- [SETUP and TUNING - RANGE FINDER - OPTICAL FLOW](./navigation-pid-tuning-mc.mdx#setup-tuning-rangefinder-flow)
+
+:::warning
+When tuning all navigation PID's.
+Bear in mind, over-tuning their gains will not always react in the same way as over-tuning the main stabilization PID's, which will lead to oscillations on that axis.
+Instead, over-tune and saturating **some** navigation PID gain terms, will in effect provide a poorer control response, equivalent to under-tuning those same gains.
+Log data must be used as reference.
+**The Main Stabilization _PID_CD_ and _LEVEL_ controllers MUST be tuned before attempting to tune the navigation controllers.
+This is because the output from the navigation controllers are place into action through the stabilization PID controllers.**
+:::
+
+## Tuning Altitude Controller - Z axis
+
+**Inability to maintain altitude can be caused by a number of reasons:**
+
+- Incorrectly set [nav_mc_hover_thr](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_hover_thr) - Adjust this setting to suit what your copter requires to hold a vertical stationary hover.
+- Insufficient POS*P, POS_I and/or VEL_P, VEL_I - \_The default multicopter Altitude PID gains are set conservative for safety.*
+- Non-functional barometer - _Go to the Configurator "\_Sensors tab_" and verify that barometer graph changes as you move the copter up and down.\_
+- Poor GNSS satellite accuracy and EPV altitude data - _Ensure you have a HDOP less than 1.2 for best precision. And never above 1.8. [Possible causes](https://github.com/iNavFlight/inav/wiki/GPS-and-Compass-setup#installing-the-gnss-unit---antenna-orientation)_
+- Seriously under-powered copter - _ALTHOLD is only able to compensate to some degree. If your copter hovers at 1700 linear throttle without any expo, ALTHOLD might fail to compensate._
+- Gaining altitude during fast flight - _Can be caused by increased air pressure being applied to the barometer.
+This is measured as a reduction in altitude - Try covering your barometer with open-cell foam._
+- Copter climbs vertically at a high rate, for a time - _High accelerometer vibrations from the motors, props or frame resonance._
+
+**Make sure these hardware conditions are addressed first, before you even attempt to tune the nav Altitude POS and VEL PID's.**
+
+_The following settings can be accessed using the Configurator CLI or **Tuning tab** under **Additional PID Gains** or by the CMS OSD stick menu's._
+
+**Altitude is referred too as the vertical or (Z) axis.**
+
+- POS P `nav_mc_pos_z_p` - defines how fast copter will attempt to compensate for altitude error (converts alt error to desired climb rate)
+- POS I `nav_mc_auto_climb_rate` - defines how fast copter will accelerate to reach desired climb rate
+- VEL P `nav_mc_vel_z_p` - defines how much throttle the copter will add to achieve the desired acceleration/deceleration required to meet the POS_P and POS_I targets.
+- VEL I `nav_mc_vel_z_i` - controls compensation for hover throttle, based on vertical air movement, thermals or ground-effect. Too much VEL I will lead to vertical oscillations, too low VEL I will cause drops or jumps when ALTHOLD is enabled.
+- VEL D `nav_mc_vel_z_d` - Acts as a dampener for VEL P and VEL I, to smooth their response and reduce oscillations caused by sensor variations.
+
+### ALTITUDE POS + VEL PID Tuning
+
+Try a small experiment: Make sure the barometer is well isolated.
+You may also want to reduce baro weight.
+
+Tuning of copter z axis is **best** performed on a day no colder than 10°C.
+Due to the effect temperature has on the Baro and IMU.
+
+- set `inav_w_z_baro_p = 0.5` and POS P `nav_mc_pos_z_p = 0` and try flying. The controller will attempt to keep zero climb rate without any reference to altitude. The quad should slowly drift either up or down. If you see it jumping up and down slightly, your VEL `nav_mc_vel_z` gains are too high.
+
+- As a second step you can try zeroing out VEL P `nav_mc_vel_z_p` and VEL I `nav_mc_vel_z_i` and set VEL D `nav_mc_vel_z_d = 100`. Now the quad should be drifting up/down even slower. Raise VEL D `nav_mc_vel_z_d` to the edge of oscillations.
+
+- Now raise VEL P `nav_mc_vel_z_p` to the edge of oscillations. Now ALTHOLD should be almost perfect. But if the copter is buzzing or slightly oscillating while ALTHOLD is active. This means you have the POS P `nav_mc_pos_z_p` set too high and/or VEL P `nav_mc_vel_z_p` is pushing too hard to reach the altitude target, which is causing some over-shoot. Start lower VEL P `nav_mc_vel_z_p` first. Then lower POS P if there is no change after a reduction of 20 points.
+
+- And finally set `nav_mc_hover_thr` slightly higher/lower (50 - 100uS) than your actual hover throttle and tune VEL I `nav_mc_vel_z_i`. The copter should be able to compensate.
+
+What is the trick with VEL I `nav_mc_vel_z_i` ?
+It is used to compensate for HOVER THROTTLE `nav_mc_hover_thr` being a slightly incorrect value.
+It's difficult to set hover throttle to an exact value; there is always influence from thermals, battery charge level etc.
+Too much VEL I `nav_mc_vel_z_i` will lead to vertical oscillations.
+If it's too low it can cause the copter to drop or jump when ALTHOLD is enabled.
+Very low VEL I `nav_mc_vel_z_i` can result in total inability to maintain altitude.
+
+The easiest trial and error testing method is done through the INAV OSD while in the field.
+Or by the _Adjustments_ [inflight tuning](https://www.youtube.com/watch?v=A5i0gs9LfE8) while in the air.
+
+Climb rate is calculated using sensor data from the Accelerometer, Barometer and GNSS velocity NED/NEU.
+The average strength of these noisy signals are taken into account, to estimate the mean altitude.
+INAV sensor fusion weights are set by:
+
+- `inav_w_z_baro_p = 0.350` - Weight LPF for barometer estimated altitude and climb rate.
+- `inav_w_z_baro_v = 0.100` - Weight LPF for barometer estimated climb rate measurement.
+- `inav_w_z_gps_p = 0.200` - Weight LPF for GPS altitude position. Vertical data is noisy and works better for airplanes than copter.
+- `inav_w_z_gps_v = 0.100` - Weight LPF for GPS climb rate velocity measurement.
+
+Too high `inav_w_z_baro_p` will make ALTHOLD nervous, and setting it too low will make it drift, so you risk running into the ground when cruising around.
+Using GNSS data for vertical velocity can allow you to lower the barometer weight to make ALTHOLD smoother without making it less accurate.
+But ONLY if your build consistently provides high GNSS sensor accuracy on every power-up.
+These weights should only be adjusted if you have a firm grasp of their relationship.
+Small adjustments can make a significant difference, and has the potential to make things worse, if not tested under different atmospheric conditions.
+
+In cases when the barometer may be providing poor altitude data.
+Altitude estimation sensor priority can be selected [inav_default_alt_sensor](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#inav_default_alt_sensor).
+
+## Tuning Position Controller - XY axis
+
+**Inability to obtain an accurate horizontal position can be caused by a number of reasons.
+These prerequisites below, MUST be resolved or achieved before attempting to tune the navigation POS, VEL and HEADING PID controller.**
+
+- Poor GNSS satellite accuracy and EPH position data - _Ensure you have a HDOP less than 1.2 for best precision and never above 1.8. [Possible causes](../05-core-features/gps.mdx#installing-the-gnss-unit---antenna-orientation)_
+- Main stabilization **PID_CD** and **LEVEL** is poorly tuned. Or the Copter has a low thrust to weight ratio - _Tune main stabilization PID's first._
+- Poorly _Installed_, _Aligned_ or _Calibrated_ magnetometer (compass) - _If a magnetometer is used, read [here](../05-core-features/compass.mdx#setting-up-a-compass) to provide the best results._
+- High accelerometer vibrations from the motors, props or frame-resonance.
+
+Tuning of copter XY axis is **best** performed on a day no colder than 10°C.
+This is due to the effect temperature has on the IMU.
+
+_When tuning the Nav XY controllers, you require a means to reference the copters target position, to its \_real-time_ turning or stopping position, otherwise you are just guessing.
+This is best done by logging flight controller data and gauging the changes with one or all of the following software: [MWP Tools](https://codeberg.org/stronnag/mwptools/releases) , [INAV Blackbox Explorer](https://github.com/iNavFlight/blackbox-log-viewer/releases) or [Blackbox Tools](https://github.com/iNavFlight/blackbox-tools/releases/tag/v8.0.0).\_
+
+### Horizontal POS + VEL + HEADING PID Tuning
+
+_The following settings can be accessed using the Configurator CLI or **Tuning tab** under **Additional PID Gains**.
+Or by the CMS OSD stick menu's._
+
+**Settings that can influence position accuracy:**
+
+- If you have increased the navigation bank angle or speed too high, when the distance between WP's is short - _Lowering the `nav_mc_bank_angle` and `nav_auto_speed` will help to acquire the target position, especially when windy._
+
+- Waypoint approach speed can be altered by [nav_mc_wp_slowdown](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_wp_slowdown). _In general, this setting only works better in lower wind conditions._
+Due to speed reduction braking also effecting heading and target acquisition if the copter is experiencing a frontal cross wind, as it's approaching the WP marker.
+
+- Waypoint interception and turning action can be altered by [nav_wp_radius](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_wp_radius).
+It can be useful to increase this setting if `nav_mc_bank_angle` and `nav_auto_speed` are also increase for higher navigation speed. This can prevent overshoot of the WP marker, and allow turning to commence earlier on a downwind leg.  
+A value between 6 - 8 meters is useful if `nav_auto_speed = 2000` (maximum allowable nav speed).
+
+**Position XY:**
+
+- `nav_mc_pos_xy_p` - Controls how fast the copter will fly towards the target position. This is a multiplier to convert the distance to the target velocity.
+
+**Velocity XY:**
+
+- `nav_mc_vel_xy_p` - Controls velocity to acceleration. Increasing the gain will provide a stronger response when position error occurs.
+- `nav_mc_vel_xy_i` - Increasing this gain can compensation for position drift, caused by the wind.
+- `nav_mc_vel_xy_d` - Increasing this gain can help smooth the P gain response, and lower the chance of target overshoot, up to a point.
+- `nav_mc_vel_xy_ff` - Attempts to predict velocity to acceleration disturbances via sensory input, to actively reduce the controllers response time.
+- `nav_mc_vel_xy_dterm_attenuation` - Attenuation of VEL_XY_D controller in %. Providing a smoother control response when the copter is navigating at speed. VEL_XY_D is not attenuated at low speeds, braking or accelerating. Some copters may react smoother with lower attenuation applied.
+- `nav_mc_vel_xy_dterm_attenuation_start` - A point in percentage between the current horizontal velocity and the target, when VEL_XY_D attenuation begins.
+- `nav_mc_vel_xy_dterm_attenuation_end`- A point in percentage between the current horizontal velocity and the target, when VEL_XY_D attenuation reaches the `nav_mc_vel_xy_dterm_attenuation` value.
+- `nav_mc_vel_xy_dterm_lpf_hz` -
+Low pass filter cutoff frequency for the VEL_XY_D controller attenuation.
+To allow for a smoother target response when traveling at `nav_auto_speed` or `nav_max_auto_speed`.
+The default cutoff is already low.
+However, lowering it to 1, can still help on copters that pitch/roll bounce, as a result of over compensating to meet the rolling velocity target speed.
+
+**Heading:**
+
+- `nav_mc_heading_p` - Controls the strength that the yaw axis will track the IMU's Compass derived heading target.
+
+## Tuning Level Controller
+
+- `mc_p_level` If you're unhappy with the strength ANGLE based flight modes return to level after the sticks are released. You can increase this setting from default.  
+Increasing its value beyond 30 can make the corresponding axis more jittery when trying to maintain a level attitude.  
+Its responsiveness will also be dependent on - **1)** Motor power **2)** ESC braking effect **3)** The tightness of the main stabilization PID tune.
+
+- `mc_i_level` works as a Low Pass Filter for the LEVEL controllers update rate. The default value of 15 is optimal, and works in conjunction with [`acc_lpf_hz`](https://github.com/iNavFlight/inav/wiki/Multirotor-guide#5-selecting-filters). This means that `fw_i_level` will add no benefit if set higher than the accelerometers low-pass cutoff frequency.  
+In some cases it may be better to lower it a few points.
+Because most larger multicopters can not adjust their level attitude at 15 times per second or greater.
+
+- `mc_d_level` uses the present rate target and the calculated angle rate target. Which allows for transition between ANGLE (level) and ACRO (rate), to provide HORIZON mode.  
+When tuning this value.
+Increase or decrease the setting according to the stick position you want transition to occur.
+Generally it is better to have transition occur near full stick deflection.
+Meaning, it's your intent to perform an aerobatic maneuver.
+
+## Setup Tuning Rangefinder Flow
+
+**Hardware requirements:**
+
+To use the rangefinder capabilities of INAV you require two sensors - _Lidar_ / _Sonar_, to measure distance to the surface.
+And _Optical flow_, to measure motion or flow across the terrain.
+
+**Tested sensors:**
+
+- Matek 3901-L0X Lidar & Optical-Flow board
+- MicoAir MTF-01 Optical Flow & Lidar Sensor (prior to INAV 7.1.0)
+
+**Note:** When powering-up and initializing the rangefinder hardware.
+Ensure the Lidar sensor has a distance between it and the ground, equivalent to 1/4 of the sensors minimum operation range, based on sensor specs.
+
+**Connecting and configuring the hardware:**
+
+Combination sensor boards are the easiest to setup.
+You only require one serial port to get the data from both sensors. i.e.
+Optical-flow and Lidar/sonar sensors.
+
+**Prerequisites:**
+
+- The copter has been flight tested in ANGLE and ALTHOLD, by just using the barometer and GNSS module. Before you attempt to use the Lidar & Optical flow sensors.
+- You must align the arrow on the rangefinder board, so the optical flow sensor works in unity with the flight controllers accelerometer arrow. This step is equally as critical as getting the magnetometer alignment correct, for GNSS enabled flight.
+
+**Software configuration:**
+
+Once you have decided which serial port you will wire the sensors to.
+Go to the Configurator _Ports Tab_ and select the **MSP** protocol at 115200 baud.
+
+![MSP](/img/pid-tune/mc-nav-pid-tune-00.png)
+
+Then go to the _Configuration Tab_ under _Sensors & Buses_ and select **MSP** for RangeFinder and **MSP** for Optical-Flow
+
+![Sensors and bus](/img/pid-tune/mc-nav-pid-tune-01.png)
+
+If you've connected and configured everything correctly.
+You should see the Sonar & Opflow sensors active
+and ready (blue).
+If they have appeared in red, plug in the flight battery for them to show as active or recheck the serial TX/RX wiring.
+At miniumum, you should have Gyro, Accelerometer, Barometer, Flow and Sonar active for the rangefinder to operate.
+
+![Sensors highlight Opflow and Lidar](/img/pid-tune/mc-nav-pid-tune-02.png)
+
+**Aligning the hardware:**
+
+There isn't a GUI to align the optical flow sensor.
+However, you can use the Configurator _Alignment Tool_ and make like the Optical flow sensor is a magnetometer, with some success.
+But it's still more beneficial to use the sensor output method to ensure the Optical flow is aligned correctly with the FC's accelerometer.
+
+Go into CLI and set `debug mode = FLOW_RAW`
+
+**Find a location that is _well-lit_, preferably by natural light.
+With the ground surface providing good contrasting terrain:**
+
+1. Without a surface that has different contrast and texture, it can not measure motion. It will not work correctly/optimally on solid colors, low or repetitive surface texture, or in low light condition.
+
+2. A Laser rangefinder needs a relatively reflective surface for best operation. Its operation distance will be reduced over dark surface.
+
+Open the Configurator _Sensors tab_.
+Then lift the copter 40-70cm over the surface, and tilt it side to side on the roll, then fore and aft on the pitch axis.
+The max tilt should be around 30-40 degrees.
+The Optical flow lens should always be looking down at the surface.
+Make sure that you only tilt the copter on its central axis, **without** moving it across the terrain.
+Observe the graphs and make sure `Debug 0`(flow rate X) looks similar to `Debug 2`(flow coordinates X).
+And `Debug 1`(flow rate Y) is similar to `Debug 3`(flow coordinates Y).
+
+![Debug OpFlow sensor-](/img/pid-tune/mc-nav-pid-tune-03.png)
+
+If it doesn't look correct.
+Change the `align_opflow` setting in CLI, then retry the procedure until your `Debug 0` looks similar to `Debug 2` and `Debug 1` is similar to `Debug 3`.  
+Because the Optical Flow sensor is looking downwards [`FLIP` is default], there are only 4 possible alignment angles: `CW0FLIP`, `CW90FLIP`, `CW180FLIP` and `CW270FLIP`.
+
+:::note
+Those values are relative to the FC board, not the frame.
+So if your FC is mounted upside down, possible values can be `CW0`, `CW90`, `CW180` and `CW270`, the opposite of `FLIP` being added.
+:::
+
+**Optical flow calibration:**
+
+Go to the Configurator and open the _Calibration tab_ and follow the instructions for _Optical Flow Calibration_.
+You will have 30 seconds to tilt the quad in a way you did in **"Aligning the hardware:"** section.
+For the Matek 3901-L0X board and other modules that use the PMW3901 flow sensor chip.
+The `opflow_scale` value is generally between 9-10.
+
+**Flight modes:**
+
+There is no specific flight mode for Optical flow.
+From a flight modes perspective it’s the same as
+POSHOLD mode when you use it with a GNSS module.
+To enable terrain following altitude hold you need to enable SURFACE mode together with ALTHOLD or POSHOLD.
+SURFACE mode works as a modifier for the altitude hold controller and alters its behavior to use altitude Above Ground Level (AGL) instead of altitude above launch point.
+
+This image is only an example of how I use a rangefinder, together with a GNSS module for POSHOLD use, when the copter is above the workable altitude and position control range of the Lidar and Optical Flow sensors.
+You can however use POSHOLD at lower altitudes, together with the rangefinder surface mode, if you don't install a GNSS module into your copter.
+
+![modes-](/img/pid-tune/mc-nav-pid-tune-04.png)
+
+Only enable `inav_allow_dead_reckoning` for Optical-flow, if you also have an **active** GNSS module and are flying outside at a location when the satellite data may be lost for a time like under tree's or near buildings etc.
+Or if your copter has an **active** GNSS module, and you're flying indoors, with the possibility of a 3D fix appearing intermittently.
+
+Optical-flow can use GNSS data to help update its position coordinates.
+But if the GNSS data becomes un-trusted.
+Dead Reckoning uses a previously determined position, and known speeds over a measured time period to assist.
+
+_Do not arm the FC with rangefinder surface mode active.
+It can have undesirable results.
+Always arm in ANGLE mode._
+
+**Angle limits:**
+
+The copters bank angle in Surface mode is limited by -
+
+- `max_angle_inclination_rll`
+- `max_angle_inclination_pit`
+
+It is not advisable to increase these setting beyond 38 degrees, due to the limited FOV both these sensors have.
+
+This also applies to -
+
+- `nav_mc_bank_angle`
+
+For use in POHOLD.
+But its value is also constrained by the `max_angle_inclination` angles in the software.
+
+**Tuning:**
+
+_The Rangefinder (surface) and Optical-flow (flow) gains should only be tuned after the XYZ navigation PID's are optimally tuned._
+
+**Rangefinder** - Lidar or Sonar altitude terrain settings and sensor weights:
+
+- `rangefinder_median_filter` - Enables a 3-point median filter to helps smooth out altitude variations in the readout.
+- `nav_max_terrain_follow_alt` - Maximum allowable distance above the ground for altitude tracking in [CM], that directly maps throttle to altitude.
+- `inav_max_surface_altitude` - Maximum allowable altitude [CM] for the vertical position estimators validity check over a set time period.  
+Should be set approximately 20cm below `nav_max_terrain_follow_alt`.
+When it's set to the sensors max. _reliable_ working range.
+- `inav_w_z_surface_p` - Weight (cutoff frequency) for surface altitude applied to the Rangefinders estimated altitude. Setting is used when rangefinder is present, within its working distance above the ground. And/or _Surface mode_ is enabled.
+- `inav_w_z_surface_v` - Weight (cutoff frequency) for surface velocity applied to the Rangefinders estimated climb rate. Setting is used when rangefinder is present, within its working distance above the ground. And/or _Surface mode_ is enabled.
+
+**Optical-flow** - Terrain motion sensor weights:
+
+- `inav_w_xy_flow_p` - Optical flow sensor weight measurement for XY position. Also effected by light intensity.
+- `inav_w_xy_flow_v`- Optical flow sensor weight measurement for XY velocity. Also effected by light intensity and the texture of the terrain.
+- `inav_allow_dead_reckoning` - Defines if INAV will dead-reckon over short GPS outages. May also be useful for indoor Optical Flow navigation
+
+Both Lidar and optical flow offer more precise altitude and position accuracy, when comparing to a GNSS module and Barometer.
+So it's possible to tune Pos_XY, Vel_XY, Pos_Z and Vel_Z PIDs higher than defaults.
+Here are PID settings that were tested with success:
+
+- `nav_mc_vel_z_p = 150`
+- `nav_mc_vel_z_i = 240`
+- `nav_mc_vel_z_d = 25`
+- `nav_mc_pos_xy_p = 80`
+- `nav_mc_vel_xy_p = 50`
+- `nav_mc_vel_xy_i = 40`
+- `nav_mc_vel_xy_d = 60`
+
+**Keep in mind these setting should be tuned to optimally support all available sensors, unless you only intend to use Rangefinder / Optical-flow, and not GNSS / Barometer.**
+
+:::note
+The manufacturer specifications for their rangefinder modules should always be taken into account.
+Optical flow sensors have a greater range limitation, than the Lidar altitude sensor they are coupled with.
+And most have a limited speed of operation around 7m/s max.
+With a required light intensity for reliable operation, greater than 60 Lux.
+So you will often find the copters ability to hold position is lost before the Lidar sensors looses its ability to hold altitude.
+_Don't skimp on cheap lidar sensors!
+Units that provide higher altitude range, will also work better in direct sun light, or over darker surfaces._
+:::

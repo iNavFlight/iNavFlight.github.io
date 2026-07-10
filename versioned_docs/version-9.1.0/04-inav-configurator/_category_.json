@@ -1,0 +1,8 @@
+{
+  "label": "INAV Configurator",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Information about the tabs in INAV Configurator."
+  }
+}

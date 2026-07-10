@@ -1,0 +1,262 @@
+---
+title: GPS
+description: Learn how INAV uses a GPS unit
+---
+
+## Overview
+
+:::info
+In 8.x release and later, INAV only supports Ublox protocols.
+Ublox Protocol versions < 15.00 are deprecated, and from INAV 9.0 they will no longer be supported.
+:::
+
+Recommended GNSS units are M8, M9 or M10 models.
+While it is uncertain if there are M8 versions with Protocol version lower than 15.00, the majority of the units should be > 15.00 or newer.
+
+While older versions as M6N and M7N also work up to INAV 8.0, later generation M8 and the newer M9/M10 versions are superior.
+Most GNSS modules have a built in magnetometer (compass), but there are also some available without e.g. [Matek M10Q](http://www.mateksys.com/?portfolio=sam-m10q) or [Beitian BN-220](https://inavflight.com/shop/p/BN220) which are perfect for planes and flying wings.
+
+Modules known to work reasonably well:
+* [Beitian BK-880Q](https://store.beitian.com/products/beitian-compass-qmc5883l-amp2-6-pix4-pixhawk-gnss-gps-glonass-dual-flight-control-gps-module-bn-880q?variant=45152276119839) M9
+* [Matek M10Q-5883](http://www.mateksys.com/?portfolio=m10q-5883) M10
+* [Beitian BE-880Q](https://store.beitian.com/products/beitian-compass-qmc5883l-amp2-6-pix4-pixhawk-gnss-gps-glonass-dual-flight-control-gps-module-bn-880q?variant=44696118133023) M10
+* [Beitian BN-880](https://inavflight.com/shop/p/BN880) M8
+
+:::note
+M9 is recommended over M10 as it actually has better performance and capabilities.
+M10 is still preferred over M8.
+:::
+
+:::note
+Not all GNSS units are made equal.
+If you buy cheap, you are more likely to get cheap performance.
+Many GNSS units do not include a quality front end LNA and SAW filter. 
+Without those components, the chances of poor performance is much greater if you have localized RF noise from a VTX or RX with telemetry.
+:::
+
+Using default settings INAV will configure the GPS automatically, **there is no need for configuring it manually** using software like `u-center`.
+Use INAV Configurator to configure your FC to receive the GPS signals.
+
+With INAV 7.0 and later, `GPS`, `Galileo` and `BeiDou` or `Glonass` can be enabled in the GPS configuration tab (the `GPS` constellation is enabled by default).
+See [here](./gps.mdx#gnss-ublox-update-rate) for the best performance when enabling concurrent satellite constellations.
+
+The magnetometer / compass is normally included as part of the GNSS (GPS) module.
+If you want to use an external magnetometer other than the one on your GNSS module, do not use both together.
+You can't use two identical chips/magnetometers on the same I2C bus.
+
+If your flight controller has an internal magnetometer on the FC, using it will likely to have poor results due to magnetic interference (not recommended).
+
+## INAV GPS Configuration
+
+INAV will attempt to provide GPS configuration.
+This is controlled by a number of CLI settings
+
+* `gps_auto_config`
+* `gps_auto_baud`
+
+INAV only requires a few UBLOX messages and it is recommended that you leave auto-config enabled to ensure the GPS is configured to INAV's requirements.
+
+In particular, if you enable messages that INAV does not require, it is possible to seriously downgrade or even disable GPS functionality.
+This is typically indicated by a high error count being reported.
+In this case, it is recommended that you use "u-center" to reset the GPS to factory settings and let INAV perform auto-configuration.
+
+### INAV runtime Configuration steps
+
+When the GPS port is enabled, INAV will:
+
+* Auto-baud if set, to the limit set by `gps_auto_baud_max_supported`. Do not set this too high on older models
+* Disable "standard" NMEA periodic sentences
+* Set UBLOX parameters
+* Enable the required UBLOX periodic messages
+
+Note that GPS is a push protocol; if your GPS has pre-configured messages enabled for transmission, then they will be sent; it is not practical for INAV to disable the whole of the large UBLOX message catalogue.
+If in doubt, perform a factory reset.
+
+### INAV Required Messages
+
+INAV will enable UBLOX periodic messages according to the UBLOX version:
+
+| Class | Id   | Usage                                                  | UBLOX Versions | INAV Version |
+|-------|------|--------------------------------------------------------|----------------|--------------|
+| 0x01  | 0x02 | UBX-NAV-POSLLH Geodetic Position Solution              | 5,6            | < 9.0.0      |
+| 0x01  | 0x03 | UBX-NAV-STATUS Receiver Navigation status              | 5,6            | < 9.0.0      |
+| 0x01  | 0x12 | UBX-NAV-VELNED Velocity Solution in NED                | 5,6            | < 9.0.0      |
+| 0x01  | 0x21 | UBX-NAV-TIMEUTC GPS Time Solution                      | 5,6            | < 9.0.0      |
+| 0x01  | 0x35 | UBX-NAV-SAT Sattelite Infrmation                       | 5,6,7          | < 9.0.0      |
+| 0x01  | 0x35 | UBX-NAV-SAT Sattelite Infrmation                       | 8              |              |
+| 0x01  | 0x42 | UBX-NAV-SIG Signal Information                         | 9,10           | >= 8.0.0     |
+| 0x01  | 0x07 | UBX-NAV-PVT Navigation Position Velocity Time Solution | 7,8,9,10       |              |
+
+As of July 2024 / INAV 8.0.0-dev.
+
+## Installing the GNSS unit - Antenna orientation
+
+Ensure the ceramic antenna (light brown or beige in color) faces skywards to provide the strongest signal and best hemispherical satellite coverage. 
+
+:::info
+Be sure your GNSS module is mounted a minimum of 5cm away from any source of Radio Frequency or (Electro) Magnetic interference.
+**e.g.** A digital or analog video transmitter and its antenna, a radio receiver that has telemetry and its antenna.
+For the sake of the magnetometer, any source of magnetic fields, high current power wires, motors or a beeper.
+:::
+
+![M10Q-5883_4](https://github.com/iNavFlight/inav/assets/47995726/5fd7604b-986e-417f-b134-235b9c67c3dd)
+
+
+
+## Getting Started With Ublox GPS
+
+- Physically connect your GPS to your FC using UART (preferred) or softserial (not recommended).
+Connect RX from GPS to TX on FC, TX from GPS to RX on FC
+
+- Activate GPS in the ports tab in INAV configurator and set it to `57600`, `115200` using UART.
+Or `19200` using softserial (on your chosen port)
+
+- The baud rate can be set to `230400` when using an M9 or M10 devices (dependent on the quality of the modules hardware), which can be beneficial.
+However, higher baud rates are also susceptible to interference and data packet loss if the GNSS serial leads run close to a source of RF/EM interference.
+If you choose to use a higher baud rate, be sure to twist the `TX/RX/5v/G` leads together, especially if the cable length between the GNSS module and FC is more than 5cm or so.
+
+- Activate GPS in the configuration tab, set it to Ublox.
+ 
+Some FC boards may not provide 4.5V power on USB supply.
+In order to power the GPS it is necessary to connect the battery or use another power source (a 4.5V source may be powered by USB).
+The onboard 3.3V will be powered by USB, but may not provide adequate voltage as the GPS regulator typically requires 3.6V minimum.
+
+Once you have connected the GPS to your flight control board:
+
+- Open INAV Configurator
+- Enable GPS on your desired UART port
+- Set the baud rate
+- Press "Save & Reboot"
+- Then go to the "Configuration" tab in the INAV Configurator
+- Enable GPS
+- Set the "Protocol" to UBLOX
+- Set the "Ground Assistance Type" to "Auto Detect"
+- set MAG Alignment to CW270FLIP
+- Press "Set & Reboot"
+
+You can confirm the GPS unit is working by going to the GPS tab in the INAV Configurator and if it is working you will see the "Total Messages" count on the left incrementing in numbers.
+
+## GNSS Ublox Update Rate
+
+INAV 7.0 and later supports a higher GNSS update rate for Ublox receivers (`gps_ublox_nav_hz`).
+With M9 and now M10 supporting up to 25Hz.
+If you wish to increase navigation precision and you have a low noise build and high quality GNSS receiver, you may wish to alter this setting.
+ONLY do so according to the tables below.
+Note how the maximum update rate can only be achieved with lower concurrent constellations.
+
+The M9 can *theoretically* run up to 25 Hz with all four constellations enabled.
+The M10 is more limited as shown here:
+
+![GPS Update Rate](/img/features-core/gps-update-rate.png) 
+
+Ideally it is best to run `gps_ublox_nav_hz` at the highest rate your GNSS module will allow.
+This provides more precision at higher flight speeds.
+**However**, doing so can cause data to be lost randomly by the module during processing, which can reduce precision, making the benefit of running more concurrent constellations on some modules not as worthwhile.
+The chart below shows the devices with realistic update rates for more typical hardware.
+Not the theoretically possible values that only work on the best high end devices.
+
+| Device          | GPS only | GPS + Galileo | GPS + Galileo + Glonass | GPS + Galileo + Glonass + Beidou |   
+|-----------------|----------|---------------|-------------------------|----------------------------------|
+|    M8           |  12.5Hz  |     10Hz      |         5Hz             |             N/A                  |
+|    M9           |  25Hz    |     20Hz      |         10Hz            |             9Hz                  |
+|    M10          |  16Hz    |     12.5Hz    |         8Hz             | 6Hz (Some devices do not simultaneously support Glonass **and** Beidou |                    
+
+
+If it is the first time you have connected the GNSS unit, then it can take several long minutes for a satellite fix to be obtained.
+This is the time required to download the Almanac and Ephemeris data.
+This is perfectly normal.
+If it takes longer than 13 minutes, you likely have GNSS RF band interference coming from a hardware source in your model.
+
+:::note
+For the GPS unit to work & pick up satellites it needs an unobstructed view to the sky (so if using indoors, and the module has a small antenna, don't expect any satellites to be picked up!)
+:::
+
+## SBAS
+
+When using a UBLOX GPS the SBAS mode can be configured using `gps_sbas_mode`.
+
+The default is AUTO.
+
+| Value    | Region        |
+| -------- | ------------- |
+| AUTO     | Global        |
+| EGNOS    | Europe        |
+| WAAS     | North America |
+| MSAS     | Asia          |
+| GAGAN    | India         |
+| SOUTHPAN | Australia NZ  |
+| NONE     | NONE         |
+
+If you use a regional specific setting you may achieve a faster GPS lock than using AUTO.
+Keep in mind to change it if you change your location for holidays etc.
+
+This setting only works when `gps_auto_config= ON`
+
+## AssistNow Online/Offline
+
+:::info
+**Free service has been depreciated as of June 2025**
+:::
+
+INAV 8.0 adds support for AssitNow Online and AssistNow Offline GPS assistance services, which is a proprietary A-GNSS service that can reduce Time To First Fix (TTFF) but requires access to the internet to fetch data.
+AssistNow Online data is valid for a few hours, while AssistNow Offline data can be valid for weeks.
+It can be specially beneficial for new GPS units and for units without flash or battery backed ram (BBR).
+
+In order to use the service, you have to create a thingstream account and register applications to use AssistNow Online and Offline service.
+The process is described here: https://developer.thingstream.io/guides/location-services/assistnow-getting-started-guide
+
+Once you have your AssitNow service token, you need to configure INAV Configurator to use it, by clicking on the gear cog on the top right of the Configurator window.
+
+![INAV Configurator Assist Now](/img/features-core/ublox-assist-now.png)
+
+Once INAV Configurator has your token, you can use the buttons on the bottom of the GPS tab to upload AssistNow data to your GPS unit.
+
+![INAV Configurator Assist Now](/img/features-core/ublox-assist-now_2.png)
+
+AssistNow Online data requires an active internet connection, while AssistNow Offline will cache the data for 3 days, and will not need internet connection, unless the data is expired.
+
+If you have internet access, it is recommended to use both AssistNow Online and Offline services.
+
+## Issues
+
+### Troubleshooting no GPS fix
+
+If you aren't seeing a fix, or have a "navigation is unsafe" message, you can check the following things:
+
+- Check if the PPS light on the GPS module is flashing once per second.
+You may need to put it outdoors for at least 12.5 minutes the first time.
+This is so it can download the almanac and ephemerides.
+If the PPS isn't flashing, the GPS itself doesn't have a fix - this is a separate issue from how it's connected to the FC and how INAV is configured to use it.
+
+- In the GPS tab, check whether the "messages" count is increasing.
+If not, you have a communication error between the GPS and the FC - check wiring and the port setting.
+
+- Next check if the "errors" count is increasing on the same tab.
+If so, you have low frequency interference or an unreliable physical connection between the FC and GPS.
+
+- Next, does the GPS tab say you have a good fix?
+If so, in CLI check that inav_max_eph_epv is set to 1000, not 1.000.
+You can run:
+
+```
+set inav_max_eph_epv = 1000
+
+save
+```
+
+### Other issues
+
+- **`X!`** in the OSD `GPS Satellites` field indicates the flight controller isn't receiving a valid data signal from the GPS.
+- No GPS lock: often due to electric noise from flight controller or other equipment such as 1.2ghz video TX.
+Try getting the GPS as far away as possible from electric noise emitting parts as the FC, ESCs or power cables.
+Placing the GPS on a mast is also a common way, you can further try shielding with aluminum or copper foil.
+Don't place the GPS inside the frame.
+- "Toilet bowling": in the beginning the copter holds its position and then starts to make bigger and bigger circles, you probably have your magnetometer not calibrated correctly or it's interfered from the magnetic field of your power lines or the beeper.
+If you are using your FC onboard mag, try to place the the FC as far away as possible from the magnetic interference causing parts e.g. mounting it on/under the top plate on small racers.
+- 3.3V GPS units, such as the GPS from 3DR should not be powered by the flight controller's 3.3V pin along with a Spektrum (or other DSM) receiver.
+The current draw can cause the Spektrum receiver to brownout.
+Instead use a 3.3V regulator and power the GPS from the BEC or separate battery.
+
+## Related Topics
+
+- [GPS Fix Estimation](../06-advanced-features/gps-fix-estimation.mdx)

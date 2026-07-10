@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-01T21:17:32.093Z",
+  "generatedAt": "2026-07-10T05:11:22.441Z",
   "contributors": [
     {
       "login": "RunnyCow",
@@ -88,14 +88,6 @@
       "html_url": "https://github.com/Jullibach",
       "contributions": 1,
       "lastContributionDate": "2022-04-17T00:00:00.000Z"
-    },
-    {
-      "login": "dtrbinh",
-      "id": 68652319,
-      "avatar_url": "https://avatars.githubusercontent.com/u/68652319?s=60&v=4",
-      "html_url": "https://github.com/dtrbinh",
-      "contributions": 1,
-      "lastContributionDate": "2026-05-24T00:00:00.000Z"
     },
     {
       "login": "stefanodellavalle",
@@ -280,6 +272,14 @@
       "html_url": "https://github.com/radiolinkW",
       "contributions": 1,
       "lastContributionDate": "2024-11-17T00:00:00.000Z"
+    },
+    {
+      "login": "do1234521",
+      "id": 31106362,
+      "avatar_url": "https://avatars.githubusercontent.com/u/31106362?s=60&v=4",
+      "html_url": "https://github.com/do1234521",
+      "contributions": 1,
+      "lastContributionDate": "2026-03-01T00:00:00.000Z"
     },
     {
       "login": "Dope-johnny",
@@ -1378,6 +1378,14 @@
       "lastContributionDate": "2022-01-30T00:00:00.000Z"
     },
     {
+      "login": "dtrbinh",
+      "id": 68652319,
+      "avatar_url": "https://avatars.githubusercontent.com/u/68652319?s=60&v=4",
+      "html_url": "https://github.com/dtrbinh",
+      "contributions": 2,
+      "lastContributionDate": "2026-06-07T00:00:00.000Z"
+    },
+    {
       "login": "emtrax-ltd",
       "id": 60063640,
       "avatar_url": "https://avatars.githubusercontent.com/u/60063640?s=60&v=4",
@@ -1624,6 +1632,14 @@
       "html_url": "https://github.com/MaxWinterstein",
       "contributions": 2,
       "lastContributionDate": "2015-02-01T00:00:00.000Z"
+    },
+    {
+      "login": "valeriyc",
+      "id": 5569548,
+      "avatar_url": "https://avatars.githubusercontent.com/u/5569548?s=60&v=4",
+      "html_url": "https://github.com/valeriyc",
+      "contributions": 2,
+      "lastContributionDate": "2026-03-01T00:00:00.000Z"
     },
     {
       "login": "Q-Branch",
@@ -1880,14 +1896,6 @@
       "html_url": "https://github.com/apps/copilot-pull-request-reviewer",
       "contributions": 3,
       "lastContributionDate": "2026-05-17T00:00:00.000Z"
-    },
-    {
-      "login": "engineer-dakefpv",
-      "id": 74483959,
-      "avatar_url": "https://avatars.githubusercontent.com/u/74483959?s=60&v=4",
-      "html_url": "https://github.com/engineer-dakefpv",
-      "contributions": 3,
-      "lastContributionDate": "2025-09-21T00:00:00.000Z"
     },
     {
       "login": "RdXuanQi",
@@ -2360,6 +2368,14 @@
       "html_url": "https://github.com/yakorch",
       "contributions": 5,
       "lastContributionDate": "2025-11-09T00:00:00.000Z"
+    },
+    {
+      "login": "engineer-dakefpv",
+      "id": 74483959,
+      "avatar_url": "https://avatars.githubusercontent.com/u/74483959?s=60&v=4",
+      "html_url": "https://github.com/engineer-dakefpv",
+      "contributions": 5,
+      "lastContributionDate": "2025-12-14T00:00:00.000Z"
     },
     {
       "login": "TUNERC-Aria",
@@ -3050,14 +3066,6 @@
       "lastContributionDate": "2024-06-16T00:00:00.000Z"
     },
     {
-      "login": "daijoubu",
-      "id": 426801,
-      "avatar_url": "https://avatars.githubusercontent.com/u/426801?s=60&v=4",
-      "html_url": "https://github.com/daijoubu",
-      "contributions": 16,
-      "lastContributionDate": "2026-05-24T00:00:00.000Z"
-    },
-    {
       "login": "shanggl",
       "id": 10240646,
       "avatar_url": "https://avatars.githubusercontent.com/u/10240646?s=60&v=4",
@@ -3096,6 +3104,14 @@
       "html_url": "https://github.com/alexeystn",
       "contributions": 18,
       "lastContributionDate": "2018-11-25T00:00:00.000Z"
+    },
+    {
+      "login": "daijoubu",
+      "id": 426801,
+      "avatar_url": "https://avatars.githubusercontent.com/u/426801?s=60&v=4",
+      "html_url": "https://github.com/daijoubu",
+      "contributions": 18,
+      "lastContributionDate": "2026-06-07T00:00:00.000Z"
     },
     {
       "login": "jmajew",
@@ -3162,14 +3178,6 @@
       "lastContributionDate": "2020-09-13T00:00:00.000Z"
     },
     {
-      "login": "claude",
-      "id": 81847,
-      "avatar_url": "https://avatars.githubusercontent.com/u/81847?s=60&v=4",
-      "html_url": "https://github.com/claude",
-      "contributions": 22,
-      "lastContributionDate": "2026-06-07T00:00:00.000Z"
-    },
-    {
       "login": "ryet9",
       "id": 47376449,
       "avatar_url": "https://avatars.githubusercontent.com/u/47376449?s=60&v=4",
@@ -3208,6 +3216,14 @@
       "html_url": "https://github.com/nzmichaelh",
       "contributions": 23,
       "lastContributionDate": "2015-07-19T00:00:00.000Z"
+    },
+    {
+      "login": "claude",
+      "id": 81847,
+      "avatar_url": "https://avatars.githubusercontent.com/u/81847?s=60&v=4",
+      "html_url": "https://github.com/claude",
+      "contributions": 23,
+      "lastContributionDate": "2026-06-07T00:00:00.000Z"
     },
     {
       "login": "OlivierC-FR",
@@ -3262,7 +3278,7 @@
       "id": 15615439,
       "avatar_url": "https://avatars.githubusercontent.com/u/15615439?s=60&v=4",
       "html_url": "https://github.com/bkleiner",
-      "contributions": 32,
+      "contributions": 33,
       "lastContributionDate": "2026-06-07T00:00:00.000Z"
     },
     {
@@ -3502,8 +3518,8 @@
       "id": 1971284,
       "avatar_url": "https://avatars.githubusercontent.com/u/1971284?s=60&v=4",
       "html_url": "https://github.com/sensei-hacker",
-      "contributions": 615,
-      "lastContributionDate": "2026-06-14T00:00:00.000Z"
+      "contributions": 669,
+      "lastContributionDate": "2026-07-05T00:00:00.000Z"
     },
     {
       "login": "MrD-RC",

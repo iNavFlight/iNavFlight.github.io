@@ -1,0 +1,426 @@
+---
+title: Optical Flow and Rangefinder
+description: How to use a rangefinder or optical flow sensor
+---
+
+This guide explains how to use optical flow sensors and rangefinders (LIDAR/SONAR) with INAV and to enable terrain following and GPS-free position hold.
+
+## Overview
+
+**Rangefinders** (LIDAR/SONAR) measure altitude above ground level (AGL), while **optical flow sensors** track horizontal movement by analyzing the ground below. When used together, they enable:
+
+- **Terrain following** - Maintain constant height above ground using Surface mode
+- **GPS-free position hold** - Hold position indoors or in GPS-denied areas (multirotor only)
+- **Improved landing detection** - More accurate landing for multirotors and fixed wings
+
+:::note
+Optic flow and rangefinders are most commonly used with **Surface mode**, which modifies altitude-controlled flight modes to follow terrain contours instead of maintaining absolute altitude.
+:::
+
+---
+
+## Supported Hardware
+
+### Rangefinder (LIDAR/SONAR) Sensors
+
+| Type | Model | Range | Connection | Notes |
+|------|-------|-------|------------|-------|
+| **Laser (ToF)** | VL53L0X | 0-75cm | I2C | Most common, inexpensive |
+| **Laser (ToF)** | VL53L1X | 0-400cm | I2C | Extended range version |
+| **Laser (ToF)** | TOF10120 | 0-200cm | I2C | Compact and lightweight |
+| **Laser (ToF)** | TeraRanger Evo | 30-600cm | I2C/UART | Professional grade, various models |
+| **Ultrasonic** | SRF10 | 0-600cm | I2C | Legacy support |
+| **Ultrasonic** | US42 | 0-645cm | I2C | Maxbotix sensor |
+| **Radar** | NanoRadar NRA15/NRA24 | 0-200m | UART | Long range, experimental |
+| **Serial/MSP** | MSP Protocol | Varies | UART/MSP | External sensors via companion computer |
+| **Serial** | Benewake (TFmini, etc.) | Varies | UART | Popular LIDAR modules |
+
+> **Not Supported:** HC-SR04 and US-100 ultrasonic sensors are NOT supported.
+
+### Optical Flow Sensors
+
+| Type | Model | Features | Connection | Notes |
+|------|-------|----------|------------|-------|
+| **PixArt** | PMW3901-based (CXOF) | Motion tracking chip | SPI/I2C | Common in flight controllers |
+| **MSP Protocol** | External via companion | Custom solutions | UART/MSP | Requires external processor |
+
+---
+
+## Setup Guide
+
+### 1. Hardware Installation
+
+**Rangefinder Mounting:**
+- Mount facing straight down from the aircraft
+- Keep away from propeller wash turbulence
+- Clear field of view to ground (no obstructions)
+- Typical mounting: bottom center of frame
+
+**Optical Flow Mounting:**
+- Mount facing straight down
+- Should be level with rangefinder
+- Needs clear view of ground texture
+- Works best 10cm-3m above ground
+
+### 2. Configuration
+
+#### Enable Rangefinder
+
+In INAV Configurator → **Configuration Tab**:
+
+1. Set `rangefinder_hardware` to your sensor type (e.g., `VL53L0X`)
+2. Save and reboot
+
+**CLI Settings:**
+```
+# Select your rangefinder hardware
+set rangefinder_hardware = VL53L0X
+
+# Optional: Enable median filtering for smoother readings
+set rangefinder_median_filter = ON
+
+# Maximum altitude for rangefinder use (in cm, default 200cm = 2m)
+set inav_max_surface_altitude = 200
+
+# Rangefinder weight in altitude estimation (default 3.5)
+set inav_w_z_surface_p = 3.5
+
+# Rangefinder weight in climb rate estimation (default 6.1)
+set inav_w_z_surface_v = 6.1
+
+# Save settings
+save
+```
+
+#### Enable Optical Flow (Optional)
+
+**CLI Settings:**
+```
+# Select your optic flow hardware
+set opflow_hardware = CXOF
+
+# Scale factor for your specific module (default 10.5)
+set opflow_scale = 10.5
+
+# Alignment (default CW0FLIP - depends on mounting)
+set align_opflow = CW0FLIP
+
+# Optic flow weight in horizontal position estimation
+set inav_w_xy_flow_p = 1.0
+
+# Optic flow weight in horizontal velocity estimation
+set inav_w_xy_flow_v = 2.0
+
+# Save settings
+save
+```
+
+### 3. Calibration
+
+#### Rangefinder Calibration
+Rangefinders typically require no calibration. 
+Verify operation:
+1. Connect to INAV Configurator
+1. Observe sensor readings in the Sensors tab
+1. Move aircraft up/down to verify readings change appropriately
+
+#### Optical Flow Calibration
+
+In INAV Configurator → **Calibration Tab**:
+
+1. Connect your aircraft to INAV Configurator
+1. Go to the **Calibration Tab**
+1. Place aircraft on a flat, stable surface
+1. Click "Calibrate Optic Flow"
+1. Aircraft must remain stationary for ~30 seconds during auto-calibration
+1. Verification: Settings `accgain_x`, `accgain_y`, `accgain_z` should NOT be 4096
+
+**Verification (CLI):**
+After calibration, verify these settings have changed from defaults:
+- `opflow_scale` should be adjusted from the default 10.5
+- Hardware-specific calibration values should be stored
+
+If calibration fails or optic flow isn't working correctly, see the [Optic Flow and Rangefinder Troubleshooting](./optical-flow-rangefinder.mdx#troubleshooting) section.
+
+---
+
+## Using Surface Mode
+
+**Surface mode** enables **terrain following** - which is where the aircraft maintains a constant altitude above ground instead of absolute altitude.
+This is the primary use case for rangefinders.
+
+![Surface Mode](/img/features-core/surface-mode.png)
+
+
+
+### Platform Support
+
+- ✅ **Multirotors:** Full support with all altitude-holding modes
+- ❌ **Fixed Wing:** Surface mode NOT available (barometric altitude only)
+
+### Compatible Flight Modes (Multirotors)
+
+Surface mode can be combined with these altitude-controlled modes:
+
+| Mode | Without SURFACE | With SURFACE Enabled |
+|------|-----------------|---------------------|
+| **ALTHOLD** | Maintains absolute altitude (barometric) | Maintains height above ground (terrain following) |
+| **POSHOLD** | Holds 3D position with absolute altitude | Holds 2D position with terrain-relative altitude |
+| **CRUISE** | Velocity control with absolute altitude | Velocity control with terrain-relative altitude |
+
+### Throttle Stick Behavior in Surface Mode
+
+When Surface mode is active:
+- **Throttle stick** controls altitude above ground (AGL)
+- Stick range: 0 to `nav_max_terrain_follow_alt` (default 100cm)
+- Example: With default settings, full throttle = 1 meter above ground
+- Mid-throttle = ~50cm above ground
+
+**Important:** Adjust `nav_max_terrain_follow_alt` based on your rangefinder's reliable range.
+
+### Enabling Surface Mode
+
+1. Go to **Modes** tab in configurator
+1. Add **SURFACE** mode
+1. Assign to an AUX channel switch
+1. Save
+
+**Recommended Setup:**
+```
+# Set maximum terrain following altitude (in cm)
+# Should be less than your rangefinder's max reliable range
+set nav_max_terrain_follow_alt = 100
+
+# Save
+save
+```
+
+### Surface Mode Configuration
+
+**Key Settings:**
+
+| Setting | Default | Range | Description |
+|---------|---------|-------|-------------|
+| `nav_max_terrain_follow_alt` | 100cm | 0-1000cm | Maximum altitude above ground in Surface mode |
+| `inav_max_surface_altitude` | 200cm | 0-1000cm | Maximum rangefinder range to use for surface tracking |
+| `inav_w_z_surface_p` | 3.5 | 0-100 | Weight of rangefinder in altitude estimation (higher = more responsive) |
+| `inav_w_z_surface_v` | 6.1 | 0-100 | Weight of rangefinder in climb rate estimation |
+
+**Tuning Tips:**
+- `inav_w_z_surface_p` too high: Oscillation, sensitive to rangefinder noise
+- `inav_w_z_surface_p` too low: Slow response to terrain changes
+- Start with defaults and adjust gradually
+
+---
+
+## GPS Free Position Hold with Optical Flow
+
+**Prerequisites:**
+1. Rangefinder installed and working
+1. Optical flow sensor installed and calibrated
+1. Both sensors enabled in configuration
+
+**How It Works:**
+- Optical flow detects horizontal movement relative to ground
+- Rangefinder provides altitude for flow calculations
+- Together they estimate X/Y position and velocity
+- POSHOLD mode uses this to maintain position without GPS
+
+**Limitations:**
+- Works best 10cm-3m above ground
+- Requires textured ground surface (grass, carpet work well; smooth floors don't)
+- Position estimate drifts over time (no absolute reference)
+- GPS will override flow if available
+
+**Configuration:**
+```
+# Enable optic flow for position estimation
+set opflow_hardware = CXOF
+
+# Flow weight settings (adjust for your setup)
+set inav_w_xy_flow_p = 1.0   # Position weight
+set inav_w_xy_flow_v = 2.0   # Velocity weight
+
+# Enable rangefinder for altitude reference
+set rangefinder_hardware = VL53L0X
+set inav_max_surface_altitude = 300  # 3m max range
+
+save
+```
+
+---
+
+## Troubleshooting
+
+### Rangefinder Issues
+
+**Problem:** No rangefinder readings in configurator
+- Check I2C/UART connection and wiring
+- Verify correct `rangefinder_hardware` selection
+- Ensure sensor has power (3.3V or 5V depending on model)
+- Check for conflicting I2C devices (same address)
+
+**Problem:** Erratic altitude readings
+- Enable `rangefinder_median_filter = ON`
+- Check for propeller wash affecting sensor
+- Ensure sensor is mounted rigidly (no vibration)
+- Verify clear line of sight to ground
+
+**Problem:** Surface mode not working
+- Verify rangefinder readings are valid in Sensors tab
+- Check `inav_max_surface_altitude` is appropriate for your sensor
+- Ensure aircraft is within rangefinder range
+- Multirotor only - fixed wings don't support Surface mode
+
+### Optical Flow Issues
+
+**Problem:** No optic flow data
+- Verify SPI/I2C connection
+- Check `opflow_hardware` setting matches your sensor
+- Ensure sensor has clear view of ground
+- Check alignment setting `align_opflow`
+
+**Problem:** Position drift in GPS-free POSHOLD
+- Calibrate optical flow sensor
+- Verify rangefinder is working (flow needs altitude reference)
+- Ensure ground has visible texture (patterns, grass, etc.)
+- Flow works poorly over smooth/uniform surfaces
+- Check `opflow_scale` calibration
+
+**Problem:** "Toilet bowling" or circling
+- This usually indicates **compass calibration issues**, not optic flow
+- Recalibrate compass following [Compass calibration](./compass.mdx#compass-calibration-and-testing)
+- Ensure compass is away from magnetic interference
+
+---
+
+## Safety Warnings
+
+⚠️ **Important Safety Information:**
+
+1. **Test altitude limits:** Always verify your rangefinder's reliable range before flying
+2. **Failsafe behavior:** If rangefinder signal is lost, aircraft will slowly descend
+3. **Terrain clearance:** Set `nav_max_terrain_follow_alt` conservatively (under rangefinder max range)
+4. **Environmental factors:**
+   - Rangefinders may give false readings over water or reflective surfaces
+   - Optic flow requires textured ground surface
+   - Very low or very high altitude reduces accuracy
+5. **Fixed wing limitation:** Surface mode is NOT available for fixed wings
+6. **Indoor flight:** GPS-free position hold requires good lighting for optical flow
+
+---
+
+## Advanced: Position Estimator Weights
+
+INAV uses a sensor fusion algorithm that combines multiple sensors.
+You can adjust how much each sensor influences the position estimate.
+
+**Surface/Rangefinder Weights:**
+```
+set inav_w_z_surface_p = 3.5    # Altitude position weight
+set inav_w_z_surface_v = 6.1    # Altitude velocity weight
+```
+
+**Optical Flow Weights:**
+```
+set inav_w_xy_flow_p = 1.0      # Horizontal position weight
+set inav_w_xy_flow_v = 2.0      # Horizontal velocity weight
+```
+
+**General Principle:**
+- Higher weight = more influence from that sensor
+- Lower weight = less influence, more from other sensors (GPS, barometer, etc.)
+- Increase weights if sensor is accurate and reliable
+- Decrease weights if sensor is noisy or unreliable
+
+---
+
+## Examples and Use Cases
+
+### Example 1: Basic Terrain Following (Multirotor)
+
+**Goal:** Fly over uneven terrain maintaining constant ground clearance
+
+**Setup:**
+1. Install VL53L0X rangefinder (I2C)
+2. Configure: `set rangefinder_hardware = VL53L0X`
+3. Set terrain follow limit: `set nav_max_terrain_follow_alt = 100`
+4. Enable Surface mode on a switch
+
+**Flight:**
+1. Arm in ANGLE mode
+2. Enable ALTHOLD mode
+3. Toggle Surface mode ON
+4. Throttle stick now controls height above ground (0-100cm)
+5. Fly over terrain - aircraft follows ground contours
+
+### Example 2: Indoor GPS-Free Position Hold
+
+**Goal:** Stable hover indoors without GPS
+
+**Setup:**
+1. Install VL53L0X rangefinder + CXOF optical flow sensor
+2. Configure both sensors in CLI
+3. Enable Surface mode + POSHOLD mode switches
+
+**Flight:**
+1. Find area with textured floor/ground
+2. Arm and hover in ANGLE mode
+3. Enable POSHOLD mode
+4. Enable Surface mode
+5. Release sticks - aircraft holds position using optic flow
+6. Note: Position will drift slowly over time (no GPS reference)
+
+### Example 3: Automated Landing with Rangefinder
+
+**Goal:** Smooth automated landing for multirotor
+
+**Setup:**
+1. Install rangefinder
+2. Configure: `set rangefinder_hardware = VL53L0X`
+3. Set landing detection: `set nav_disarm_on_landing = ON`
+
+**Behavior:**
+- RTH landing uses rangefinder for precise altitude control
+- Landing detection activates when rangefinder shows ground contact
+- Automatic disarm on touchdown
+
+---
+
+## Related Documentation
+
+- [Navigation PID tuning MC](../07-pid-tuning/navigation-pid-tuning-mc.mdx) - More Rangefinder and Optical flow related information
+- [Modes](./flight-modes-standard.mdx) - All flight modes including SURFACE
+- [Navigation Modes](./flight-modes-navigation.mdx) - ALTHOLD, POSHOLD, CRUISE
+- [Settings](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md) - Complete CLI settings reference
+
+---
+
+## Frequently Asked Questions
+
+**Q: Can I use Surface mode with fixed wings?**
+A: No, Surface mode is only available for multirotors. Fixed wings use barometric / GPS altitude only.
+
+**Q: Do I need GPS if I have optic flow?**
+A: No, but optic flow position estimates drift over time without an absolute reference. GPS provides that reference for long-term accuracy.  You DO need a compass for yaw / heading measurement.
+
+**Q: What's the maximum rangefinder range I should use?**
+A: Set `inav_max_surface_altitude` to your sensor's **reliable** range, not maximum range. For VL53L0X, use 50-60cm even though it can read up to 75cm under ideal conditions (white tile floor, indoors).
+
+**Q: Can I combine Surface mode with waypoint missions?**
+A: Surface mode is designed for manual flight modes (ALTHOLD, POSHOLD, CRUISE). Waypoint missions use absolute altitude from barometer/GPS.
+
+**Q: My rangefinder readings jump around - how do I fix this?**
+A: Enable median filtering: `set rangefinder_median_filter = ON`. Also check for vibration and ensure sensor has clear view to ground.
+
+---
+
+## Technical Details
+
+For developers and advanced users, see the technical implementation documentation:
+
+- [Rangefinder Hardware Support](https://github.com/iNavFlight/inav/blob/master/docs/Rangefinder.md)
+- Source code: `src/main/sensors/rangefinder.c` and `src/main/sensors/opflow.c`
+- Position estimator: `src/main/navigation/navigation_pos_estimator_*.c`
+
+---
