@@ -1,0 +1,8 @@
+{
+  "label": "Mission Control",
+  "position": 8,
+  "link": {
+    "type": "generated-index",
+    "description": "This category is for features enabled by the Mission Control Tab such as waypoint missions and geozones."
+  }
+}

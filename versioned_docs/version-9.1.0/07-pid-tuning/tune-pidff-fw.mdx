@@ -1,0 +1,157 @@
+---
+title: Tune PIDFF For Fixed Wings
+description: Effectively tune the PIDFF controller for fixed wings
+---
+
+- [Manually tuning Rates and Feedforward - How it works](./tune-pidff-fw.mdx#manually-tuning-rates-and-feedforward---how-it-works)
+- [General ACRO PID tuning](./tune-pidff-fw.mdx#general-acro-pid-tuning)
+- [Tuning ANGLE mode](./tune-pidff-fw.mdx#tuning-angle-mode)
+- [LEVEL controller](./tune-pidff-fw.mdx#level-controller)
+- [Fixedwing I-term Lock](./tune-pidff-fw.mdx#fixedwing-i-term-lock)
+
+## The PID-FF + Rate Controller
+
+When tuned correctly, the FF-gain should do most of the work of pushing the airplane into a turn or climb, leaving Proportional, Integral and Derivative to make up for slight target error and drift caused by atmospheric disturbances throughout the flight. 
+
+:::warning
+Do not underestimate the importance of correctly tuning the stabilization RATES and FEEDFORWARDS to suit your airplanes requirements.
+Passing the angular rate target directly to the servo mixer can reduce control and stabilization processing latency.
+If the Rates and Feedforwards are incorrectly tuned or not working in unity with each other, they can instead _add_ extra PID processing time, reducing stabilization effectiveness and navigation target accuracy.
+:::
+
+## The Relationship Between Feed-Forward and Rate
+There are four factors that influence the precise maximum rate of rotation that can be achieved on a given fixedwing aircraft.
+1. The area of the control surfaces. 
+1. The amount of control surface deflection (throws) you have provided in the SMIX or Outputs.
+1. The plane's drag coefficient, mass and inertial resistance to attitude change.
+1. The specific airspeed your plane is flying at when full `rcData` or `rcCommand` is applied.
+
+Lets say you have your Roll Rate set to `360°/s`. We can look at the two possibilities.
+* Will the airplane fall short of reaching the roll Rate setting you have applied?
+* Or can the airplane roll even faster than the Rate setting you have applied?
+
+Now, looking at how Feedforward pushes to meet that rate target, it can work in two ways.
+* It may be told to push harder than the Rate target your airplane is physically capable of achieving, meaning the software could push the control surfaces past the point of peak rotational efficiency and begin to slow the rate of rotation due to drag; this typically happens on the pitch if not tuned correctly.
+* Or it may not push hard enough and the airplane falls short of reaching the Rate you have set, meaning it does not make the Rate target within the time the software expects.
+
+As we can see, both Feedforward and Rate must work together to reach the maximum rotation rate when tuning so the software knows how much Feedforward it needs to command.
+Only when they are both optimally tuned can the flight software know exactly how much Feedforward is required to reach the target Rate for precise stabilization and attitude control.
+Otherwise the axis P-term must make up for either overshoot or undershoot of the target rate, which effectively adds instability.
+
+_As a result of this, airplanes that have a lower rate of rotation generally require a higher Feedforward, while airplanes that can achieve a higher rate generally require a lower Feedforward._
+__________________________________________
+
+Tuning of the Rates and Feedforwards can be done more easily via [AutoTune](../05-core-features/flight-modes-standard.mdx#autotune-fw), provided it's performed correctly.
+However, tuning can also be done manually as explained below. 
+
+## Manually tuning Rates and Feedforward - How it works
+
+While flying manually, it is beneficial to run [Servo Autotrim](../05-core-features/flight-modes-standard.mdx#servo-autotrim-fw).
+
+:::tip
+Ensure the control surface servo throws are set correctly before you tune the Rates and Feedforwards manually or with AutoTune.
+Any adjustments made to the servo Mixer or Output travels after you have tuned the Rates and Feedforwards will negatively affect performance and require you to run the tuning process again.
+In addition, [Fixedwing Airmode](../05-core-features/flight-modes-standard.mdx#air-mode-fixedwing) can be enabled with `ACRO` mode; do this before tuning because the airplane will react differently to the Integral term.
+:::
+
+* Fly in `MANUAL` mode with the `manual_roll_rate`, `manual_pitch_rate` and `manual_yaw_rate` settings set to 100%.
+Record DVR footage of the flight, and enable the blackbox to log flight data.
+Perform hard rolls, hard loops and one 360° yaw turn. Apply **full stick** deflection for as long as possible throughout these maneuvers.
+* To calculate an axis _(approximate)_ rate from a DVR recording, count the number of frames it took your aircraft to complete a maneuver (roll/flip/yaw turn) and divide by the recording FPS; then use this formula: `360 / (number_of_frames / FPS)`.
+You can take multiple samples and average them for better accuracy.  
+You can also use a [Python script](https://gist.github.com/nmaggioni/e42d3f4eb242808df751b13413ebf22c) to help automate the process.
+
+* Typical starting values for Rates that are suitable for most airplanes are:
+ Roll = 300°/s
+ Pitch = 110°/s
+ Yaw = 70°/s
+
+* Zero out P, I and D gains on the Roll, Pitch and Yaw controllers.
+* Set `tpa_rate = 0` 
+* Increase FF-gain until you get about 90% of full servo throw in `ACRO` mode compared to `MANUAL` mode when sticks are at full throw.
+* This ensures the FF-gain does most of the work turning the airplane while leaving some authority for the P and I gains to correct residual error.
+* For this step it's convenient to have the two modes `MANUAL` and `ACRO` available on a switch, so you can easily move between the two, and compare the throws.
+* The 90% deflection value can also be calculated by dividing 13950 by the maximum rate for the axis (for example, for a 360°/s maximum roll `13950 / 360 = 38.75` FF). For 80% deflection, divide 12400 by the rate. 
+
+* Now set some PID gain as a starting point.
+   `fw_p_pitch = 15`
+   `fw_i_pitch = 8`
+   `fwd_pitch = 2`
+   `fw_p_roll = 15`
+   `fw_i_roll = 7`
+   `fw_i_roll = 3`
+   `fw_p_yaw = 10`
+   `fw_i_yaw = 2`
+    
+## General ACRO PID Tuning
+
+_Other settings which can influence the tune are:_
+* [Looptime](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#looptime) can influence PID tuning. It is recommended to tune with the specific looptime you choose, and not change once tuned.
+Higher looptime allows the I-term to respond faster to target error, both in accumulating it (windup) and in correcting for overshoot (unwind), but it is not always beneficial for fixedwing platforms. 
+
+* [Gyro_main_lpf_hz](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#gyro_main_lpf_hz) can reduce axis jitter if set lower, by reducing the update rate, which can make stabilization more fluid and less jittery under some wind conditions.   
+* Alternatively, you can increase it to reduce filter latency, which might allow the servos to react faster to stabilization correction if tuned with fixedwing airspeed PID attenuation and boost.
+
+* [Servo_lpf_hz](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#servo_lpf_hz) can be increased to provide less servo latency and a slightly faster reaction time for stabilization response. But it should also be noted that less filtering of the servo signal may cause the brushes in the servo motor to wear faster, leading to premature failure.
+* If you increase `servo_lpf_hz`, do so in sync with [servo_pwm_rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#servo_pwm_rate); `servo_lpf_hz` should not be set higher than half the value of `servo_pwm_rate`.
+
+
+**I-term:**
+
+If the airplane drifts slightly from center on an axis once _Autotune_, _AutoLevel_ and _Servo_Autotrim_ are complete, increasing the I-gain on that axis can reduce the effect.
+Be cautious: too much Integral gain can cause oscillations because of the time it takes the accumulated integral error to unwind.
+Values should be limited in the mid teens, accounting for the use of [pid_iterm_limit_percent](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#pid_iterm_limit_percent) and [Fixedwing I-term Lock](./tune-pidff-fw.mdx#fixedwing-i-term-lock) mentioned below.
+
+
+**P-term:**
+If you want a greater stabilization response against wind buffeting, try increasing the P-gain, but only up to a point.
+Too much Proportional gain can cause oscillations as airspeed increases; in that case apply some [Fixedwing APA or TPA](./pid-attentuation-and-scaling.mdx#fixedwing-info), which is required performance tuning in INAV 9.0 and later.
+P-term cannot **completely** correct for fixedwing roll axis motion in windy conditions at lower airspeeds due to processing time, servo reaction lag, and limited airflow over the control surfaces.
+
+**D-term:**
+Once the P-gain is tuned to about 80% of its optimal value at a given airspeed, start applying some Derivative gain in small amounts to dampen any overcorrection.
+Adding D-term can help tighten the response once P-term is optimally tuned, but be cautious with the amount you apply.
+For optimal servo motor life, 5 should be the limit; if you accept the risk of premature servo wear, you can push D-term higher for extra damping.
+
+After **manually** tuning your Rates, Feedforwards and Gains, you can reduce the throws slightly to suit your stick feel and flight requirements; if you have full servo throw at this stage you would likely overshoot the target deg/s, leaving the P-term to do the rest.
+
+
+### Tuning ANGLE mode
+
+* [Auto Level Trim](../05-core-features/flight-modes-standard.mdx#auto-level-trim-fw) should be used for tuning the flight inclination level of the wing relative to the flight controller board's mounting angle, but it can also be fine-tuned manually if desired. Enter `ANGLE` mode and check if your aircraft flies straight and level without climbing or diving.
+* If it doesn't fly level, your FC is probably not mounted flat relative to the aircraft's angle of incidence when flying; you can adjust it with [fw_level_pitch_trim](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#fw_level_pitch_trim).
+* Adjusting the board's alignment via `align_board_roll` and `align_board_pitch` can also work but is not recommended unless it's a VTOL build, in which case use _board alignment_ for the multicopter profile and _level trim_ for the fixedwing profile.
+
+* If the roll or pitch bank angles are too low for your taste, adjust them via `max_angle_inclination_rll` and `max_angle_inclination_pit` to provide greater authority within the full stick deflection range.
+* If you want the same amount of bank angle in navigation modes, increase their values via `nav_fw_bank_angle`, `nav_fw_climb_angle`, and `nav_fw_dive_angle`; however, `nav_fw_bank` angles cannot be set greater than `max_angle_inclination`.
+
+### LEVEL Controller  
+* If you're unhappy with how ANGLE-based modes return to level after the stick is released, adjust the P-gain via `fw_p_level`. The default value of 20 is optimal, but reducing it can provide a softer feel.
+* Increasing this value beyond 30 on a fixedwing generally makes the corresponding axis more jittery when trying to maintain a level attitude in turbulent conditions.
+* `fw_i_level` works as a low-pass filter for the LEVEL controller's update rate; any value greater than 5 is faster than most fixedwings can respond to, so reducing it to 3 or 2 can provide a smoother feel.
+* `fw_d_level` uses the present rate target and the calculated angle rate target, which allows transition between ANGLE (level) and ACRO (rate) to provide HORIZON mode.
+When tuning this value, increase or decrease it according to the stick position where you want the transition to occur; generally it's better to have the transition near full stick deflection when you intend to perform an aerobatic maneuver.
+
+## Fixedwing I-term Lock 
+_Version 8.0 and later_
+
+This feature solves the problem of I-term accumulation and bounce-back on a Fixedwing platform, when the stick is quickly release back to center, and the airplane still has angular momentum on that axis. 
+   
+When the pilot moves the sticks, the following happens:
+* P-term and D-term are attenuated with a bell curve. With no attenuation at stick-center, and full attenuation when `fw_iterm_lock_rate_threshold` is met.
+Its value is a percentage of the maximum axis rotation rate.
+
+* When the rate error rises greater than the `fw_iterm_lock_engage_threshold` 10% (default). And that error keeps climbing until `fw_iterm_lock_rate_threshold` reaches 40% (default). Then the I-term will become fully attenuated, until the Gyro rate error drops below the `fw_iterm_lock_engage_threshold` again. Or the `fw_iterm_lock_time_max_ms` expires.
+
+* FF-term is never attenuated. As a result, the airplane feels fully stabilized near stick center, and performs like Manual mode when executing fast maneuvers.
+
+The default settings work fine.
+But if you require less attenuation at a higher rate of axis rotation; [fw_iterm_lock_rate_threshold](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#fw_iterm_lock_rate_threshold) can be increased. For example, in the case of 3D airplanes that uses the I-term to help hold axis attitude.
+Or on air frames that carry more axis angular momentum, like those with a very high rotation rate or higher wing mass, [fw_iterm_lock_engage_threshold](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#fw_iterm_lock_engage_threshold) can be decreased, or you could add more time to [fw_iterm_lock_time_max_ms](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#fw_iterm_lock_time_max_ms).
+
+__________________________________________
+
+## Other Tuning Tips
+
+* Information on FW navigation tuning can be found here - [Navigation PID tuning](./navigation-pid-tuning-fw.mdx).
+This is the place to look if you encounter wandering left or right of the heading target or oscillations on the pitch axis while attempting to hold altitude.

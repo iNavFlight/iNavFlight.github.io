@@ -1,0 +1,8 @@
+{
+  "label": "Core Features",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "The core features that are available in INAV."
+  }
+}
