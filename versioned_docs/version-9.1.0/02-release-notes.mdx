@@ -36,8 +36,8 @@ Please carefully read all of this document for the best possible experience and 
 
 Rather than steps 4 and 5 above. You can try this [diff update tool](https://mrd-rc.com/iNav/INAV-CLI-Update.php) . This is a work in progress. Currently it will try to update version 8 or later `diffs` to version 9 or later. Just paste your full `diff all` (not `dump`) in to the tool. Select the INAV version you're upgrading to. Then press the button. It will create a new `diff` for you and give you warnings about anything you should check.
 
-> [!Note]
-> INAV 9.1 Configurator also has a settings migration tool in the CLI for firmware upgrading and flashing. Please see the 9.1 configurator release for more details.
+:::Note 
+> INAV 9.1 Configurator also has a settings migration tool in the CLI for firmware upgrading and flashing. Please see the 9.1 configurator release for more details. :::
 
 ### Upgrading from older versions
 
@@ -68,10 +68,10 @@ However keep in mind, position estimation will now rely more on the acceleromete
 
 Relevant commits - [#11270 ](https://github.com/iNavFlight/inav/pull/11270) , [#11322](https://github.com/iNavFlight/inav/pull/11322) , [#11387](https://github.com/iNavFlight/inav/pull/11387)
 
-> [!Warning]
-> If you have increased `nav_mc_pos_z_p` or `nav_mc_vel_z_p` multicopter altitude controller gains above their default values since INAV 7.1. It is advisable to lower those gains or re-tune them, to avoid possible throttle oscillations in navigation modes that control altitude. Specifically **WP**, **Cruise** and **RTH**.
+:::Warning 
+>If you have increased `nav_mc_pos_z_p` or `nav_mc_vel_z_p` multicopter altitude controller gains above their default values since INAV 7.1. It is advisable to lower those gains or re-tune them, to avoid possible throttle oscillations in navigation modes that control altitude. Specifically **WP**, **Cruise** and **RTH**.
 >
-> **Poshold** is generally less affected in a fixed hover. But if it's used for forward flight, it too can be affected.
+> **Poshold** is generally less affected in a fixed hover. But if it's used for forward flight, it too can be affected. :::
 
 ### OSD changes
 
