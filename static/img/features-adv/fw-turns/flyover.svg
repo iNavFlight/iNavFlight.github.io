@@ -1,0 +1,30 @@
+<svg width="900" height="440" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" role="img" aria-label="FLY_OVER: circle pinned at the overfly point, exit tangent through the next waypoint">
+  <style>
+    text{font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;fill:#3a3d2e}
+    .mono{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:12px}
+    .anno-bad{fill:#c23c2f;font-weight:700}
+    .anno-good{fill:#3d7a4a;font-weight:700}
+  </style>
+  <rect x="0" y="0" width="900" height="440" fill="#dfe3cc"/>
+  <rect x="0.5" y="0.5" width="899" height="439" fill="none" stroke="#c9ccb8" stroke-width="1"/>
+    <line x1="60" y1="120" x2="500" y2="120" stroke="#d61fbe" stroke-width="2"/>
+    <line x1="500" y1="120" x2="250" y2="400" stroke="#d61fbe" stroke-width="2"/>
+    <rect x="491" y="111" width="18" height="18" fill="none" stroke="#d61fbe" stroke-width="2"/>
+    <text x="466" y="100">WP (must be overflown)</text>
+    <rect x="243" y="393" width="14" height="14" fill="none" stroke="#d61fbe" stroke-width="2"/>
+    <text x="180" y="426">next WP</text>
+    <circle cx="540" cy="220" r="100" fill="none" stroke="#2e6fb0" stroke-width="1.6" stroke-dasharray="7 6"/>
+    <circle cx="540" cy="220" r="3.5" fill="#2e6fb0"/>
+    <text x="655" y="200" fill="#2e6fb0">circle pinned at the</text>
+    <text x="655" y="220" fill="#2e6fb0">overfly point,</text>
+    <text x="655" y="240" fill="#2e6fb0">advanced for the roll-in</text>
+    <line x1="60" y1="120" x2="540" y2="120" stroke="#6f5546" stroke-width="3"/>
+    <path d="M540,120 A100,100 0 0 1 597.4,138.1" fill="none" stroke="#d07a1f" stroke-width="5" stroke-linecap="round"/>
+    <path d="M597.4,138.1 A100,100 0 0 1 610.7,290.7" fill="none" stroke="#2e6fb0" stroke-width="5" stroke-linecap="round"/>
+    <path d="M610.7,290.7 A100,100 0 0 1 565.4,316.7" fill="none" stroke="#3d7a4a" stroke-width="5" stroke-linecap="round"/>
+    <line x1="565.4" y1="316.7" x2="250" y2="400" stroke="#3d7a4a" stroke-width="3"/>
+    <line x1="565.4" y1="316.7" x2="540" y2="220" stroke="#2e6fb0" stroke-width="1.2" stroke-dasharray="3 4"/>
+    <circle cx="565.4" cy="316.7" r="4.5" fill="#2e6fb0"/>
+    <text x="380" y="330" class="anno-good">exit = tangent through the next WP</text>
+    <text x="380" y="352" class="anno-good">(roll-out lands on the direct line)</text>
+  </svg>

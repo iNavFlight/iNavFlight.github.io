@@ -23,6 +23,10 @@ This enables up to 4 different approach directions, based on the landing site an
 1. Flare: Only if a LIDAR/Rangefinder sensor is present: the motor remains switched off and the pitch angle of "Flare Pitch" is held
 1. Landing: As soon as INAV has detected the landing, it is automatically disarmed, see setting `nav_disarm_on_landing`.
 
+From INAV 10.0 all turns between the approach legs are flown as coordinated FLY_BY corners.
+The turn is anticipated from the aircraft's actual turn radius, so the plane rolls out already aligned with the next leg.
+This applies during the landing approach whatever [nav_fw_wp_turn_mode](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_mode) is set to, see [Fixed Wing Waypoint Turns](./fixed-wing-waypoint-turns.mdx).
+
 To activate the automatic landing, the parameter `nav_rth_allow_landing` must be set to `ALWAYS` or `FAILSAFE`. 
 
 :::warning
@@ -118,11 +122,8 @@ Wind can intensively alter the final landing heading.
 Make sure your plane maintains Ground or Airspeed when climbing in any navigation mode. 
 The Craft should not get slower and not speed ub significantly during a navigation climb, if P2T is tuned properly.
 
-* `nav_wp_radius`: This parameter might be too high if you have set up your craft with INAV 6 or INAV 7.
-With a too high value, the turning points for the Crosswind-Leg and Final Approach are hit too early and make it difficult for the plane to align to the runway or cut short the approach. 
-Make sure this parameter is not set greater than 1000 (cm).
-The better your craft and navigation system is tuned, the lower this value can be.
-We recommend to start with 1000 for flying wings and 800 for a Plane with Tail.
+* `nav_wp_radius`: From INAV 10.0 the turning points for the Crosswind-Leg and Final Approach are calculated from the aircraft's own coordinated turn radius, so this parameter no longer shapes the approach corners.
+Make sure it is not set greater than 1000 (cm) so the approach waypoints are not treated as reached too early.
 
 * Test your Navigation-Tuning: A better Navigation-Tune will reward you with smoother and more reliable landings.
 To test your nav systems limit, we recommend to create a waypoint missions with many 90° turn angles with shorter and shorter tracks. 

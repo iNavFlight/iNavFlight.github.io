@@ -1,0 +1,27 @@
+<svg width="900" height="470" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" role="img" aria-label="Capped corner flown by the capture fallback">
+  <style>
+    text{font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;fill:#3a3d2e}
+    .mono{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:12px}
+    .anno-bad{fill:#c23c2f;font-weight:700}
+    .anno-good{fill:#3d7a4a;font-weight:700}
+  </style>
+  <rect x="0" y="0" width="900" height="470" fill="#dfe3cc"/>
+  <rect x="0.5" y="0.5" width="899" height="469" fill="none" stroke="#c9ccb8" stroke-width="1"/>
+    <line x1="40" y1="120" x2="700" y2="120" stroke="#d61fbe" stroke-width="2"/>
+    <line x1="700" y1="120" x2="322" y2="448" stroke="#d61fbe" stroke-width="2"/>
+    <rect x="691" y="111" width="18" height="18" fill="none" stroke="#d61fbe" stroke-width="2"/>
+    <text x="722" y="126">WP (Δ = 139°)</text>
+    <circle cx="406" cy="230" r="110" fill="none" stroke="#2e6fb0" stroke-width="1.4" stroke-dasharray="7 6" opacity="0.55"/>
+    <path d="M406,120 A110,110 0 0 1 478,313" fill="none" stroke="#2e6fb0" stroke-width="2" opacity="0.4"/>
+    <text x="150" y="98" fill="#2e6fb0" opacity="0.8">ideal turn-in (over the lead-time ceiling)</text>
+    <line x1="550" y1="104" x2="550" y2="136" stroke="#c23c2f" stroke-width="3"/>
+    <text x="470" y="166" class="anno-bad">ceiling: turn-in clamped here</text>
+    <line x1="40" y1="120" x2="550" y2="120" stroke="#6f5546" stroke-width="3"/>
+    <path d="M550,120 A110,110 0 0 1 622,313" fill="none" stroke="#6f5546" stroke-width="3"/>
+    <path d="M622,313 L509,411" stroke="#6f5546" stroke-width="3" stroke-dasharray="8 7"/>
+    <path d="M622,313 L560,242" stroke="#c23c2f" stroke-width="2"/>
+    <path d="M560,242 l14,3 l-6,13 z" fill="#c23c2f"/>
+    <text x="598" y="272" class="anno-bad">offset</text>
+    <text x="540" y="440" fill="#6f5546">course is correct and coordinated;</text>
+    <text x="540" y="460" fill="#6f5546">tracking or the next leg removes the offset</text>
+  </svg>

@@ -1,0 +1,250 @@
+---
+title: Fixed Wing Waypoint Turns
+description: How a plane flies corners in waypoint missions, and which turn mode to choose
+---
+
+From INAV 10.0 a plane no longer reacts to a waypoint corner once it arrives there.
+It works out the corner in advance and flies a real, coordinated turn through it.
+
+The autopilot knows the radius your plane actually needs at its current speed and bank angle, so it knows how early the turn has to begin and when to roll out.
+The result is a turn that ends on the outbound leg instead of swinging past it, and a flight path that looks like the mission you planned.
+
+:::note
+This page describes fixed wing behaviour in **NAV WP** missions, in RTH trackback and during the automatic landing approach.
+Multicopters are not affected.
+The old `nav_fw_wp_turn_smoothing` setting has been replaced, see [Upgrading from Turn Smoothing](#upgrading-from-turn-smoothing).
+:::
+
+## How a coordinated turn is flown
+
+Three things decide the shape of every turn:
+
+- **Speed.** The faster the plane, the wider the circle it can fly.
+- **[nav_fw_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_bank_angle).** The bank the turn is planned for. More bank means a tighter circle.
+- **The corner angle.** A 90° corner needs a much earlier turn-in than a 30° corner.
+
+From those the autopilot places a circle that touches both mission legs, starts banking early enough to reach it smoothly, holds that circle through the corner, and rolls out so that the wings are level exactly when the plane is aligned with the next leg.
+
+Rolling in and rolling out is not instant, and the autopilot accounts for that too.
+It reads your roll rate, [nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) and the angle mode P gain to predict how long your plane takes to bank and to level again, and it shapes the turn around that.
+Retune the plane and the turns follow — there is nothing to measure by hand.
+
+Corners shallower than about 30° are left to normal navigation, which handles them better than a very short arc would.
+
+<details>
+<summary>The geometry behind it</summary>
+
+The radius of a coordinated turn is fixed by physics: `R = v² / (g · tan φ)`, with `v` the ground speed and `φ` the planned bank angle.
+At 20 m/s and 35° of bank that is about 58 m; at 30 m/s it is already 131 m.
+
+To join the outbound leg cleanly, the circle has to touch both legs, which puts the turn entry a distance `R · tan(Δ/2)` before the waypoint, where `Δ` is the course change.
+That factor is what makes sharp corners expensive: it is 0.41 × R at a 45° corner, 1.0 × R at 90°, and 2.4 × R at 135°.
+On top of that comes the roll-in distance, because the plane still flies almost straight while it is banking into the turn.
+
+Everything above is recomputed continuously from the current ground speed, so a leg flown downwind starts its turn earlier than the same leg flown upwind.
+
+</details>
+
+## Turn modes
+
+The mode is set with [nav_fw_wp_turn_mode](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_mode) in the Advanced Tuning tab or in the CLI.
+It applies to the whole mission.
+
+### COORD_FLYBY — cut the corner (default)
+
+![FLY_BY turn](/img/features-adv/fw-turns/flyby.svg)
+
+The plane turns *before* the waypoint and passes it to the side, rolling out already on the next leg.
+This is the smoothest and most predictable option and the right choice for almost every mission.
+
+Use it when the waypoint marks a corner of your route rather than a place you have to be over.
+
+### COORD_FLYOVER — fly over the waypoint, then turn
+
+![FLY_OVER turn](/img/features-adv/fw-turns/flyover.svg)
+
+The plane flies over the waypoint first and only then banks into the corner.
+Because nothing can be anticipated, the turn is instead flown so that it rolls out pointing exactly at the next waypoint.
+
+Use it when the waypoint itself matters: a photo point, a gate between obstacles, or a corner where cutting inside is not acceptable.
+
+With waypoint tracking enabled the mode does more, see [Working with waypoint tracking](#working-with-waypoint-tracking).
+
+### COORD_FLYINTO — cross the waypoint already aligned
+
+![FLY_INTO turn](/img/features-adv/fw-turns/flyinto.svg)
+
+The plane eases away from the waypoint first, then curves back and crosses it already flying the bearing of the next leg.
+
+Use it for survey, mapping and photogrammetry missions where each line has to be entered straight and on heading from the very first metre.
+The mode applies to mission legs only.
+
+### DIRECT — the old behaviour
+
+No coordinated turns.
+The plane steers at the waypoint with the heading controller and turns when it gets there, exactly as INAV 9.x and earlier did with turn smoothing off.
+
+This is an opt-out for anyone who wants the previous behaviour back.
+It is not recommended for new setups.
+
+### Choosing a mode
+
+| You want | Mode |
+|---|---|
+| A clean, smooth route — general missions, corridors, RTH-style flying | `COORD_FLYBY` |
+| To actually pass over each waypoint | `COORD_FLYOVER` |
+| To enter every survey line straight and on heading | `COORD_FLYINTO` |
+| The pre-10.0 behaviour | `DIRECT` |
+
+## Working with waypoint tracking
+
+[nav_fw_wp_tracking_accuracy](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_accuracy) makes the plane fly *on* the line between two waypoints instead of merely heading toward the next one.
+It changes what the turn modes aim for:
+
+| | Tracking off (default) | Tracking on |
+|---|---|---|
+| `COORD_FLYBY` | Rolls out on the outbound course | Rolls out on the outbound course, on the line |
+| `COORD_FLYOVER` | Rolls out pointing at the next waypoint | Flies a short S after the corner and rolls out **on the leg line itself** |
+| Very sharp corners | Rolls out on the correct course, slightly offset to the side | The offset is flown out as a curve back onto the line |
+
+If you fly corridors, survey grids or anything where being a few metres off the planned line matters, turn tracking on.
+`nav_fw_wp_tracking_accuracy` is a deadband in metres; 2 m works well for most planes.
+
+![FLY_OVER with tracking](/img/features-adv/fw-turns/flyover-tracking.svg)
+
+<details>
+<summary>What the S after a FLY_OVER corner actually does</summary>
+
+Rolling out pointing at the next waypoint is not the same as rolling out *on the leg*.
+On a long leg the difference is small, but on a survey grid it means entering every line at an angle and letting the tracker pull you back onto it.
+
+With tracking enabled the corner is therefore flown as two arcs.
+The first rolls out on a course that cuts toward the new leg at no more than 45°, a short straight gives the wings time to roll through level, and a second arc in the opposite direction rolls out tangentially on the leg itself.
+The turn coordinator stays in charge across the whole manoeuvre, so the path tracker never gets handed a plane that is sitting a turn diameter off its line.
+
+</details>
+
+## Sharp corners and reversals
+
+The tighter the corner and the faster the plane, the earlier a turn has to begin — a 135° corner at speed can need several hundred metres of run-up.
+[nav_fw_wp_turn_max_lead_time](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_max_lead_time) puts a ceiling on that so a fast model does not leave the leg absurdly early.
+
+When a corner needs more anticipation than the ceiling allows, the plane flies a bounded maximum-effort turn instead.
+It cannot over-rotate, it always ends on the correct outbound course, and it may end slightly to the side of the planned line.
+With waypoint tracking on, that offset is flown out; without it, normal navigation converges toward the next waypoint.
+
+![Capped corner fallback](/img/features-adv/fw-turns/fallback.svg)
+
+A course reversal (close to 180°) is a special case of the same thing.
+In `COORD_FLYBY` the plane rolls out on the reversed course and converges afterwards, `COORD_FLYOVER` flies the reversal as one continuous sweep, and `COORD_FLYINTO` flies it as a teardrop and crosses the waypoint on heading.
+
+<details>
+<summary>Why a reversal always ends beside the line</summary>
+
+At 180° both legs lie on the same line.
+Any single circle that starts on that line and turns the plane around ends up a full turn diameter — `2 · R` — to the side of it.
+No amount of tuning changes that; it is the geometry of a circle.
+
+So a reversal is either flown as one arc and the offset is converged afterwards, or it is flown as a teardrop: turn away from the line first, then curve back onto it from the other side.
+That is exactly the difference between `COORD_FLYBY` and `COORD_FLYINTO` at a reversal.
+
+</details>
+
+## Settings
+
+| Setting Name | CLI Name | Description |
+| --- | --- | --- |
+| WP Turn Mode | [nav_fw_wp_turn_mode](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_mode) | How the plane turns at mission waypoints: `DIRECT`, `COORD_FLYBY` (default), `COORD_FLYOVER`, `COORD_FLYINTO`. |
+| Max Turn Lead Time | [nav_fw_wp_turn_max_lead_time](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_max_lead_time) | Ceiling on how early a turn may start, 3000-12000 ms, default 6000. Raise it for fast or sluggish models flying sharp corners, lower it to keep turns close to the waypoint. `COORD_FLYBY` only. |
+| Turn Feed-Forward Gain | [nav_fw_turn_ff_gain](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_turn_ff_gain) | How much of the required bank is commanded directly instead of being built up by the PID, 0-200 %, default 100. Leave it at the default unless you are chasing a specific problem. |
+| Turn Control Ease | [nav_fw_wp_turn_control_ease](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_control_ease) | Extra roll response lag of your servos and airframe, 0-500 ms, default 100. Increase it for large or slow-rolling planes. |
+| Max navigation bank angle | [nav_fw_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_bank_angle) | The bank all turn and loiter radii are planned for, default 35°. See below. |
+| Waypoint Tracking Accuracy | [nav_fw_wp_tracking_accuracy](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_accuracy) | Deadband in metres for flying on the leg line. 0 disables line tracking. |
+
+Everything else the turn system needs is derived from tuning you already have.
+
+## What nav_fw_bank_angle means now
+
+:::warning
+`nav_fw_bank_angle` changed meaning in INAV 10.0.
+It used to be the hard limit for navigation bank.
+It is now the **sustained bank the autopilot plans for** — every turn radius, every turn-in point and every loiter circle is sized for it.
+:::
+
+While the plane is holding a planned turn or a loiter circle, the roll output may briefly go above that target to hold the geometry against wind, up to the real limit set by [max_angle_inclination_rll](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#max_angle_inclination_rll).
+That reserve is what keeps a circle round in wind instead of letting it drift wide.
+
+In practice: set `nav_fw_bank_angle` to the bank your plane can hold comfortably and continuously, not to the most it can survive.
+The default of 35° suits most models.
+Raise it carefully if your plane holds more bank without sinking, and lower it if it loses altitude in turns.
+
+## Loiter and position hold circles
+
+The same turn machinery now flies loiter circles, and two things change for you:
+
+- **The circle is held accurately.** Once established, the autopilot regulates the radius itself instead of chasing a moving target point, so the circle stays round and centred in wind.
+- **[nav_fw_loiter_radius](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_loiter_radius) is a minimum, not a fixed value.** If your plane is flying too fast to hold the configured radius at the planned bank, the circle widens instead of demanding a bank it cannot fly.
+
+If your loiter looks bigger than configured, that is the plane telling you it is flying faster than the radius allows at `nav_fw_bank_angle`.
+
+<details>
+<summary>How the circle behaves in wind</summary>
+
+Ground speed changes continuously as the plane goes around a circle in wind, and with it the radius the plane is physically able to hold.
+Commanding that raw requirement would make the circle pulse once per revolution and deform into the classic kidney shape.
+
+Instead the radius floor is smoothed: it rises immediately when more radius is needed, holds that peak for one full revolution, and then eases back down slowly and never below what is currently flyable.
+The circle follows the slow trend of the wind rather than every upwind and downwind passage.
+
+</details>
+
+## Energy protection
+
+Banking costs lift.
+If the plane is already at the limit of what it can do — climbing with full authority and not achieving the commanded climb rate — the autopilot temporarily lowers the bank it is willing to use.
+
+You will see this as wider circles and earlier turn-ins during a hard climb, and it returns to normal by itself.
+It is a safety behaviour, not something to tune.
+
+## Landing approach
+
+Turns between the legs of an [automatic landing approach](./fixed-wing-autoland.mdx) always fly as coordinated `COORD_FLYBY` corners, whatever `nav_fw_wp_turn_mode` is set to.
+Clean, aligned transitions between the downwind, base and final legs matter more there than the mode preference.
+
+The approach turning points are calculated from the plane's real turn radius, so [nav_wp_radius](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_wp_radius) no longer shapes the approach corners.
+
+## Upgrading from Turn Smoothing
+
+`nav_fw_wp_turn_smoothing` no longer exists.
+Its replacement is `nav_fw_wp_turn_mode`:
+
+| INAV 9.x | INAV 10.0 | |
+|---|---|---|
+| `nav_fw_wp_turn_smoothing = OFF` | `nav_fw_wp_turn_mode = DIRECT` | Same reactive turns as before |
+| `nav_fw_wp_turn_smoothing = ON` | `nav_fw_wp_turn_mode = COORD_FLYOVER` | The waypoint is still passed over, but the turn is planned instead of flown as a loiter arc |
+| `nav_fw_wp_turn_smoothing = ON-CUT` | `nav_fw_wp_turn_mode = COORD_FLYBY` | The corner is still cut, now on the plane's real turn radius |
+
+New installs default to `COORD_FLYBY`.
+
+:::note
+A CLI backup taken from INAV 9.x contains a `set nav_fw_wp_turn_smoothing = ...` line that INAV 10.0 does not know.
+Remove that line before restoring, or set the turn mode afterwards.
+:::
+
+## Troubleshooting
+
+| What you see | What to do |
+|---|---|
+| The plane leaves the leg far too early | Lower `nav_fw_wp_turn_max_lead_time`. Check that the mission speed is not much higher than you expect. |
+| It swings past the outbound leg in sharp corners | Raise `nav_fw_wp_turn_max_lead_time`, raise `nav_fw_bank_angle`, or fly the corner slower. |
+| Turns are wide and lazy | Raise `nav_fw_bank_angle` — this is the value the radius is planned from. |
+| Roll-in feels abrupt on a big plane | Raise `nav_fw_wp_turn_control_ease`. |
+| The plane rolls out on the right heading but beside the planned line | Expected in very tight corners. Enable `nav_fw_wp_tracking_accuracy` to have it flown out. |
+| The loiter circle is larger than configured | Expected. See [Loiter and position hold circles](#loiter-and-position-hold-circles). |
+
+## Further reading
+
+- [Waypoint Missions](../08-mission-control/waypoint-missions.mdx) — planning and uploading missions
+- [Fixed Wing Autoland](./fixed-wing-autoland.mdx)
+- [Navigation PID Tuning (FW)](../07-pid-tuning/navigation-pid-tuning-fw.mdx)
+- Developers: the `DEBUG_FW_TURN` blackbox channels are documented in [fw-turn-debugging.md](https://github.com/iNavFlight/inav/blob/master/docs/development/fw-turn-debugging.md)

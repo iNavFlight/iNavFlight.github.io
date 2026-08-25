@@ -88,7 +88,7 @@ Min Throttle Down Pitch | [fw_min_throttle_down_pitch](https://github.com/iNavFl
 Pitch to throttle ratio | [nav_fw_pitch2thr](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_pitch2thr) = 10 | Amount of throttle applied related to pitch attitude in GPS assisted modes. Throttle = nav_fw_cruise_throttle - (nav_fw_pitch2thr * pitch_angle). (notice that pitch_angle is in degrees and is negative when climbing and positive when diving, and throttle value is constrained between nav_fw_min_thr and nav_fw_max_thr)
 Throttle smoothing | [nav_fw_pitch2thr_smoothing](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_pitch2thr_smoothing) | How smoothly the autopilot makes pitch to throttle correction inside a deadband defined by `nav_fw_pitch2thr_threshold`.
 Instantaneous throttle adjustment threshold | [nav_fw_pitch2thr_threshold](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_pitch2thr_threshold) | Threshold from average pitch where momentary pitch_to_throttle correction kicks in. [decidegrees]
-Max navigation bank angle | [nav_fw_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_bank_angle) = 45 | The maximum bank the autopilot will command.
+Max navigation bank angle | [nav_fw_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_bank_angle) = 35 | The sustained bank angle that turn and loiter radii are planned for. From INAV 10.0 corrections may briefly exceed it, `max_angle_inclination_rll` remains the hard ceiling.
 Max alt hold climb rate | [nav_fw_manual_climb_rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_manual_climb_rate) | Maximum climb/descent rate firmware is allowed when processing pilot input for ALTHOLD control mode [cm/s]
 Max. navigation climb angle | [nav_fw_climb_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_climb_angle) = 25 | Max positive pitch angle when climbing in GPS assisted modes, is also restrained by global [max_angle_inclination_pit](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#max_angle_inclination_pit)
 Max. navigation dive angle | [nav_fw_dive_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_dive_angle) = 18 | Max negative pitch angle when diving in GPS assisted modes, is also restrained by global [max_angle_inclination_pit](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#max_angle_inclination_pit)
@@ -265,7 +265,10 @@ The **altitude** can be adjusted via the **pitch stick** if required.
 Loiter direction can be selected by `fw_loiter_direction`.
 It can be altered in flight by the Yaw stick or by the LOITER CHANGE mode, via a switch.
  
-**Please see other factors that will also effect the loiter radius** [below](./flight-modes-navigation.mdx#fixed-wing-waypoint-tracking-accuracy-and-turn-smoothing)
+**Please see other factors that will also effect the loiter radius** [below](./flight-modes-navigation.mdx#fixed-wing-waypoint-tracking-accuracy-and-turns)
+
+From INAV 10.0 the configured radius is a minimum rather than a fixed value.
+If the aircraft is flying too fast to hold that radius at the planned bank angle, the circle widens instead of demanding a bank it cannot fly, see [Fixed Wing Waypoint Turns](../06-advanced-features/fixed-wing-waypoint-turns.mdx#loiter-and-position-hold-circles).
 
 ### MC Braking Mode - POSHOLD modifier
 
@@ -392,16 +395,19 @@ There is an additional [[wiki page further describing way point missions, tools 
 
 The [MSP navigation message protocol documentation](../06-advanced-features/msp-navigation-messages.mdx) describes optional parameters affecting WP behaviour.
 
-### Fixed Wing Waypoint Tracking Accuracy and Turn Smoothing
-Waypoint tracking accuracy forces the craft to quickly head toward and track along the waypoint course line as closely as possible.
-2 settings control the alignment behaviour. [nav_fw_wp_tracking_accuracy](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_accuracy) adjusts the stability of the alignment. Higher values dampen the response reducing possible overshoot and oscillation. [nav_fw_wp_tracking_max_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_max_angle)
+### Fixed Wing Waypoint Tracking Accuracy and Turns
+Waypoint tracking accuracy makes the craft fly along the course line between two waypoints instead of simply heading toward the next one.
+2 settings control the alignment behaviour. [nav_fw_wp_tracking_accuracy](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_accuracy) sets the deadband distance from the course line in metres. Tracking is not actively controlled within the deadband, so larger values give smoother flight adjustments but less accurate tracking. A 2 m deadband works well in most cases and 0 disables tracking entirely. [nav_fw_wp_tracking_max_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_max_angle)
 sets the maximum alignment convergence angle to the waypoint course line (see below). This is the maximum angle allowed during alignment and in reality will only be acheived when some distance away from the course line with the angle reducing as the craft gets closer to alignment. Lower values result in smoother alignment with the course line but a greater distance along the course line will be required until this is achieved.
- 
-Turn Smoothing helps to smooth turns during WP missions by switching to a loiter turn at waypoints with the turn initiated slightly before the waypoint is actually reached. This helps to avoid the overshoot often seen on tighter turns. The [nav_fw_wp_turn_smoothing](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_smoothing) setting provides 2 options as shown below.
 
-(Available from INAV 6.0)
+From INAV 10.0 the turns at the waypoints themselves are flown by the coordinated turn coordinator, selected with [nav_fw_wp_turn_mode](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_mode).
+It works out the turn radius the plane actually needs from its current speed and bank angle and begins the turn early enough to roll out aligned with the next leg.
+Three coordinated modes are available — cut the corner, fly over the waypoint, or cross it already aligned with the outbound leg — plus `DIRECT` for the pre-10.0 behaviour.
+Waypoint tracking also changes what those turns aim for.
 
-![Wapoint turn smoothing](/img/features-core/nav-wp-turn-smoothing.png)
+See [Fixed Wing Waypoint Turns](../06-advanced-features/fixed-wing-waypoint-turns.mdx) for the full description, including which mode to pick and how to tune it.
+
+(Waypoint tracking available from INAV 6.0, coordinated turn modes from INAV 10.0)
 
 :::note
 Besides the waypoint _track angle_ and _accuracy_ settings, there are other setting that will influence the turn accuracy of a fixedwing aircraft in a Waypoint mission, RTH Trackback or Loiter.
@@ -409,10 +415,10 @@ It may also be beneficial to adjust these setting for windy conditions or for fl
 These setting can be found in the _Advanced Tuning Tab_ or the _CLI_.
 :::
 
-* [nav_wp_radius](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_wp_radius) - A lower value can be beneficial, however a value around 600 (6m) will allow the plane to commence the turn earlier on a tail wind leg, with less likelihood of it being pushed past or overshooting the turn.
-* [nav_fw_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_bank_angle) - A higher bank angle will allow a sharper turn. 
-This helps the plane pull through the corner faster.
-Practical responsive values are between 45° to 55°.
+* [nav_wp_radius](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_wp_radius) - Defines how close the craft has to get before a waypoint counts as reached. With the coordinated turn modes it no longer decides when a turn begins, that comes from the turn geometry, but a value that is too large still lets the craft move on to the next leg early.
+* [nav_fw_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_bank_angle) - The sustained bank that all turn and loiter radii are planned for, so a higher value gives tighter turns.
+From INAV 10.0 this is a planning target rather than a hard limit, see [Fixed Wing Waypoint Turns](../06-advanced-features/fixed-wing-waypoint-turns.mdx#what-nav_fw_bank_angle-means-now).
+Set it to the bank your plane can hold comfortably and continuously.
 * [nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) - Lower values can produce a more abrupt banking motion, but will also allow the plane to react faster to navigation, course, and heading commands.
 * [nav_use_fw_yaw_control](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_use_fw_yaw_control) - If your plane has a form of yaw control **e.g. Rudder or Differential Thrust**, this setting allows the plane to yaw as well as bank when making a turn.
 A lower `nav_fw_bank_angle` (35°) should be used, for a flatter turn.

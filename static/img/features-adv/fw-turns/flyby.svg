@@ -1,0 +1,34 @@
+<svg width="900" height="400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" role="img" aria-label="90 degree corner with inscribed circle and phases">
+  <style>
+    text{font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;fill:#3a3d2e}
+    .mono{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:12px}
+    .anno-bad{fill:#c23c2f;font-weight:700}
+    .anno-good{fill:#3d7a4a;font-weight:700}
+  </style>
+  <rect x="0" y="0" width="900" height="400" fill="#dfe3cc"/>
+  <rect x="0.5" y="0.5" width="899" height="399" fill="none" stroke="#c9ccb8" stroke-width="1"/>
+    <line x1="60" y1="90" x2="620" y2="90" stroke="#d61fbe" stroke-width="2"/>
+    <line x1="620" y1="90" x2="620" y2="360" stroke="#d61fbe" stroke-width="2"/>
+    <rect x="611" y="81" width="18" height="18" fill="none" stroke="#d61fbe" stroke-width="2"/>
+    <text x="638" y="86">WP (Δ = 90°)</text>
+    <circle cx="480" cy="230" r="140" fill="none" stroke="#2e6fb0" stroke-width="1.6" stroke-dasharray="7 6"/>
+    <circle cx="480" cy="230" r="3.5" fill="#2e6fb0"/>
+    <line x1="480" y1="230" x2="620" y2="230" stroke="#2e6fb0" stroke-width="1.2" stroke-dasharray="3 4"/>
+    <text x="536" y="222" class="mono" fill="#2e6fb0">R</text>
+    <circle cx="480" cy="90" r="4.5" fill="#2e6fb0"/>
+    <circle cx="620" cy="230" r="4.5" fill="#2e6fb0"/>
+    <text x="440" y="72" fill="#2e6fb0">tangent point, in-leg</text>
+    <text x="638" y="252" fill="#2e6fb0">tangent point, out-leg</text>
+    <line x1="60" y1="90" x2="410" y2="90" stroke="#6f5546" stroke-width="3"/>
+    <path d="M410,90 L480,90 A140,140 0 0 1 539,103" fill="none" stroke="#d07a1f" stroke-width="5" stroke-linecap="round"/>
+    <path d="M539,103 A140,140 0 0 1 607,171" fill="none" stroke="#2e6fb0" stroke-width="5" stroke-linecap="round"/>
+    <path d="M607,171 A140,140 0 0 1 620,230 L620,330" fill="none" stroke="#3d7a4a" stroke-width="5" stroke-linecap="round"/>
+    <line x1="410" y1="90" x2="410" y2="130" stroke="#3a3d2e" stroke-width="1.4"/>
+    <text x="392" y="150" class="mono">turn start</text>
+    <path d="M410,58 L620,58" stroke="#3a3d2e" stroke-width="1"/>
+    <path d="M410,52 L410,64 M620,52 L620,64" stroke="#3a3d2e" stroke-width="1"/>
+    <text x="418" y="46" class="mono">turn anticipation</text>
+    <text x="300" y="300" fill="#d07a1f" font-weight="700">roll in</text>
+    <text x="365" y="322" fill="#2e6fb0" font-weight="700">hold the circle</text>
+    <text x="470" y="344" fill="#3d7a4a" font-weight="700">roll out, already aligned</text>
+  </svg>
