@@ -3,11 +3,12 @@ title: Fixed Wing Waypoint Turns
 description: How a plane flies corners in waypoint missions, and which turn mode to choose
 ---
 
-From INAV 10.0 a plane no longer reacts to a waypoint corner once it arrives there.
-It works out the corner in advance and flies a real, coordinated turn through it.
+From INAV 10.0 a plane no longer has to react to a waypoint corner once it arrives there.
+In the coordinated turn modes it works out the corner in advance and flies a real, coordinated turn through it.
 
-The autopilot knows the radius your plane actually needs at its current speed and bank angle, so it knows how early the turn has to begin and when to roll out.
+The autopilot knows the radius your plane actually needs at its current speed and bank angle, so it knows where the turn has to begin and when to roll out.
 The result is a turn that ends on the outbound leg instead of swinging past it, and a flight path that looks like the mission you planned.
+One of the coordinated modes is the default, and the reactive behaviour of INAV 9.x and earlier is still available as [DIRECT](#direct--the-old-behaviour).
 
 :::note
 This page describes fixed wing behaviour in **NAV WP** missions, in RTH trackback and during the automatic landing approach.
@@ -23,7 +24,8 @@ Three things decide the shape of every turn:
 - **[nav_fw_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_bank_angle).** The bank the turn is planned for. More bank means a tighter circle.
 - **The corner angle.** A 90° corner needs a much earlier turn-in than a 30° corner.
 
-From those the autopilot places a circle that touches both mission legs, starts banking early enough to reach it smoothly, holds that circle through the corner, and rolls out so that the wings are level exactly when the plane is aligned with the next leg.
+The clearest case is the default `COORD_FLYBY`: the autopilot places a circle that touches both mission legs, starts banking early enough to reach it smoothly, holds that circle through the corner, and rolls out so that the wings are level exactly when the plane is aligned with the next leg.
+The other coordinated modes use the same radius and the same roll-in and roll-out shaping, but they place their arcs differently because they have to meet the waypoint rather than cut past it, see [Turn modes](#turn-modes).
 
 Rolling in and rolling out is not instant, and the autopilot accounts for that too.
 It reads your roll rate, [nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) and the angle mode P gain to predict how long your plane takes to bank and to level again, and it shapes the turn around that.
@@ -37,7 +39,7 @@ Corners shallower than about 30° are left to normal navigation, which handles t
 The radius of a coordinated turn is fixed by physics: `R = v² / (g · tan φ)`, with `v` the ground speed and `φ` the planned bank angle.
 At 20 m/s and 35° of bank that is about 58 m; at 30 m/s it is already 131 m.
 
-To join the outbound leg cleanly, the circle has to touch both legs, which puts the turn entry a distance `R · tan(Δ/2)` before the waypoint, where `Δ` is the course change.
+To cut a corner and join the outbound leg cleanly, the circle has to touch both legs, which puts the turn entry a distance `R · tan(Δ/2)` before the waypoint, where `Δ` is the course change.
 That factor is what makes sharp corners expensive: it is 0.41 × R at a 45° corner, 1.0 × R at 90°, and 2.4 × R at 135°.
 On top of that comes the roll-in distance, because the plane still flies almost straight while it is banking into the turn.
 
