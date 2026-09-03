@@ -38,6 +38,23 @@ Enable the `VBAT` feature to enable the measurement of the battery voltage and t
 `vbat_scale` - Adjust this setting to match actual measured battery voltage to reported value.
 Increasing this value increases the measured voltage.
 
+### Voltage Sensor Source
+
+INAV can read the battery voltage from the flight controller's own ADC, or from a remote source (ESC telemetry, SmartPort, CRSF, or a DroneCAN battery monitor).
+Select the source with the `bat_voltage_src` setting:
+
+| Value | Sensor Source          |
+| ----- | ---------------------- |
+| 0     | None                   |
+| 1     | ADC / hardware sensor  |
+| 2     | ESC telemetry          |
+| 3     | Fake (test/development) |
+| 4     | SmartPort telemetry    |
+| 5     | CRSF telemetry         |
+| 6     | DroneCAN               |
+
+For a DroneCAN battery monitor, set `bat_voltage_src = CAN`; for setup and supported hardware see [Battery Monitoring via DroneCAN](#battery-monitoring-via-dronecan).
+
 ### Voltage Measurement Source
 
 Two voltage sources are available: raw voltage and sag compensated voltage.
@@ -99,13 +116,18 @@ Enable current monitoring using the CLI command:
 feature CURRENT_METER
 ```
 
-Configure the current meter type using the `current_meter_type` settings here:
+Configure the current meter type using the `current_meter_type` setting:
 
 | Value | Sensor Type            |
 | ----- | ---------------------- |
 | 0     | None                   |
-| 1     | ADC/hardware sensor    |
+| 1     | ADC / hardware sensor  |
 | 2     | Virtual sensor         |
+| 3     | Fake (test/development) |
+| 4     | ESC telemetry          |
+| 5     | SmartPort telemetry    |
+| 6     | CRSF telemetry         |
+| 7     | DroneCAN               |
 
 Configure capacity using the `battery_capacity` setting, in mAh units.
 
@@ -181,6 +203,24 @@ current_meter_scale = (reported_draw_mAh / charging_data_mAh) * old_current_mete
                     = (1260 / 1158) * 400
                     = 435
 ```
+
+## Battery Monitoring via DroneCAN
+
+A DroneCAN battery monitor sends voltage and current together in a single `BatteryInfo` message.
+Both readings come from the same source, so they update in lockstep when using a DroneCAN source.
+
+Enable voltage and current from a DroneCAN battery monitor:
+
+```
+set bat_voltage_src = CAN
+set current_meter_type = CAN
+feature CURRENT_METER
+save
+```
+
+The `CAN` value for both settings is selected from the same enumerations used for other sources — `bat_voltage_src` accepts `RAW`, `SAG_COMP`, and `CAN`; `current_meter_type` accepts the full set in the table above (None, ADC, Virtual, Fake, ESC, SmartPort, CRSF, DroneCAN).
+
+For general DroneCAN setup (bus bitrate, FC node ID, supported hardware) see [DroneCAN](../06-advanced-features/dronecan.mdx).
 
 ## Power and Current Limiting
 

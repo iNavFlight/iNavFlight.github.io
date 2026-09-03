@@ -1,0 +1,137 @@
+---
+title: DroneCAN
+description: Connect external sensors and peripherals to INAV over a CAN bus using the DroneCAN protocol
+---
+
+DroneCAN (formerly UAVCAN v0) is a lightweight protocol designed for reliable communication in aerospace and robotic applications over a CAN bus.
+INAV supports DroneCAN for connecting external sensors and peripherals such as battery monitors and GNSS receivers.
+
+## What DroneCAN gives you
+
+A single CAN bus can carry multiple sensors and actuators to and from the flight controller.
+Peripherals broadcast on the bus, the flight controller listens, and configuration goes back the other way.
+This lets you:
+
+- Replace a flight-controller ADC with a digital battery monitor that already measures both voltage and current, including per-cell data
+- Use a remote GNSS receiver mounted away from RF noise without running a long serial cable
+- Add and remove peripherals without re-flashing or re-wiring the FC
+
+:::info
+DroneCAN is independent of your serial-port configuration.
+It uses the CAN bus peripheral on the flight controller, which is separate from any UART.
+:::
+
+## Supported hardware
+
+DroneCAN requires a flight controller with CAN bus hardware:
+
+- STM32H7 boards (FDCAN peripheral)
+- STM32F7 boards (bxCAN peripheral)
+
+Check your flight controller's documentation to confirm CAN bus availability before connecting any DroneCAN peripherals.
+
+## Supported features
+
+| Feature | Status | Notes |
+| --- | --- | --- |
+| GNSS receiver | Supported | Set `gps_provider = DRONECAN` |
+| Battery voltage | Supported | Set `bat_voltage_src = CAN` |
+| Battery current | Supported | Set `current_meter_type = CAN` |
+| Per-node parameter Get/Set, Restart, Save | Supported | Configurator "DroneCAN" tab — requires INAV 10.0 or later |
+| Dynamic Node Allocation (DNA) | Supported | Optional server; assigns node IDs automatically — requires INAV 10.0 or later |
+| CAN bus-off event logging | Supported | New blackbox field `droneCANBusOffCount` — requires INAV 10.0 or later |
+| ESC / actuator / RC-input over CAN | Not yet | Targeted for a future INAV release |
+
+## Basic configuration
+
+Open the **DroneCAN** tab in INAV Configurator to configure the flight controller on the bus — node ID, bitrate, and the DNA server toggle all live there.
+The same settings are also available via the CLI, which is useful for scripted setup or if the tab isn't available on your platform.
+
+```
+set dronecan_node_id = 10
+set dronecan_bitrate = 1000KBPS
+save
+```
+
+| Setting | Values | Default | Description |
+| --- | --- | --- | --- |
+| `dronecan_node_id` | 1-127 | 10 | CAN node ID for the flight controller |
+| `dronecan_bitrate` | 125KBPS, 250KBPS, 500KBPS, 1000KBPS | 1000KBPS | CAN bus bitrate; all peripherals must match |
+| `dronecan_use_dna_server` | OFF, ON | ON | Whether the flight controller runs the Dynamic Node Allocation server (see [Node management](#node-management)) |
+
+:::note
+Node IDs 126 and 127 are reserved for network maintenance tools — avoid assigning them to your FC or peripherals.
+:::
+
+### Common next steps
+
+After enabling DroneCAN on the bus, choose where each sensor's data should come from:
+
+- For a DroneCAN GNSS receiver, see the [GPS](../05-core-features/gps.mdx) page.
+- For a DroneCAN battery monitor (voltage and/or current), see the [Battery Monitoring](../05-core-features/battery.mdx) page.
+
+## Node management
+
+:::info
+This section describes behaviour available in INAV 10.0 and later, behind firmware PR #11683 and configurator PR #2671 (parameter Get/Set and the DroneCAN configurator tab), firmware PR #11688 and configurator PR #2672 (Dynamic Node Allocation), and firmware PR #11729 (CAN bus-off blackbox logging).
+It documents the *intended* user experience; behaviour may shift during review before these PRs merge.
+:::
+
+INAV exposes DroneCAN nodes it can see on the bus through the INAV Configurator's **DroneCAN** tab.
+For each node you can:
+
+- Read its identity (`GetNodeInfo`) — name, hardware/software version, unique ID
+- Browse and edit its parameters (`GetSet`) — with the per-parameter `min`/`max` reported by the node itself, so out-of-range writes are rejected in the UI before they're sent
+- Save parameters to the node's EEPROM (`ExecuteOpcode(SAVE)`)
+- Restart the node (`RestartNode`) — useful after firmware updates or when a peripheral is wedged
+
+:::warning
+The **Restart** button on a node restarts *that node*, not the flight controller.
+It is intentionally placed away from the global **Save & Reboot** button so the two cannot be confused.
+:::
+
+### Per-node restart caveat
+
+Some peripherals acknowledge a `RestartNode` command and then reset themselves so quickly that their ACK frame never makes it onto the bus before the bus is gone.
+In that case the configurator will report "RestartNode failed" even though the node did in fact restart successfully.
+Confirm a successful restart by checking the node's `NodeStatus` heartbeats on the bus before assuming the restart was lost.
+
+### Dynamic Node Allocation
+
+If you enable the DNA server (`dronecan_use_dna_server = ON`, the default), the flight controller assigns node IDs to peripherals that don't already have one configured.
+This means you can plug in a new DroneCAN peripheral and not have to manually configure its node ID first.
+
+The DNA server:
+
+- Honours a peripheral's preferred node ID where it can (within the available range, skipping already-allocated IDs)
+- Stores its allocation table in persistent storage so the same peripheral gets the same node ID across power cycles
+- Detects conflicts with actively-broadcasting nodes and reassigns rather than overwriting
+- Reserves node IDs 126 and 127 for network maintenance tools and the FC's own ID range
+
+If you prefer to assign every node ID manually, set `dronecan_use_dna_server = OFF` — or uncheck the toggle in the **DroneCAN** tab.
+
+### Blackbox logging
+
+INAV exposes a cumulative bus-off event counter as a blackbox slow (S) frame field, `droneCANBusOffCount`.
+This lets you diagnose intermittent CAN bus faults from a recorded flight log without having to attach the configurator live and watch the `dronecan` CLI.
+
+The field is gated behind `USE_DRONECAN` in the firmware and only appears in blackbox logs when DroneCAN is enabled on the target.
+
+## Bus wiring notes
+
+DroneCAN requires a properly terminated CAN bus — termination at each physical end of the bus, not in the middle.
+
+- Each flight controller and each peripheral should declare its own bus termination state in its documentation; verify both ends of the bus are terminated.
+- A common cause of intermittent DroneCAN faults is missing or duplicated termination, which shows up in blackbox as an incrementing `droneCANBusOffCount` during the affected segment.
+- Avoid running the CAN bus parallel to and close to RF sources (video transmitter, radio receiver with telemetry) — the bus is differential but shares the same physical space and can pick up noise.
+
+## Troubleshooting
+
+If a peripheral isn't appearing in the configurator or isn't being seen by INAV:
+
+- Verify the bitrate matches between the FC and all peripherals — the most common cause is a peripheral left at a different default bitrate from the FC
+- Check the CAN wiring: CAN-H and CAN-L must not be swapped, both ends of the bus must be terminated, and the bus should have a common ground
+- Check `dronecan` in the CLI for an active node count
+- If you suspect bus-off events, decode a blackbox log and look at `droneCANBusOffCount` over time
+
+For more detail on the protocol internals and the driver layer, see `docs/DroneCAN.md` and `docs/DroneCAN-Driver.md` in the INAV firmware repository.
