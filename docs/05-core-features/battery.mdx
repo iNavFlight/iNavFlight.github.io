@@ -41,7 +41,7 @@ Increasing this value increases the measured voltage.
 ### Voltage Sensor Source
 
 INAV can read the battery voltage from the flight controller's own ADC, or from a remote source (ESC telemetry, SmartPort, CRSF, or a DroneCAN battery monitor).
-Select the source with the `bat_voltage_src` setting:
+Select the source with the `vbat_meter_type` setting:
 
 | Value | Sensor Source          |
 | ----- | ---------------------- |
@@ -53,7 +53,7 @@ Select the source with the `bat_voltage_src` setting:
 | 5     | CRSF telemetry         |
 | 6     | DroneCAN               |
 
-For a DroneCAN battery monitor, set `bat_voltage_src = CAN`; for setup and supported hardware see [Battery Monitoring via DroneCAN](#battery-monitoring-via-dronecan).
+For a DroneCAN battery monitor, set `vbat_meter_type = CAN`; for setup and supported hardware see [Battery Monitoring via DroneCAN](#battery-monitoring-via-dronecan).
 
 ### Voltage Measurement Source
 
@@ -212,13 +212,14 @@ Both readings come from the same source, so they update in lockstep when using a
 Enable voltage and current from a DroneCAN battery monitor:
 
 ```
-set bat_voltage_src = CAN
+set vbat_meter_type = CAN
 set current_meter_type = CAN
 feature CURRENT_METER
 save
 ```
 
-The `CAN` value for both settings is selected from the same enumerations used for other sources — `bat_voltage_src` accepts `RAW`, `SAG_COMP`, and `CAN`; `current_meter_type` accepts the full set in the table above (None, ADC, Virtual, Fake, ESC, SmartPort, CRSF, DroneCAN).
+The `CAN` value for both settings is selected from the enumerations documented above: `vbat_meter_type` accepts the sensor-source values listed in the [Voltage Sensor Source](#voltage-sensor-source) table (None, ADC, ESC, Fake, SmartPort, CRSF, DroneCAN); `current_meter_type` accepts the full set in the table above (None, ADC, Virtual, Fake, ESC, SmartPort, CRSF, DroneCAN).
+The separate `bat_voltage_src` setting (`RAW` or `SAG_COMP`) controls whether raw or sag-compensated readings are used for battery alarms and telemetry; it is documented under [Voltage Measurement Source](#voltage-measurement-source).
 
 For general DroneCAN setup (bus bitrate, FC node ID, supported hardware) see [DroneCAN](../06-advanced-features/dronecan.mdx).
 

@@ -6,6 +6,12 @@ description: Connect external sensors and peripherals to INAV over a CAN bus usi
 DroneCAN (formerly UAVCAN v0) is a lightweight protocol designed for reliable communication in aerospace and robotic applications over a CAN bus.
 INAV supports DroneCAN for connecting external sensors and peripherals such as battery monitors and GNSS receivers.
 
+:::info
+This page describes the INAV 10.0 (and later) DroneCAN implementation.
+DroneCAN sensor support is not present in the currently shipped 9.x firmware — the getting-started [Hardware Overview](../03-getting-started/01-hardware-overview.mdx) still describes 9.x as not supporting DroneCAN sensors, which is correct for 9.x but stale for 10.0.
+That page is being updated separately; once the upstream fix lands, this qualification can be removed.
+:::
+
 ## What DroneCAN gives you
 
 A single CAN bus can carry multiple sensors and actuators to and from the flight controller.
