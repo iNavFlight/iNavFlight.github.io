@@ -63,7 +63,7 @@ When the current drawn from a battery varies the provided voltage also varies du
 The sag can often trigger the battery alarms before the battery is empty and if you are relying on the battery voltage to know the charge state of your battery you have to land or cut the throttle to know the real, without load, battery voltage.
 The sag compensation algorithm simulates a battery with zero internal resistance and provides a stable reading independent from the drawn current.
 
-You can select the voltage source used for battery alarms and telemetry with the `bat_voltage_source` setting.
+You can select the voltage source used for battery alarms and telemetry with the `bat_voltage_src` setting.
 It can be set to either `RAW` for using raw battery voltage or `SAG_COMP` for using the calculated sag compensated voltage.
 
 You can see an illustration of the sag compensation algorithm in action in the following graph:
