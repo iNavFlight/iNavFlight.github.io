@@ -278,7 +278,7 @@ In INAV we use a set of specific variables, each variable may contain multiple a
 **navPos**, **navVel**, **navTgtPos** and **navTgtVel** each hold arrays [0-2], which represent distances due North [0], due East [1] and straight Up [2], all relative to the "point of origin".
 North and East are fused from accelerometer and GPS data, while Up is fused from accelerometer + barometer for multicopters and accelerometer + gps for airplanes if no barometer is available. Read the Inertial position estimator|Inertial-position-estimator-(INAV) section in the [[Developer info]] page for detailed explanation.
 
-"Point of origin" might be different from "Home". "Home" is defined as position at the time of arming. While "Point of origin" is recorded after a valid GPS fix is aquired.
+"Point of origin" might be different from "Home". "Home" is defined as position at the time of arming. While "Point of origin" is recorded after a valid GPS fix is acquired.
 
 For further information about the coordinate system used please read the Coordinate systems|Coordinate-systems section on the [[Developer info]] page.
 
@@ -332,7 +332,7 @@ Due to the complexity of the tasks being performed in later INAV releases. e.g. 
 
 Some fields that are logged, are not yet accessible with Blackbox Explorer, particularly navigation related.. Other options:
 
-* [backbox_decode](https://github.com/iNavFlight/blackbox-tools) Decode to CSV file
+* [blackbox_decode](https://github.com/iNavFlight/blackbox-tools) Decode to CSV file
 * [flightlog2kml](https://codeberg.org/stronnag/flightlog2kml), [fl2xui](https://codeberg.org/stronnag/fl2xui/). Decode to KML (for Google Earth).
 * [mwptools](https://codeberg.org/stronnag/mwptools/). Interactive log replay, inter-alia.
 
@@ -341,7 +341,7 @@ Some fields that are logged, are not yet accessible with Blackbox Explorer, part
 |  Name of field in txt file 	|  Name in Blackbox Log Viewer 	|  Explanation 	|  . 	|  ..            |
 |:--------------------------:	|:----------------------------:	|:------------:	|:---:	|:----------:|
 |  loopIteration 	|  not used 	|  counter from main loop 	|   	|   |
-|  time (us) 	    |  x-axis of diagram 	|  real time in micoseconds 	|   	|   |sensors/acceleration.h
+|  time (us) 	    |  x-axis of diagram 	|  real time in microseconds 	|   	|   |sensors/acceleration.h
 |  axisRate[0] 	    |  gyros[roll] (.. deg/s) 	|  rotation rate 	|  roll 	|  deg/sec |
 |  axisRate[1] 	    |  gyros[pitch] (.. deg/s) 	|  rotation rate 	|  pitch 	|  deg/sec |
 |  axisRate[2] 	    |  gyros[yaw] (.. deg/s) 	|  rotation rate 	|  yaw 	|  deg/sec |

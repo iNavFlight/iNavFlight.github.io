@@ -114,10 +114,10 @@ While [nav_fw_pitch2thr_threshold](https://github.com/iNavFlight/inav/blob/maste
 
 **Inability to obtain an accurate horizontal position can be caused by a number of reasons:**
 
-- Poor GNSS satellite accuracy and EPH position data - _Ensure you have a HDOP less than 1.2 for best precision. And never above 1.8._ [See here](https://github.com/iNavFlight/inav/wiki/GPS-and-Compass-setup#installing-the-gnss-unit---antenna-orientation)
+- Poor GNSS satellite accuracy and EPH position data - _Ensure you have a HDOP less than 1.2 for best precision. And never above 1.8._ [See here](../05-core-features/gps.mdx#installing-the-gnss-unit---antenna-orientation)
 - Main stabilization **PID_FF** and **RATES** are poorly tuned.
-- [SERVO AUTOTRIM](https://github.com/iNavFlight/inav/wiki/Modes#servo-autotrim-fw) is not tuned correctly.
-- Poorly Installed, Aligned or Calibrated magnetometer (compass) - _If a magnetometer is used, read [here](https://github.com/iNavFlight/inav/wiki/GPS-and-Compass-setup#setting-up-the-compass-alignment) to provide the best results._
+- [SERVO AUTOTRIM](../05-core-features/flight-modes-standard.mdx#servo-autotrim-fw) is not tuned correctly.
+- Poorly Installed, Aligned or Calibrated magnetometer (compass) - _If a magnetometer is used, read the [Compass](../05-core-features/compass.mdx) page to provide the best results._
 - High accelerometer vibrations from the motor(s) or prop(s). - _Can lead to attitude and heading inaccuracy or drift._
 - The control surface throws are too great or too little. Or its C.G. with respect to the aerofoils Center of Lift/Pressure is incorrect.
 - If all the previous conditions are satisfied - _Incorrectly tuned POS_XY_P, POS_XY_I or POS_HDG_P if [nav_use_fw_yaw_control ](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_use_fw_yaw_control) = ON_
@@ -156,7 +156,7 @@ The advantage of this, is you won't need to tune the PID gains. You can leave th
 
 Fixedwing stabilization uses the [TURN ASSIST](../05-core-features/flight-modes-standard.mdx#turn-assist) feature to help maintain control over the aircraft. It is active in all navigation modes. But can be disabled in the modes tab if desired.
 
-Fixedwing AutoTune does not operate on the yaw axis. This means the tuning has to be done [manually](https://github.com/iNavFlight/inav/wiki/Tune-INAV-PID%E2%80%90FF-controller-for-fixedwing#manually-tuning-rates-and-feedforward---how-it-works).  
+Fixedwing AutoTune does not operate on the yaw axis. This means the tuning has to be done [manually](./tune-pidff-fw.mdx#manually-tuning-rates-and-feedforward---how-it-works).  
 The gains you derive when tuning the Yaw PID controller will differ, depending on the control method used.  
 A Rudder induces yaw rotation from control surface area and deflection. While Differential thrust or Vectored thrust does so actively. Meaning the _Gains_ , _Feedforward_ and _Mixers_ adjustments will be more sensitive to change if using the latter on more powerful models.  
 _Differential thrust yaw stabilization strength is also dependent on how much throttle stick you have applied._
@@ -169,7 +169,7 @@ While the **mmix** motor yaw weight works together with `fw_ff_yaw` to achieve t
 The default motor mixer weight for yaw is [`0.3 -0.3`]. When increasing the yaw motor mixer weight, it MUST be done in **harmony** with the first three navigation setting mentioned hereafter.  
 Under normal flight conditions, the default motor mixer weight is adequate. While it maybe acceptable to go as high as [`0.7 -0.7`] on highly aerobatic airplanes. But it should be noted that this WILL affect yaw based navigation if those first three settings are increased too far beyond their recommended values.
 
-More mixer related information can be found [here](https://github.com/iNavFlight/inav/blob/master/docs/Mixer.md).
+More mixer related information can be found on the [Mixer](../05-core-features/mixer.mdx) page.
 
 _Yaw axis tuning should only be attempted after you have first successfully tuned the airplane on the roll and pitch axis._
 
@@ -224,7 +224,7 @@ If you experience this, it may be beneficial to disable the sensor in the Config
 - `inav_w_z_surface_v` - Weight applied to the Rangefinders estimated _climb rate_. When a rangefinder is present, within its operational distance above the ground.
 
 :::tip
-When choosing a [Lidar rangefinder](https://github.com/iNavFlight/inav/blob/master/docs/Rangefinder.md) for fixedwing landing assistance. Ensure you do not purchased a cheaper unit with minimal range. e.g. 2meters or less.
+When choosing a [Lidar rangefinder](../05-core-features/optical-flow-rangefinder.mdx) for fixedwing landing assistance. Ensure you do not purchased a cheaper unit with minimal range. e.g. 2meters or less.
 Such Lidar sensors have great difficulty working at even one quarter of their recommended range in direct sun light.
 Always select a higher quality unit with a stronger laser diode and lens, to provide more operational range.
 :::

@@ -38,7 +38,7 @@ This is because the output from the navigation controllers are place into action
 - Incorrectly set [nav_mc_hover_thr](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_hover_thr) - Adjust this setting to suit what your copter requires to hold a vertical stationary hover.
 - Insufficient POS*P, POS_I and/or VEL_P, VEL_I - \_The default multicopter Altitude PID gains are set conservative for safety.*
 - Non-functional barometer - _Go to the Configurator "\_Sensors tab_" and verify that barometer graph changes as you move the copter up and down.\_
-- Poor GNSS satellite accuracy and EPV altitude data - _Ensure you have a HDOP less than 1.2 for best precision. And never above 1.8. [Possible causes](https://github.com/iNavFlight/inav/wiki/GPS-and-Compass-setup#installing-the-gnss-unit---antenna-orientation)_
+- Poor GNSS satellite accuracy and EPV altitude data - _Ensure you have a HDOP less than 1.2 for best precision. And never above 1.8. [Possible causes](../05-core-features/gps.mdx#installing-the-gnss-unit---antenna-orientation)_
 - Seriously under-powered copter - _ALTHOLD is only able to compensate to some degree. If your copter hovers at 1700 linear throttle without any expo, ALTHOLD might fail to compensate._
 - Gaining altitude during fast flight - _Can be caused by increased air pressure being applied to the barometer.
 This is measured as a reduction in altitude - Try covering your barometer with open-cell foam._
@@ -161,7 +161,7 @@ However, lowering it to 1, can still help on copters that pitch/roll bounce, as 
 Increasing its value beyond 30 can make the corresponding axis more jittery when trying to maintain a level attitude.  
 Its responsiveness will also be dependent on - **1)** Motor power **2)** ESC braking effect **3)** The tightness of the main stabilization PID tune.
 
-- `mc_i_level` works as a Low Pass Filter for the LEVEL controllers update rate. The default value of 15 is optimal, and works in conjunction with [`acc_lpf_hz`](https://github.com/iNavFlight/inav/wiki/Multirotor-guide#5-selecting-filters). This means that `fw_i_level` will add no benefit if set higher than the accelerometers low-pass cutoff frequency.  
+- `mc_i_level` works as a Low Pass Filter for the LEVEL controllers update rate. The default value of 15 is optimal, and works in conjunction with [`acc_lpf_hz`](../03-getting-started/06-mr-gettingstarted.mdx#5-selecting-filters). This means that `fw_i_level` will add no benefit if set higher than the accelerometers low-pass cutoff frequency.  
 In some cases it may be better to lower it a few points.
 Because most larger multicopters can not adjust their level attitude at 15 times per second or greater.
 
@@ -212,7 +212,7 @@ If you've connected and configured everything correctly.
 You should see the Sonar & Opflow sensors active
 and ready (blue).
 If they have appeared in red, plug in the flight battery for them to show as active or recheck the serial TX/RX wiring.
-At miniumum, you should have Gyro, Accelerometer, Barometer, Flow and Sonar active for the rangefinder to operate.
+At minimum, you should have Gyro, Accelerometer, Barometer, Flow and Sonar active for the rangefinder to operate.
 
 ![Sensors highlight Opflow and Lidar](/img/pid-tune/mc-nav-pid-tune-02.png)
 

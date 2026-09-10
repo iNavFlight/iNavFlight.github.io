@@ -63,7 +63,7 @@ Waypoint radius | [nav_wp_radius](https://github.com/iNavFlight/inav/blob/master
 Waypoint safe distance | [nav_wp_max_safe_distance](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_wp_max_safe_distance) | The first waypoint in the mission should be closer than this value [m]. A value of 0 disables this check.
 Load Waypoints on Boot | [nav_wp_load_on_boot](https://github.com/iNavFlight/inav/blob/9.0.1/docs/Settings.md#nav_wp_load_on_boot) | If set to ON, waypoints will be automatically loaded from EEPROM to the FC during startup.
 Enforce Altitude at Waypoint | [nav_wp_enforce_altitude](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_wp_enforce_altitude) | Forces craft to achieve the set WP altitude as well as position before moving to next WP. Position is held and altitude adjusted as required before moving on. 0 = disabled, otherwise setting defines altitude capture tolerance [cm], e.g. 100 means required altitude is achieved when within 100cm of waypoint altitude setting.
-Waypoint Tracking Accuracy | [nav_fw_wp_tracking_accuracy](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_accuracy) | Waypoint tracking accuracy forces the craft to quickly head toward and track along the waypoint course line as closely as possible. Setting adjusts tracking deadband distance fom waypoint courseline [m]. Tracking isn't actively controlled within the deadband providing smoother flight adjustments but less accurate tracking. A 2m deadband should work OK in most cases. Setting to 0 disables waypoint tracking accuracy.
+Waypoint Tracking Accuracy | [nav_fw_wp_tracking_accuracy](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_accuracy) | Waypoint tracking accuracy forces the craft to quickly head toward and track along the waypoint course line as closely as possible. Setting adjusts tracking deadband distance from waypoint courseline [m]. Tracking isn't actively controlled within the deadband providing smoother flight adjustments but less accurate tracking. A 2m deadband should work OK in most cases. Setting to 0 disables waypoint tracking accuracy.
 Waypoint Tracking Angle | [nav_fw_wp_tracking_max_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_max_angle) | Sets the maximum allowed alignment convergence angle to the waypoint course line when nav_fw_wp_tracking_accuracy is active [degrees]. Lower values result in smoother alignment with the course line but will take more distance until this is achieved.
 Waypoint Turn Mode | [nav_fw_wp_turn_mode](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_mode) | Fixed wing only. How the plane turns at mission waypoints: `COORD_FLYBY` (default) cuts the corner and passes the waypoint abeam, `COORD_FLYOVER` flies over the waypoint before turning onto the next leg, `COORD_FLYINTO` crosses the waypoint already aligned with the outbound leg, `DIRECT` restores the pre INAV 10.0 turns. See [Fixed Wing Waypoint Turns](../06-advanced-features/fixed-wing-waypoint-turns.mdx).
 Max Turn Lead Time | [nav_fw_wp_turn_max_lead_time](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_max_lead_time) | Fixed wing only. Ceiling on how early a coordinated turn may start before the waypoint [ms]. Raise it for fast or sluggish models flying sharp corners, lower it to keep turns close to the waypoint. `COORD_FLYBY` only.
@@ -74,7 +74,7 @@ Restart Waypoint Mission | [nav_wp_mission_restart](https://github.com/iNavFligh
 
 ## Waypoint Types
 
-INAV offers serveral different waypoint types that each have unique functions.
+INAV offers several different waypoint types that each have unique functions.
 This section describes each of the waypoint types.
 
 ### Waypoint
@@ -115,7 +115,7 @@ A POI waypoint tells the multicopter to point its head (its front) to the POI un
 Multiple POI waypoints can be used in a single mission.
 
 The POI will be active on the *n-1* to *n+i* where *i* is an arbitrary number of waypoints after the POI waypoint.
-If the POI waypoint is the first waypint, it will be active on the *n* to *n+i* waypoints until a SET_HEAD is reset on waypoint *n+i* or the mission ends.
+If the POI waypoint is the first waypoint, it will be active on the *n* to *n+i* waypoints until a SET_HEAD is reset on waypoint *n+i* or the mission ends.
 
 **Example:**
 
@@ -134,7 +134,7 @@ The CLI setting `nav_disarm_on_landing` is honoured.
 
 
 
-For fixed wings there are additional parameters given to specifiy the landing behavior.
+For fixed wings there are additional parameters given to specify the landing behavior.
 These parameters are:
 
 ![land wp](/img/mission-control/wp-land.png)

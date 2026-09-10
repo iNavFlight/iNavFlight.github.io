@@ -5,7 +5,7 @@ description: How to configure addressable LED strips
 
 
 INAV supports the use of addressable LED strips.
-Addressable LED strips allow each LED in the strip to be programmed with a unique and independant color.
+Addressable LED strips allow each LED in the strip to be programmed with a unique and independent color.
 This is far more advanced than the normal RGB strips which require that all the LEDs in the strip show the same color.
 
 Addressable LED strips can be used to show information from the flight controller system. 
@@ -63,7 +63,7 @@ Just ensure that the GROUND is the same for all BEC outputs and LEDs.
 
 If using a large number of LEDs.
 It would be more efficient to use 12v LEDs and power them with a separate regulated supply, especially if using long strips.
-The data line (LED pad) from the flight controller wll have to be used.
+The data line (LED pad) from the flight controller will have to be used.
 Make sure there is continuity between the ground on the LEDS and the ground on the flight controller.
 
 | Target                | Pin  | LED Strip | Signal |
@@ -221,7 +221,7 @@ This mode binds the LED color to remaining battery capacity.
 | Red        |    20%   |
 | Deep pink  |     0%   |
 
-When Warning or Critial voltage is reached, LEDs will blink slowly or fast.
+When Warning or Critical voltage is reached, LEDs will blink slowly or fast.
 Note: this mode requires a current sensor. If you don't have the actual device you can set up a virtual current sensor (see [Battery](./battery.mdx)).
 
 #### Blink
@@ -323,11 +323,11 @@ the same time.  Thrust should normally be combined with Color or Mode/Orientatio
 
 This mode is allows you to use one or multiple led rings (e.g. NeoPixel ring) for an afterburner effect.  The light pattern rotates clockwise as throttle increases.
 
-A better effect is acheived when LEDs configured for thrust ring have no other functions.
+A better effect is achieved when LEDs configured for thrust ring have no other functions.
 
 LED direction and X/Y positions are irrelevant for thrust ring LED state.  The order of the LEDs that have the state determines how the LED behaves.
 
-Each LED of the ring can be a different color. The color can be selected between the 16 colors availables.
+Each LED of the ring can be a different color. The color can be selected between the 16 available colors.
 
 For example, led 0 is set as a `R`ing thrust state led in color 13 as follow.
 
@@ -401,7 +401,7 @@ color 14 0,0,0
 color 15 0,0,0
 ```
 
-### Mode Colors Assignement
+### Mode Colors Assignment
 
 Mode Colors can be configured using the cli `mode_color` command.
 
@@ -560,7 +560,7 @@ LEDs 1-2, 4-5, 7-8 and 10-11 should be positioned so the face east/north/west/so
 LEDs 12-13 should be placed facing down, in the middle
 LEDs 14-15 should be placed facing up, in the middle
 
-### Exmple 28 LED config
+### Example 28 LED config
 
 ```
 # right rear cluster
