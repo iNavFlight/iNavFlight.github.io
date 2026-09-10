@@ -200,6 +200,20 @@ Calibrate with flight battery powering up the aircraft.
 1. Within 30 seconds, hold the aircraft in the air and rotate it so that each side (front, back, left, right, top and bottom) points down towards the earth.
    The algorithm is smart enough to calculate the proper calibration values even if each side does not see a complete rotation after pressing the "Calibrate Magnetometer" button.
 
+### Automatic Compass Orientation Detection
+
+INAV can automatically detect and set the compass's mounting orientation (`align_mag_roll`, `align_mag_pitch`, `align_mag_yaw`) as part of the calibration spin above, so a standard mounting no longer needs its Orientation Preset worked out by hand.
+
+There's nothing extra to do beyond the steps above: while the aircraft is spun during calibration, INAV records the raw compass reading together with the flight controller's own attitude at each moment. Once the spin finishes, it checks whether the compass mounting matches one of 16 standard orientations (upright or inverted, in 45° yaw steps) and, if it's confident in the result, sets the alignment automatically.
+
+:::info
+This detects the compass's mounting **relative to the flight controller**, not which way the flight controller itself is mounted on the airframe. FC alignment must still be set correctly first — see [Compass and Flight Controller Alignment is Coupled](#compass-and-flight-controller-alignment-is-coupled) above.
+:::
+
+- It only covers upright/inverted mountings in 45° yaw steps, not a compass mounted at an arbitrary tilt (e.g. on an angled camera mount). For those, use [Manual Compass Orientation and Placement](#manual-compass-orientation-and-placement) or the [Empirical Method](#empirical-method-for-determining-compass-alignment) above.
+- **Not available on F722-based flight controllers** (or any target with 256KB of RAM or less) — there isn't enough spare RAM to hold the calibration sample buffer. On those boards the feature is compiled out entirely, and calibration works exactly as described above — you'll still need to set the alignment manually.
+- If the spin doesn't produce a confident result (too few samples, or an ambiguous spin), INAV leaves your existing alignment setting untouched rather than guessing.
+
 ### Compass Calibration Using Stick Commands
 
 Calibrating Mag/Compass without the need to be connected to a computer can extremely convenient while out in the field.
