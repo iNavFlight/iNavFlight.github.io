@@ -1,0 +1,175 @@
+---
+title: EZ-Tune
+description: Simplified multirotor tuning for PID gains, rates and filters
+---
+
+EZ-Tune is a simplified tuning framework for multirotors.
+Instead of setting every PID gain, rate, expo and filter value by hand, you work with nine values and the firmware derives all the underlying settings from them.
+For example, instead of setting several filters with individual cutoff frequencies and types, you set one base frequency and INAV configures the whole filter chain around it.
+
+When EZ-Tune is enabled, it takes over the settings it manages, so the manual PID, rate and filter controls of the Configurator's _Tuning_ tab are hidden while it is active.
+That also makes it hard to break a working EZ-Tune setup by editing a value it would overwrite anyway.
+
+:::warning
+EZ-Tune applies to multicopters only, because it writes the multicopter PID bank and nothing else.
+If you set the platform type in the _Mixer_ tab to anything other than multirotor or tricopter, the Configurator switches `ez_enabled` off for you.
+:::
+
+:::note
+The Configurator still labels EZ-Tune experimental.
+It is not guaranteed to work on every frame, and the way the values are computed can change between INAV versions.
+EZ-Tune values are stored per control profile, so switching the control profile switches the EZ-Tune values with it.
+:::
+
+## Where to find it
+
+In the Configurator, open the _Tuning_ tab and stay on the _Main PID Gains_ page.
+The highlighted box at the top of the page holds the **Enabled** switch, and the nine sliders below it appear once EZ-Tune is enabled.
+The right-hand side of the page shows a _PID preview_ and a _Rate preview_ that update as you move the sliders, so you can see the gains, rates and expo curve that will be written before you save.
+
+The same values are also reachable from the flight controller itself through the [in-flight OSD menu](../06-advanced-features/in-flight-osd-menu.mdx) under `PID TUNING` > `EZTUNE`, with the exception of _Snappiness_.
+Everything can be set from the Configurator or the OSD menu, so the CLI is only needed if you prefer it, or for backups.
+
+## Before you change anything
+
+Save a copy of your current configuration with `diff all` in the [CLI](../cli.mdx) and write it to a file.
+If a tune turns out worse than what you had, that file is the fastest way back.
+
+## The nine values
+
+| Slider | CLI setting | Range | Default | Acts as |
+| --- | --- | --- | --- | --- |
+| Filter Hz | [ez_filter_hz](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_filter_hz) | `20` - `300` | `110` | base cutoff for the gyro and D-term filter chain |
+| Axis ratio | [ez_axis_ratio](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_axis_ratio) | `25` - `175` | `110` | pitch gains as a percentage of the roll gains |
+| Response | [ez_response](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_response) | `0` - `200` | `100` | P-term |
+| Damping | [ez_damping](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_damping) | `0` - `200` | `100` | D-term |
+| Stability | [ez_stability](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_stability) | `0` - `200` | `100` | I-term |
+| Aggressiveness | [ez_aggressiveness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_aggressiveness) | `0` - `200` | `100` | Control Derivative term, called FF in the preview |
+| Rate | [ez_rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_rate) | `0` - `200` | `100` | rotation rates and RC expo |
+| Expo | [ez_expo](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_expo) | `0` - `200` | `100` | RC expo shown in the preview |
+| Snappiness | [ez_snappiness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_snappiness) | `0` - `100` | `0` | D-Boost |
+
+EZ-Tune itself is switched on and off with [ez_enabled](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#ez_enabled), which is `OFF` by default in the firmware and set to `ON` by the multirotor presets described below.
+
+Moving a slider from left to right increases the effect it describes, typically from sluggish, through the value that suits the craft, to unstable.
+_Damping_ is the exception and is best left alone until the final test flights.
+
+- **Filter Hz** sets the base cutoff frequency for the gyro and D-term filters, so higher values mean less filter delay and better stabilization, but also more noise reaching the motors.
+The goal is the highest value that shows none of the usual side effects: hot motors, audible oscillation, rapid shaking, or the craft climbing by itself.
+- **Axis ratio** describes how the mass of the craft is distributed.
+A perfect X frame is `100`, and most modern frames land somewhere between `110` and `130` because they carry more mass along the front-to-back axis.
+- **Response** defines how quickly the craft reacts to stick movement and gyro signal.
+Increase it if the craft feels sluggish or has a slow wobble, and decrease it if motors get hot, it overshoots, or it feels nervous.
+Most modern quads with strong motors fly best with _Response_ below `80`.
+- **Damping** opposes any change of rotation speed and makes the flight smoother and more stable.
+Raise it until the first side effects appear; most modern quads accept `150` to `180`.
+- **Stability** is the long-term stabilization strength and usually needs no tuning at all.
+Most modern quads tolerate `120` to `130`, and lowering it can help with heavy propwash during vertical descents.
+- **Aggressiveness** defines how hard the controller pushes on fast stick movement.
+It changes stick feel rather than stabilization.
+- **Rate** sets the rotation rate for all three axes, where `0` is 300 dps, `100` is 600 dps and `200` is 900 dps.
+Yaw is always set 100 dps lower than roll and pitch.
+- **Expo** shapes the RC input curve, with lower values making the sticks more sensitive around centre.
+- **Snappiness** accelerates the reaction to fast stick movement, both when you start and when you stop a manoeuvre.
+It is `0` by default, so it does nothing until you raise it.
+
+### Filter Hz starting points
+
+| Propeller size | Filter Hz |
+| --- | --- |
+| 3 inch | 90 |
+| 5 inch | 110 |
+| 7 inch | 90 |
+| 10 inch | 75 |
+| 12 inch | 60 |
+
+These are starting points, not final values, and the sequence is deliberately not a straight line.
+Use [Blackbox](../05-core-features/blackblox.mdx) logs and your own judgement to find the value that suits your craft once you have flown it.
+
+:::tip
+For propellers of 10 inches and up, expect to reduce _Response_ and increase _Damping_ compared with the smaller sizes.
+The values in the preset table below show the same trend already between 3 and 7 inch quads.
+:::
+
+## What EZ-Tune writes
+
+The values above are not stored as PID gains: the firmware recomputes the affected settings every time EZ-Tune values or the control profile change.
+Knowing the formulas makes the preview panel easy to read.
+
+### PID gains
+
+EZ-Tune starts from its own base gains, which are `P 40`, `I 75`, `D 23` and `CD 100` for roll and pitch, and `P 45`, `I 80`, `D 0` and `CD 100` for yaw.
+Roll takes those base values scaled by the matching slider: P by _Response_, I by _Stability_, D by _Damping_ and CD by _Aggressiveness_, each as a percentage.
+Pitch takes the same result multiplied by _Axis ratio_, so the default `110` gives pitch gains 10 percent above roll.
+Yaw is scaled more gently, at half the deviation from `100` that roll and pitch get, so a slider at `150` gives 125 percent of the yaw base gain.
+
+The results are written to `mc_p_*`, `mc_i_*`, `mc_d_*` and `mc_cd_*` for the active control profile.
+
+### Rates and expo
+
+_Rate_ is mapped linearly onto `roll_rate` and `pitch_rate`, from 300 dps at `0` to 900 dps at `200`, and `yaw_rate` is set 100 dps below that.
+This is why the _Rate preview_ table reports values in dps rather than in the deca-degrees used by the CLI settings.
+
+:::note
+In INAV 10 the firmware computes the applied `rc_expo` and `rc_yaw_expo` from the _Rate_ slider, while the Configurator's expo preview and curve are drawn from the _Expo_ slider.
+If the stick feel around centre does not change the way the preview suggests, this is why.
+:::
+
+### Filters
+
+_Filter Hz_ drives the whole filter chain, and this is the part of EZ-Tune that replaces the most manual work.
+
+- `gyro_main_lpf_hz` is set to the _Filter Hz_ value.
+- `dterm_lpf_hz` is set 5 Hz below it, never below 50 Hz, and `dterm_lpf_type` is set to `PT2`.
+- The dynamic gyro notch is enabled in 3D mode with `dynamic_gyro_notch_q` at `250`, and `dynamic_gyro_notch_min_hz` follows two thirds of _Filter Hz_, never dropping below its own default of 50 Hz.
+- `setpoint_kalman_enabled` is switched on, and `setpoint_kalman_q` sits at `200` below 150 Hz and rises towards `400` as _Filter Hz_ approaches 300.
+- `smith_predictor_delay` is set to the PT1 filter delay at that cutoff, which works out at roughly 1.5 ms for the default `110`.
+- `gyro_anti_aliasing_lpf_hz` is returned to its default, `gyro_filter_mode` is forced to `STATIC`, and `rc_filter_auto` is forced `ON`.
+
+_Snappiness_ is applied through `d_boost_min`, from `1.0` at `0` (no D-Boost) down to `0.0` at `100`.
+
+## Recommended starting values
+
+The Configurator ships complete EZ-Tune presets for three quad sizes.
+They are applied by the defaults dialog that appears after flashing, and can be applied again later with **Select New Defaults** on the _Tuning_ tab.
+All three enable EZ-Tune, which is why a freshly set up multirotor arrives with EZ-Tune already active.
+
+| Setting | 3 inch | 5 inch | 7 inch |
+| --- | --- | --- | --- |
+| `ez_filter_hz` | 90 | 110 | 90 |
+| `ez_axis_ratio` | 116 | 110 | 110 |
+| `ez_response` | 71 | 92 | 101 |
+| `ez_damping` | 103 | 108 | 115 |
+| `ez_stability` | 105 | 110 | 100 |
+| `ez_aggressiveness` | 100 | 80 | 100 |
+| `ez_rate` | 134 | 134 | 134 |
+| `ez_expo` | 118 | 118 | 118 |
+
+There are no presets for larger quads.
+For those, start from the _Filter Hz_ table above, follow the trend the presets show, and expect to test and adjust.
+
+:::warning
+Presets cannot account for your frame, motors, propellers and battery, so treat them as a stable place to start and nothing more.
+:::
+
+## Tuning procedure
+
+1. Enable EZ-Tune and set the values recommended for your craft, either by applying a preset or by working through the sliders.
+1. Press **Save** and let the flight controller reboot.
+1. Test fly and note what needs changing.
+1. Change one value, save, and test again before changing anything else.
+
+Look for a responsive setting that is still stable, then go back a little, or raise _Damping_ at the end until the craft feels reliable.
+The values interact, so a change that looks harmless on its own can shift the result of an earlier one.
+
+:::tip
+Share results and ask questions in the `#ez-tune` channel on the INAV Discord.
+:::
+
+## Coming from Betaflight
+
+The slider concept resembles the Betaflight slider tuning, but EZ-Tune covers more ground.
+It does not only scale the PID controller: it also sets the rates and expo, configures the filter chain, and enables the functions that go with it.
+Instead of twelve PID values you set four, and instead of a set of individual filter settings you set one frequency.
+
+If you are moving over from Betaflight, [INAV for Betaflight users](../05-core-features/inav-for-betaflight-users.mdx) covers the wider differences between the two firmwares.
