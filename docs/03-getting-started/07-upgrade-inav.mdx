@@ -1,0 +1,209 @@
+---
+title: Upgrade INAV
+sidebar_position: 7
+description: Move an aircraft that already runs INAV to a newer release without losing its configuration
+---
+
+This page describes the general procedure for moving an aircraft that already runs INAV to a newer INAV release.
+It is written to be version independent: the steps are the same for every release, while the settings that changed in one particular release are listed in the [release notes](../02-release-notes.mdx).
+If the flight controller is brand new, or currently runs another firmware, follow [Install INAV](./03-install-inav.mdx) instead.
+
+:::warning
+Read the whole page before you flash anything.
+Flashing with _Full chip erase_ wipes every setting stored on the flight controller, and a configuration restored blindly from an older release can leave an aircraft mistuned or unflyable.
+Always keep your own copy of the old configuration, and always check the aircraft on the bench with the propellers removed before you fly it.
+:::
+
+## How INAV version numbers work
+
+An INAV version consists of three numbers separated by dots, for example 9.1.0.
+
+- The first number is the major version, which changes when large changes are made to INAV.
+- The second number is the minor version, which changes when smaller changes are made.
+- The third number is the patch level, which changes when bugs are fixed and no new functionality is added.
+
+The first two numbers are the ones that matter for an upgrade.
+Moving between patch levels of the same minor release, for example 9.1.0 to 9.1.1, is usually possible without touching the configuration.
+Moving to a new major or minor release, for example 9.0.x to 9.1, means some settings have been renamed, removed or given a different meaning, so the old configuration needs to be reviewed before it is loaded back.
+
+## Before you start
+
+Download the newest INAV Configurator from the [INAV Configurator releases page](https://github.com/iNavFlight/inav-configurator/releases) and install it on your computer.
+Configurator can flash other firmware versions, but the Firmware Flasher tab asks you to match the major and minor version of firmware and Configurator when you set an aircraft up.
+For INAV 9.1 firmware that means INAV Configurator 9.1.1.
+
+You also need somewhere to keep the backup of your configuration, so have a plain text editor at hand.
+
+:::note
+INAV is only built for STM32 F4, F7 and H7 processors, for AT32 F4 and for RP2350.
+Boards with an STM32 **F1** processor, such as NAZE32 or CC3D, work up to INAV 1.7.3 only, and boards with an STM32 **F3** processor, such as SPRACINGF3 or OMNIBUS, work up to INAV 2.6.0 only.
+Those boards cannot be upgraded any further, and we recommend a newer flight controller for any new setup.
+:::
+
+## Step 1: Back up the configuration
+
+This is the step that saves your setup, so do not skip it.
+
+### Let Configurator back it up
+
+Configurator takes a backup of the flight controller by itself.
+The Firmware Flasher tab has three buttons for this in the lower left corner: _Backup Config_, _Restore Config_ and _Open Backups_.
+
+- _Backup Config_ reads the configuration over the CLI with `diff all` and writes it to a file of your choice.
+- _Restore Config_ loads such a file back into the flight controller.
+- _Open Backups_ opens the folder where Configurator keeps its own backups.
+
+Whenever you flash from the Firmware Flasher tab, Configurator also writes an automatic backup before it starts, whether or not _Full chip erase_ is enabled.
+Those files are kept in `%APPDATA%/inav-configurator/backups/` on Windows, `~/Library/Application Support/inav-configurator/backups/` on macOS and `~/.config/inav-configurator/backups/` on Linux.
+Automatic backups are named `UPDATE_inav_backup_{version}_{board}_{date}.txt` and only the ten most recent ones are kept, so rename or copy the file if you want to keep it for good.
+
+### Back up manually from the CLI
+
+Keep a copy of your own as well, in a place you choose, because that is the copy you can still read on another computer.
+
+1. Connect the flight controller to the USB port of your computer and press _Connect_ in Configurator.
+2. Go to the CLI tab.
+3. Press the _Diff All_ button, or type `diff all` and press enter.
+4. Press _Save to File_ and store the output, or use _Copy to Clipboard_ and paste it into a text editor.
+
+`diff all` lists every setting that differs from the defaults, across the master section and all profiles.
+Plain `diff` prints the master section only, so always add `all` when you make a backup.
+`dump` prints the complete configuration including all the values that are still at their default, which makes it much longer and much riskier to load into a newer release, so use `diff all` for backups.
+Adding `showdefaults`, as in `diff all showdefaults`, writes the default value of each changed setting into the output as a comment, which is useful when you want to see how far your setup deviates from stock.
+
+:::note
+Leaving the CLI tab or pressing _Disconnect_ sends `exit` to the board, which restarts it and discards anything you have not saved.
+Reading the configuration with `diff all` changes nothing, so it is safe to leave the tab after a backup.
+:::
+
+## Step 2: Note your current version and target
+
+The backup starts with a version header that looks like this.
+
+```
+# version
+# INAV/MATEKF405SE 9.0.2 Mar 15 2026 / 19:22:41 (bd2ba7ada)
+# GCC-13.2.1 20231009
+```
+
+The name after `INAV/` is the target of your flight controller, `MATEKF405SE` in this example, and the number after it is the firmware version, `9.0.2`.
+You can also get the same two lines at any time by typing `version` in the CLI.
+Write both down, because you need the target to pick the right firmware and the version to find the right section in the release notes.
+
+## Step 3: Prepare the configuration for the new release
+
+Settings that no longer exist in the new firmware are rejected when the configuration is loaded back, and settings that changed their meaning are accepted silently with the wrong value, which is the more dangerous case.
+
+Open the [release notes](../02-release-notes.mdx) of the release you are upgrading to and work through its upgrade section.
+It lists the settings that were removed, renamed or changed in that release, together with anything that has to be redone by hand.
+If you are jumping over several releases, work through the sections for the releases in between as well.
+
+There are two tools that do most of the mechanical work for you.
+
+- Configurator migrates a backup for you while restoring it, see [Step 5](#step-5-restore-the-configuration).
+- The [INAV CLI Update Tool](https://mrd-rc.com/iNav/INAV-CLI-Update.php) rewrites a `diff all` text into the format of a newer release in the browser and warns about settings you should check.
+  Paste the full `diff all` into it, not a `dump`.
+
+:::tip
+Edit a copy, not your original backup.
+Keep the untouched original and give the edited file the name of the version you are upgrading to, so you can always start over from the original.
+:::
+
+## Step 4: Flash the new firmware
+
+1. Go to the Firmware Flasher tab in Configurator.
+2. Select your target in the board list, or press _Auto-select Target_ while the flight controller is connected.
+3. Select the firmware version you want to flash.
+4. Enable _Full chip erase_.
+5. Leave _No reboot sequence_ disabled as long as Configurator can talk to the board and reboot it into the bootloader itself.
+   Enable it only when you have powered the board with the BOOT button held or the boot pins jumpered.
+6. Press _Load Firmware [Online]_, or _Load Firmware [Local]_ if you downloaded the file from the [INAV releases page](https://github.com/iNavFlight/inav/releases) yourself.
+7. Press _Flash Firmware_ and wait for the progress bar to finish.
+
+:::warning
+Do not disconnect the board or turn off your computer while it is being flashed.
+:::
+
+:::warning
+Upgrade with _Full chip erase_ enabled.
+Without it, settings left over from the old release stay in memory, and Configurator warns that updating from one version to another without a full chip erase can cause unpredictable issues or configuration corruption.
+Configurator also refuses to restore your configuration automatically in that case.
+:::
+
+## Step 5: Restore the configuration
+
+### With the Configurator restore flow
+
+When the flash was done with _Full chip erase_ enabled, Configurator waits for the board to come back, offers to restore the backup it took before flashing and asks _Yes, Restore_ or _No, Skip_.
+
+If the backup comes from an older major version, Configurator first shows a migration preview that lists the removed settings, the renamed settings and commands, the changed values and the settings whose numbering was remapped, plus warnings about settings that need your own judgement.
+Read that list, then press _Continue with Restore_ or _Cancel (Manual Review)_ if you would rather edit the file yourself.
+The migration profiles are chained across major versions, so a jump from INAV 7 to INAV 9 applies the 7 to 8 profile followed by the 8 to 9 profile.
+For a jump Configurator has no profile for it says so and restores the file unconverted, and for a downgrade across a major version it does not offer an automatic restore at all.
+
+If the flight controller reports errors while the settings are being written, Configurator lists the offending lines and lets you choose _Save Anyway_ or _Abort (Don't Save)_.
+
+### By hand in the CLI
+
+1. Press _Connect_ and go to the CLI tab.
+2. Paste your edited settings into the command box and press enter, or press _Load from File_, check the commands in the _Review loaded commands_ dialog and press _Execute_.
+3. Watch the output for lines the firmware rejected.
+4. Let the flight controller save and reboot, or press _Save Settings_ if you loaded only part of the file.
+
+A `diff all` file begins with `defaults noreboot` and `batch start` and ends with `save`, so loading a complete one resets the board to defaults, applies your settings and then saves and reboots by itself.
+There is no need to run `defaults` first, and if you do run it, note that `defaults` writes the defaults to memory and reboots the board on its own, so it needs no `save` afterwards.
+
+:::warning
+If a pasted line failed, `save` refuses to write and answers `PLEASE FIX ERRORS THEN 'SAVE'`.
+Correct the offending lines and save again, and never assume settings were stored because the tab scrolled past.
+:::
+
+:::tip
+If you use several profiles, load a long `diff all` in two parts.
+Copy everything from the top of the file down to the end of the `# master` section, paste it, press enter and press _Save Settings_.
+Wait for the reboot, return to the CLI tab and load the rest of the file, starting at the first `# control_profile` section.
+:::
+
+After the restore, run `diff all` once more and compare it with your backup to confirm that everything you meant to keep is really there.
+
+## Step 6: Upload the OSD font again
+
+An analogue OSD stores its character set on the video chip, and the character set changes between INAV releases.
+The firmware checks the font when it boots and writes `INVALID FONT` or `INVALID FONT VERSION` on the OSD splash screen when the font on the chip is missing or older than the release needs.
+
+1. Go to the OSD tab.
+2. Press _Analogue Font Manager_ in the toolbar at the bottom of the tab.
+3. Pick one of the supplied fonts, or press _Open Font File_ to use your own.
+4. Press _Upload Font_ and wait for the process to finish.
+
+Digital video systems get their fonts from the goggles or the video receiver, so there is nothing to upload for them in Configurator.
+
+## Step 7: Calibrate, then check everything on the bench
+
+- Recalibrate the accelerometer as described in [Accelerometer and Gyroscope Calibration](./04-accel-calibration.mdx).
+- Recalibrate the compass, and do it outdoors, because the magnetic field indoors is distorted and produces a bad calibration.
+  See [Compass](../05-core-features/compass.mdx) for the procedure.
+- Check that an _ARM_ mode is still assigned to a switch in the Modes tab.
+  INAV arms from that mode only, there is no stick command for arming.
+- Go through every tab and confirm your settings survived, especially ports, mixer, outputs, modes, failsafe and the battery configuration.
+- Take the propellers off, then move the aircraft by hand and watch the model preview follow it correctly.
+  On an airplane, check that every control surface still moves in the right direction and to the right side.
+- Check the release notes for tuning advice.
+  A release can change how a controller behaves, so gains you had raised above the defaults may need to be lowered or retuned before the first flight.
+
+:::warning
+Treat the first flight after an upgrade as a test flight.
+Hover or fly a few conservative circuits in a manual or stabilised mode and confirm the aircraft behaves as expected before you trust it with a navigation mode.
+:::
+
+## Coming from a very old version
+
+If you are still on INAV 1.x or 2.x, the configuration is worth very little.
+The mixer framework, the OSD framework and the calibration scales of accelerometer and magnetometer were all replaced along the way, so those old values do not translate.
+Set the aircraft up from scratch instead: load the mixer in the Mixer tab, calibrate the sensors, and rebuild the OSD layout.
+INAV has become considerably easier to set up since then, and [Getting Started](./01-hardware-overview.mdx) walks through it.
+
+## After the upgrade
+
+Every INAV release brings features that your old configuration knows nothing about.
+Read the [release notes](../02-release-notes.mdx) of the release you just installed to see what is new and what you can now switch on.
