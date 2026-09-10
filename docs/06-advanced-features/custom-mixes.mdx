@@ -1,0 +1,382 @@
+---
+title: Custom Mixes for Exotic Setups
+description: Worked motor and servo mixes for airframes that need more than a preset
+---
+
+Some airframes do not match the obvious quad or plane, and some need extra servos that no preset drives.
+This page collects worked `mmix` and `smix` examples for those setups, together with the syntax details that are easy to get wrong.
+
+It is the advanced companion to two other pages, and it assumes both of them.
+[Mixer](../05-core-features/mixer.mdx) explains what the motor weights and the servo mixer inputs do, and lists every input ID.
+[Mixer Tab](../04-inav-configurator/mixer-tab.mdx) covers the graphical mixer editor, the preset list and output allocation.
+
+:::warning
+Remove the propellers before you test a new mix.
+A mix with a wrong sign fights the pilot instead of helping, and a missing rule leaves a control surface dead.
+Check every motor direction and every servo direction on the bench, in every flight mode you intend to use, before the first flight.
+:::
+
+## Start from a preset if one exists
+
+Most of the airframes on this page became mixer presets years ago, so typing them by hand is now the slower and riskier path.
+Load the preset in the `Mixer` tab, then change only what your airframe actually needs.
+
+| Airframe | Mixer preset |
+| --- | --- |
+| Quad with motors at front, rear, left and right | `Quad +` |
+| Hexacopter on an H frame | `Hex H` |
+| Hexacopter with motors at front and rear | `Hex +` |
+| Coaxial Y6 | `Y6` |
+| Y4 with a coaxial rear pair | `Y4` |
+| Quad with a V-tail | `V-tail Quad` |
+| Quad with an A-tail | `A-tail Quad` |
+| Flat octocopter with motors on the axes | `Octo Flat +` |
+| Flat octocopter with motors between the axes | `Octo Flat X` |
+| Plane with a V-tail | `Airplane V-tail` |
+| Plane with a V-tail and one aileron servo | `Airplane V-tail (single aileron servo)` |
+| Plane without a rudder | `Airplane without rudder` |
+| Twin motor plane with differential thrust | `Airplane with differential thrust` |
+
+The mixes below are the ones those presets write.
+That makes them useful for a CLI-only workflow, and for checking a `diff` or a backup against what the aircraft should contain.
+
+:::note
+Set the platform type before you load or type a mix, because it decides which flight modes and mixer features are available.
+INAV defines the platform types `MULTIROTOR`, `AIRPLANE`, `HELICOPTER`, `TRICOPTER`, `ROVER` and `BOAT`, and of those only `MULTIROTOR`, `AIRPLANE` and `TRICOPTER` are implemented.
+See [Platform type](../05-core-features/mixer.mdx#platform-type) for the details.
+:::
+
+## Syntax details worth checking
+
+### Motor rules
+
+A motor rule is written as `mmix <index> <throttle> <roll> <pitch> <yaw>`.
+All four weights are mandatory and a rule with fewer arguments is rejected.
+The index counts from `0` and goes up to eleven on most targets.
+
+Motor rules have to be contiguous, because the firmware counts motors by walking the rules from `0` and stopping at the first slot whose throttle weight is `0`.
+A gap in the middle therefore hides every rule behind it.
+This is also why setting the throttle weight to `0` is the way to remove a motor from the end of the list.
+
+`mmix reset` clears all motor rules and `mmix` on its own lists the current ones.
+
+### Servo rules
+
+A servo rule is written as `smix <rule> <servo> <input> <weight> <speed> <logic condition>`.
+
+* `rule` is the slot the rule is stored in, from `0` to `35`, which is twice the eighteen supported servos.
+* `servo` is the target servo, from `0` to `17`.
+* `input` is the mixer input ID, listed in full in [Servo Mixing](../05-core-features/mixer.mdx#servo-mixing).
+* `weight` runs from `-1000` to `1000` and is applied as `input * weight / 100`, so `100` passes the input through unchanged and a negative weight reverses it.
+* `speed` limits the rate of change, from `0` to `255`, where `0` means no limit.
+* `logic condition` is optional and defaults to `-1`, which means the rule is always active.
+
+`smix reset` clears all servo rules and `smix` on its own lists the current ones.
+
+:::warning
+The old `smix reverse <servo> <input> r` command no longer exists.
+The servo mixer parser accepts numbers only, so a rule is reversed by giving it a negative weight instead.
+:::
+
+### Servo endpoints
+
+Servo travel is set with `servo <index> <min> <max> <middle> <rate>`, which takes exactly five numbers.
+Examples written for older firmware often carry a sixth value, a forwarding channel, and those lines are rejected today.
+`min` and `max` have to stay inside 500 to 2500, `middle` has to sit between them, and `rate` runs from `-125` to `125`.
+
+The mixer output is scaled separately for each side of the midpoint, using `(max - middle)` upwards and `(middle - min)` downwards, and the result is finally clipped to `min` and `max`.
+Moving the midpoint to one end of the travel is therefore a legitimate way to build a surface that only deflects one way, which the flaps example below relies on.
+
+### Input names
+
+Input `29` is called `Fixed Value` in the Configurator today and was called `MAX` when these examples were first written.
+Only the label changed, the input still feeds a constant, so old rules using input `29` keep working.
+
+Input `14` is called `Flaperon Mode` in the Configurator and `FEATURE FLAPS` in the firmware settings.
+It is `0` until `FLAPERON` flight mode is active, and then carries the `flaperon_throw_offset` value, which defaults to 200 and can be set between 50 and 450.
+`FLAPERON` mode is only offered when the platform type is `AIRPLANE` and `has_flaps` is `ON`.
+
+The input list also grew well past the twenty-nine entries these examples use.
+Inputs `30` to `37` are the [Programming Framework](./programming-framework.mdx) global variables, `38` is `Mixer Transition` for [VTOL](./vtol.mdx) profiles, `39` to `41` are head tracker pan, tilt and roll, and `42` to `59` are RC channels 17 to 34.
+
+## Multirotor mixes
+
+### Quad +
+
+Motors sit at the front, rear, left and right instead of on the diagonals.
+
+```
+mmix reset
+mmix 0 1.0 0.0 1.0 -1.0    # REAR
+mmix 1 1.0 -1.0 0.0 1.0    # RIGHT
+mmix 2 1.0 1.0 0.0 1.0     # LEFT
+mmix 3 1.0 0.0 -1.0 -1.0   # FRONT
+```
+
+### Hex H
+
+An H frame with four motors on the corners and two more on the centre line of each side rail.
+
+```
+mmix reset
+mmix 0 1.0 -1.0 1.0 -1.0   # REAR_R
+mmix 1 1.0 -1.0 -1.0 1.0   # FRONT_R
+mmix 2 1.0 1.0 1.0 1.0     # REAR_L
+mmix 3 1.0 1.0 -1.0 -1.0   # FRONT_L
+mmix 4 1.0 0.0 0.0 0.0     # RIGHT
+mmix 5 1.0 0.0 0.0 0.0     # LEFT
+```
+
+:::note
+The last two rules carry throttle only, so those motors add lift without contributing any roll, pitch or yaw authority.
+They still have to be present, because the firmware stops counting motors at the first rule with a throttle weight of `0`.
+:::
+
+### Hex +
+
+Six motors at sixty degree intervals, with one of them at the front and one at the rear.
+
+```
+mmix reset
+mmix 0 1.0 -0.866025 0.5 1.0      # REAR_R
+mmix 1 1.0 -0.866025 -0.5 -1.0    # FRONT_R
+mmix 2 1.0 0.866025 0.5 1.0       # REAR_L
+mmix 3 1.0 0.866025 -0.5 -1.0     # FRONT_L
+mmix 4 1.0 0.0 -1.0 1.0           # FRONT
+mmix 5 1.0 0.0 1.0 -1.0           # REAR
+```
+
+### Y6
+
+Three arms with a coaxial pair on each, so the upper and lower motor of a pair share roll and pitch authority but oppose each other in yaw.
+
+```
+mmix reset
+mmix 0 1.0 0.0 1.333333 1.0       # REAR
+mmix 1 1.0 -1.0 -0.666667 -1.0    # RIGHT
+mmix 2 1.0 1.0 -0.666667 -1.0     # LEFT
+mmix 3 1.0 0.0 1.333333 -1.0      # UNDER_REAR
+mmix 4 1.0 -1.0 -0.666667 1.0     # UNDER_RIGHT
+mmix 5 1.0 1.0 -0.666667 1.0      # UNDER_LEFT
+```
+
+### Y4
+
+Two front arms and a coaxial pair at the rear, where yaw comes entirely from the rear pair.
+
+```
+mmix reset
+mmix 0 1.0 0.0 1.0 -1.0     # REAR_TOP CW
+mmix 1 1.0 -1.0 -1.0 0.0    # FRONT_R CCW
+mmix 2 1.0 0.0 1.0 1.0      # REAR_BOTTOM CCW
+mmix 3 1.0 1.0 -1.0 0.0     # FRONT_L CW
+```
+
+### V-tail Quad
+
+Two motors at the front and two angled rear motors that produce yaw through their tilt.
+
+```
+mmix reset
+mmix 0 1.0 -0.58 0.58 1.0      # REAR_R
+mmix 1 1.0 -0.46 -0.39 -0.5    # FRONT_R
+mmix 2 1.0 0.58 0.58 -1.0      # REAR_L
+mmix 3 1.0 0.46 -0.39 0.5      # FRONT_L
+```
+
+### A-tail Quad
+
+The rear pair is angled the opposite way to a V-tail quad, and in this mix the two rear motors carry no roll authority while the two front motors carry no yaw authority.
+
+```
+mmix reset
+mmix 0 1.0 0.0 1.0 1.0       # REAR_R
+mmix 1 1.0 -1.0 -1.0 0.0     # FRONT_R
+mmix 2 1.0 0.0 1.0 -1.0      # REAR_L
+mmix 3 1.0 1.0 -1.0 0.0      # FRONT_L
+```
+
+### Octo Flat +
+
+Eight motors in one plane, four of them on the roll and pitch axes and four between them.
+
+```
+mmix reset
+mmix 0 1.0 0.707107 -0.707107 1.0     # FRONT_L
+mmix 1 1.0 -0.707107 -0.707107 1.0    # FRONT_R
+mmix 2 1.0 -0.707107 0.707107 1.0     # REAR_R
+mmix 3 1.0 0.707107 0.707107 1.0      # REAR_L
+mmix 4 1.0 0.0 -1.0 -1.0              # FRONT
+mmix 5 1.0 -1.0 0.0 -1.0              # RIGHT
+mmix 6 1.0 0.0 1.0 -1.0               # REAR
+mmix 7 1.0 1.0 0.0 -1.0               # LEFT
+```
+
+### Octo Flat X
+
+The same eight motors rotated so that none of them sits on the roll or pitch axis.
+
+```
+mmix reset
+mmix 0 1.0 1.0 -0.414178 1.0       # MIDFRONT_L
+mmix 1 1.0 -0.414178 -1.0 1.0      # FRONT_R
+mmix 2 1.0 -1.0 0.414178 1.0       # MIDREAR_R
+mmix 3 1.0 0.414178 1.0 1.0        # REAR_L
+mmix 4 1.0 0.414178 -1.0 -1.0      # FRONT_L
+mmix 5 1.0 -1.0 -0.414178 -1.0     # MIDFRONT_R
+mmix 6 1.0 -0.414178 1.0 -1.0      # REAR_R
+mmix 7 1.0 1.0 0.414178 -1.0       # MIDREAR_L
+```
+
+## Fixed wing mixes
+
+:::note
+Only the relative order of the servo indexes matters, not their absolute value.
+The firmware writes the servos from the lowest index used to the highest, in order, onto the servo outputs.
+A block of rules numbered `1` to `4` therefore drives the same outputs as one numbered `2` to `5`, as long as the spacing between the indexes is kept.
+Which physical pin the first servo output lands on depends on the output allocation described in [Mixer Tab](../04-inav-configurator/mixer-tab.mdx#flexible-motor-and-servo-output-allocation).
+:::
+
+### Plane with a V-tail
+
+Two aileron servos and two V-tail surfaces that share the elevator and rudder work.
+Both tail rules take pitch with opposite signs and yaw with the same sign, which suits the usual mirrored servo installation.
+
+```
+mmix reset
+mmix 0 1.0 0.0 0.0 0.0     # motor
+
+smix reset
+smix 0 1 0 100 0     # left aileron takes Stabilized Roll
+smix 1 2 0 100 0     # right aileron takes Stabilized Roll
+smix 2 3 1 50 0      # left tail surface takes Stabilized Pitch
+smix 3 3 2 -50 0     # left tail surface takes Stabilized Yaw
+smix 4 4 1 -50 0     # right tail surface takes Stabilized Pitch
+smix 5 4 2 -50 0     # right tail surface takes Stabilized Yaw
+```
+
+:::tip
+If the aircraft rolls or pitches the wrong way on the bench, flip the sign of the weight rather than reversing the servo in the radio.
+Keep the pair of tail rules consistent, so that pitch stays opposite between the two surfaces and yaw stays equal.
+:::
+
+### Plane with a V-tail and a single aileron servo
+
+The same tail, but with both ailerons driven from one output, for example through a Y lead or a single central servo.
+
+```
+mmix reset
+mmix 0 1.0 0.0 0.0 0.0     # motor
+
+smix reset
+smix 0 1 0 100 0     # aileron output takes Stabilized Roll
+smix 1 2 1 50 0      # left tail surface takes Stabilized Pitch
+smix 2 2 2 -50 0     # left tail surface takes Stabilized Yaw
+smix 3 3 1 -50 0     # right tail surface takes Stabilized Pitch
+smix 4 3 2 -50 0     # right tail surface takes Stabilized Yaw
+```
+
+### Plane without a rudder
+
+A conventional tail with an elevator and two aileron servos, and no rudder at all.
+
+```
+mmix reset
+mmix 0 1.0 0.0 0.0 0.0     # motor
+
+smix reset
+smix 0 1 1 100 0     # elevator takes Stabilized Pitch
+smix 1 2 0 100 0     # left aileron takes Stabilized Roll
+smix 2 3 0 100 0     # right aileron takes Stabilized Roll
+```
+
+### Twin motor with differential thrust
+
+Two motors that help the rudder by adding a little yaw authority.
+The yaw weight is what creates the differential thrust, so keep it small and equal in magnitude on both motors.
+
+```
+mmix reset
+mmix 0 1.0 0.0 0.0 0.3     # left motor
+mmix 1 1.0 0.0 0.0 -0.3    # right motor
+
+smix reset
+smix 0 1 1 100 0     # elevator takes Stabilized Pitch
+smix 1 2 0 100 0     # left aileron takes Stabilized Roll
+smix 2 3 0 100 0     # right aileron takes Stabilized Roll
+smix 3 4 2 100 0     # rudder takes Stabilized Yaw
+```
+
+To turn the ailerons into flaperons, add the `Flaperon Mode` input on top of the roll rules.
+
+```
+smix 4 2 14 100 0     # left aileron also takes Flaperon Mode
+smix 5 3 14 -100 0    # right aileron also takes Flaperon Mode, reversed
+```
+
+:::note
+Which of the two flaperon rules needs the negative weight depends on how the two servos are installed.
+Mirror image installations need opposite signs so that both surfaces move the same way in the air.
+Both surfaces going down gives flaperons, both going up gives spoilerons, and the two surfaces going opposite ways means one of the signs is wrong.
+:::
+
+### Separate flaps instead of flaperons
+
+An airframe with proper flaps, one aileron output shared through a Y lead, an elevator and a rudder.
+The flap servo takes the `Flaperon Mode` input instead of borrowing the ailerons.
+
+```
+smix reset
+smix 0 1 1 100 0      # elevator takes Stabilized Pitch
+smix 1 2 0 100 0      # aileron output takes Stabilized Roll
+smix 2 3 14 100 0     # flaps take Flaperon Mode
+smix 3 4 2 100 0      # rudder takes Stabilized Yaw
+
+servo 3 1000 2000 2000 -100
+```
+
+The `servo` line parks the flap servo midpoint at the top of its travel, so the surface sits at one end of its range while `FLAPERON` mode is off and can only move in one direction when the mode is engaged.
+That works because the mixer scales a positive output by `(max - middle)`, which is zero here, and a negative output by `(middle - min)`, which is the full travel.
+If the flaps deploy the wrong way, move the midpoint to the other end and flip the rate sign together, as in `servo 3 1000 2000 1000 100`.
+Flipping only the rate sign leaves the servo unable to move at all, because with the midpoint on an endpoint only one sign of output has any travel to use.
+
+:::tip
+Set `has_flaps` to `ON`, otherwise `FLAPERON` mode is not offered and the flaps never move.
+Tune the deflection with `flaperon_throw_offset` rather than by changing the mixer weight, so that a later mixer edit does not undo it.
+:::
+
+### Extra servos driven from RC channels
+
+Servos that are not part of the flight controls, such as a camera pan or a release mechanism, take a raw RC channel as their input.
+Number them above the flight control servos so they land on the outputs after them.
+
+```
+smix 6 5 8 -100 0     # servo 5 takes RC channel 5, rule slot 6
+smix 7 6 9 -100 0     # servo 6 takes RC channel 6, rule slot 7
+```
+
+The rule slots only need to be free, so pick the next unused ones after the flight control rules.
+
+Inputs `8` to `11` are RC channels 5 to 8, and the channels above that continue at input `15`.
+The full mapping is in [Servo Mixing](../05-core-features/mixer.mdx#servo-mixing).
+
+:::tip
+A [logic condition](./programming-framework.mdx) as the sixth `smix` argument turns such a servo into something conditional, for example a release that only arms above a set altitude.
+:::
+
+## Setups with no verified mix
+
+A few configurations from the early days of this documentation are listed here so that nobody spends an evening looking for them.
+None of them has a mixer table that can be verified against the current firmware, so none is reproduced.
+
+* Bicopter, dualcopter and singlecopter still appear in the mixer preset list, but they are disabled entries with empty motor and servo tables, and the firmware has no platform type for them.
+The tables that once circulated for these airframes were reverse engineered from Cleanflight and never tested, so they are not repeated here.
+* Helicopters are not supported.
+The `HELICOPTER` platform type exists in the firmware, but it is not implemented, and the `Heli 120` and `Heli 90` presets are disabled entries with no mixer rules.
+* The old `MIXER_GIMBAL` mixer and the `SERVO_TILT` feature it referred to are both gone.
+A camera gimbal is now driven from the servo mixer instead, using the `Gimbal Pitch` and `Gimbal Roll` inputs `12` and `13`, which follow the aircraft attitude, or the head tracker inputs `39` to `41`.
+
+:::warning
+Do not fill in a missing mixer table by guessing at the weights.
+An aircraft with a wrong mix can be uncontrollable from the moment it leaves the ground.
+:::
