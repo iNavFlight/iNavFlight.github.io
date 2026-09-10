@@ -11,6 +11,10 @@ interface RemoteMarkdownProps {
 }
 
 const DEFAULT_TAG = 'master';
+
+// A ref starting with a digit is treated as a release tag (e.g. "9.1.0").
+// Anything else is treated as a branch (e.g. "master", "maintenance-10.x").
+const isReleaseTag = (ref: string): boolean => /^[0-9]/.test(ref);
 const CACHE_PREFIX = 'remote-markdown-';
 
 interface CacheData {
@@ -48,7 +52,7 @@ const setCachedData = (tag: string, markdown: string, html: string) => {
 };
 
 const constructUrl = (tag: string): string => {
-  const ref = tag === 'master' ? 'refs/heads/master' : `refs/tags/${tag}`;
+  const ref = isReleaseTag(tag) ? `refs/tags/${tag}` : `refs/heads/${tag}`;
   return `https://raw.githubusercontent.com/iNavFlight/inav/${ref}/docs/Settings.md`;
 };
 
@@ -72,8 +76,9 @@ const RemoteMarkdown: React.FC<RemoteMarkdownProps> = ({
       setLoading(true);
       setError(null);
 
-      // Check cache for non-master tags
-      if (tag !== 'master') {
+      // Release tags never change, so they can be served from the cache.
+      // Branches move, so they are always fetched fresh.
+      if (isReleaseTag(tag)) {
         const cached = getCachedData(tag);
         if (cached && cached.tag === tag) {
           if (isMounted) {
@@ -102,7 +107,9 @@ const RemoteMarkdown: React.FC<RemoteMarkdownProps> = ({
 
         setMarkdown(source);
         setHtml(rendered);
-        setCachedData(tag, source, rendered);
+        if (isReleaseTag(tag)) {
+          setCachedData(tag, source, rendered);
+        }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         if (isMounted) {
