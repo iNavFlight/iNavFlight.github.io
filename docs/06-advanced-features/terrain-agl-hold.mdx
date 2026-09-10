@@ -35,7 +35,7 @@ Multirotor **SURFACE** mode follows the ground *reactively* from a physical rang
 
 ## Setup
 
-1. **Prepare and enable terrain data** — see **[Terrain](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Terrain.md)**: generate `.TER` tiles for your area with the **Map Generator** tab in the INAV Configurator, or with the online [terrain generator web tool](https://martinovem.github.io/High-Resolution-Map-Generator/) (how to use it is described on its [project page](https://github.com/MartinovEm/High-Resolution-Map-Generator)). Include the tile for your take-off site. Copy the files to the SD card root (and delete the card's `FREESPAC.E` file if you find one there, INAV makes a fresh one on the next boot), then in the CLI:
+1. **Prepare and enable terrain data** — see **[Terrain](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Terrain.md)**: generate `.TER` tiles for your area with the [**Map Generator** tab](../04-inav-configurator/map-generator-tab.mdx) in the INAV Configurator, or with the online [terrain generator web tool](https://martinovem.github.io/High-Resolution-Map-Generator/) (how to use it is described on its [project page](https://github.com/MartinovEm/High-Resolution-Map-Generator)). Include the tile for your take-off site. Copy the files to the SD card root (and delete the card's `FREESPAC.E` file if you find one there, INAV makes a fresh one on the next boot), then in the CLI:
    ```
    set terrain_enabled = ON
    save
