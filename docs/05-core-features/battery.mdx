@@ -38,6 +38,23 @@ Enable the `VBAT` feature to enable the measurement of the battery voltage and t
 `vbat_scale` - Adjust this setting to match actual measured battery voltage to reported value.
 Increasing this value increases the measured voltage.
 
+### Voltage Sensor Source
+
+INAV can read the battery voltage from the flight controller's own ADC, or from a remote source (ESC telemetry, SmartPort, CRSF, or a DroneCAN battery monitor).
+Select the source with the `vbat_meter_type` setting:
+
+| Value | Sensor Source          |
+| ----- | ---------------------- |
+| 0     | None                   |
+| 1     | ADC / hardware sensor  |
+| 2     | ESC telemetry          |
+| 3     | Fake (test/development) |
+| 4     | SmartPort telemetry    |
+| 5     | CRSF telemetry         |
+| 6     | DroneCAN               |
+
+For a DroneCAN battery monitor, set `vbat_meter_type = CAN`; for setup and supported hardware see [Battery Monitoring via DroneCAN](#battery-monitoring-via-dronecan).
+
 ### Voltage Measurement Source
 
 Two voltage sources are available: raw voltage and sag compensated voltage.
@@ -46,7 +63,7 @@ When the current drawn from a battery varies the provided voltage also varies du
 The sag can often trigger the battery alarms before the battery is empty and if you are relying on the battery voltage to know the charge state of your battery you have to land or cut the throttle to know the real, without load, battery voltage.
 The sag compensation algorithm simulates a battery with zero internal resistance and provides a stable reading independent from the drawn current.
 
-You can select the voltage source used for battery alarms and telemetry with the `bat_voltage_source` setting.
+You can select the voltage source used for battery alarms and telemetry with the `bat_voltage_src` setting.
 It can be set to either `RAW` for using raw battery voltage or `SAG_COMP` for using the calculated sag compensated voltage.
 
 You can see an illustration of the sag compensation algorithm in action in the following graph:
@@ -99,13 +116,18 @@ Enable current monitoring using the CLI command:
 feature CURRENT_METER
 ```
 
-Configure the current meter type using the `current_meter_type` settings here:
+Configure the current meter type using the `current_meter_type` setting:
 
 | Value | Sensor Type            |
 | ----- | ---------------------- |
 | 0     | None                   |
-| 1     | ADC/hardware sensor    |
+| 1     | ADC / hardware sensor  |
 | 2     | Virtual sensor         |
+| 3     | Fake (test/development) |
+| 4     | ESC telemetry          |
+| 5     | SmartPort telemetry    |
+| 6     | CRSF telemetry         |
+| 7     | DroneCAN               |
 
 Configure capacity using the `battery_capacity` setting, in mAh units.
 
@@ -181,6 +203,25 @@ current_meter_scale = (reported_draw_mAh / charging_data_mAh) * old_current_mete
                     = (1260 / 1158) * 400
                     = 435
 ```
+
+## Battery Monitoring via DroneCAN
+
+A DroneCAN battery monitor sends voltage and current together in a single `BatteryInfo` message.
+Both readings come from the same source, so they update in lockstep when using a DroneCAN source.
+
+Enable voltage and current from a DroneCAN battery monitor:
+
+```
+set vbat_meter_type = CAN
+set current_meter_type = CAN
+feature CURRENT_METER
+save
+```
+
+The `CAN` value for both settings is selected from the enumerations documented above: `vbat_meter_type` accepts the sensor-source values listed in the [Voltage Sensor Source](#voltage-sensor-source) table (None, ADC, ESC, Fake, SmartPort, CRSF, DroneCAN); `current_meter_type` accepts the full set in the table above (None, ADC, Virtual, Fake, ESC, SmartPort, CRSF, DroneCAN).
+The separate `bat_voltage_src` setting (`RAW` or `SAG_COMP`) controls whether raw or sag-compensated readings are used for battery alarms and telemetry; it is documented under [Voltage Measurement Source](#voltage-measurement-source).
+
+For general DroneCAN setup (bus bitrate, FC node ID, supported hardware) see [DroneCAN](../06-advanced-features/dronecan.mdx).
 
 ## Power and Current Limiting
 

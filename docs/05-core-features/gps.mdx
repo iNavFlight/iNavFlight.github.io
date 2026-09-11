@@ -257,6 +257,33 @@ If you are using your FC onboard mag, try to place the the FC as far away as pos
 The current draw can cause the Spektrum receiver to brownout.
 Instead use a 3.3V regulator and power the GPS from the BEC or separate battery.
 
+## GNSS via DroneCAN
+
+A DroneCAN GNSS receiver broadcasts position data on the CAN bus, separate from any UART-connected GPS.
+You can use a DroneCAN GNSS in place of a Ublox receiver on a serial port.
+
+To use a DroneCAN GNSS receiver as the position source:
+
+```
+set gps_provider = DRONECAN
+save
+```
+
+The flight controller will automatically receive GPS data from any DroneCAN GNSS device on the bus.
+The GNSS node's own parameters — including which constellations it tracks — live on the node, not in INAV's settings.
+Edit them through the **DroneCAN** tab in INAV Configurator: use GetNodeInfo to find the GNSS node, then GetSet to browse and edit its parameters.
+Out-of-range writes are rejected in the UI before they're sent.
+
+The most common firmware on DroneCAN GNSS nodes is AP_Periph.
+For the parameter names it exposes (e.g. `GPS_TYPE`, the `GPS_` group, the `GNSS_` group), see the [ArduPilot AP_Periph Complete Parameter List](https://ardupilot.org/dev/docs/AP_Periph-Parameters.html).
+
+:::info
+INAV only supports a single GNSS source at a time.
+If a DroneCAN GNSS is selected via `gps_provider = DRONECAN`, the serial-port `GPS` configuration is ignored — including `gps_auto_baud` and `gps_auto_config`, which only apply when `gps_provider` is set to a serial source.
+:::
+
+For general DroneCAN setup (bus bitrate, FC node ID, supported hardware) see [DroneCAN](../06-advanced-features/dronecan.mdx).
+
 ## Related Topics
 
 - [GPS Fix Estimation](../06-advanced-features/gps-fix-estimation.mdx)
