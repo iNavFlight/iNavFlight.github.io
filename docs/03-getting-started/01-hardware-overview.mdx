@@ -19,7 +19,7 @@ This section outlines the components needed depending on the kind of build.
 - Flight controller
 - Radio control link receiver
 
-INAV can function without any extra sensors and be used as a simple flight stablization system. 
+INAV can function without any extra sensors and be used as a simple flight stabilization system. 
 This can be useful for certain visual line of sight flying (VLOS).
 
 ### Navigation Essentials
@@ -39,7 +39,7 @@ In addition to everything in [Navigation Essentials](./01-hardware-overview.mdx#
 - Camera compatible with VTX system
 
 There are now a multitude of video systems for FPV available. 
-These range from the inexpesive, old, but still widely used analog video systems to digital systems such as DJI, Caddx Walksnail, Caddx Ascent, Betafpv P1, and OpenIPC. 
+These range from the inexpensive, old, but still widely used analog video systems to digital systems such as DJI, Caddx Walksnail, Caddx Ascent, Betafpv P1, and OpenIPC. 
 
 :::info
 It is possible to fly FPV without a GPS, but is not recommended.
@@ -102,7 +102,7 @@ A popular example of single board FC is the AtomRC F405 Navi as pictured below:
 <figcaption><i>Credit: AtomRC</i></figcaption>
 
 These FCs typically contain all the hardware needed to power and wire up hardware needed for fixed wings.
-Since fixed wings in the hobby are usually single or twin motors, the electronic speed controllers (ESC) for the motors will have to be sourced seperately and soldered onto the specified pads on the FC.
+Since fixed wings in the hobby are usually single or twin motors, the electronic speed controllers (ESC) for the motors will have to be sourced separately and soldered onto the specified pads on the FC.
 
 Whether single board or stacked, all will contain a PCB layer that's flat bottomed and intended to be used as a mounting surface.
 
@@ -110,7 +110,7 @@ Whether single board or stacked, all will contain a PCB layer that's flat bottom
 Flight Controllers are typically equipped with accelerometers. 
 These devices are sensitive to shocks. 
 When the device is not yet installed to an aircraft, it has very little mass by itself. 
-If you drop or bump the controller, a big force will be applied on the interal components of the accelerometer, which could potentially damage them. 
+If you drop or bump the controller, a big force will be applied on the internal components of the accelerometer, which could potentially damage them. 
 **Bottom line: Handle the board very carefully until it's installed on an aircraft!**
 :::
 
@@ -153,12 +153,12 @@ As an illustrated example, the wiring guide for the AtomRC F405 Navi is shown be
 <figcaption><i>Credit: AtomRC</i></figcaption>
 
 #### Power Wires 
-Powers wires from the battery and to the ESC(s), should be a thicker gauage wire. 
+Powers wires from the battery and to the ESC(s), should be a thicker gauge wire. 
 Depending on the size of the aircraft, a good starting point for average, parkflier sized aircraft is 16awg to 14awg.
 
 It's also a good idea to mount a capacitor on the battery pad. 
 The capacitor is provided in FC packaging along with the wiring accessories for all the peripherals. 
-There are two ways to mount the capacitor: directly on with the legs or slightly discretly using wire extensions. 
+There are two ways to mount the capacitor: directly on with the legs or slightly discreetly using wire extensions. 
 
 For larger builds that have bigger motors and more current flow, 12awg is a good idea. 
 Keep in mind the servos' current draw is within limits of the FC's servo BEC, otherwise the servos will have to be powered with an external voltage regulator.
@@ -167,7 +167,7 @@ Keep in mind the servos' current draw is within limits of the FC's servo BEC, ot
 
 ### Flight Controller (FC)
 
-Multicopter FCs are fairly standarized and come in three distinct form factors:
+Multicopter FCs are fairly standardized and come in three distinct form factors:
 - 30.5mm stack
 - 20mm stack
 - 25mm AIO stack

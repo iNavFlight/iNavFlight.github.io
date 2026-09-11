@@ -24,7 +24,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/assets/code.svg').default,
     description: (
       <>
-        INAV is free and open source software that is actively developed by many contributers from around the world. Large version releases occur annually and smaller, maintenance releases throughout the year.
+        INAV is free and open source software that is actively developed by many contributors from around the world. Large version releases occur annually and smaller, maintenance releases throughout the year.
       </>
     ),
   },

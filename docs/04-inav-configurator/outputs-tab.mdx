@@ -64,7 +64,7 @@ CLI commands to configure servos:
 
 The `servo` command is used to list or modify servo's configuration. To list the current servo's configuration run the `servo` command without parameters.
 
-To change the configuration of a servo use the `servo` command with the following syntax: `servo <n> <min> <max> <mid> <rate>`. `<n>` is representing the index of the servo output defined by a servo mixer (See (mixer documentation)[https://github.com/iNavFlight/inav/blob/master/docs/Mixer.md]). The other parameters must be positive integers apart from the rate wich valid range is [-125, 125].
+To change the configuration of a servo use the `servo` command with the following syntax: `servo <n> <min> <max> <mid> <rate>`. `<n>` is representing the index of the servo output defined by a servo mixer (See the [mixer documentation](../05-core-features/mixer.mdx)). The other parameters must be positive integers apart from the rate which valid range is [-125, 125].
 
 ### Servo filtering
 
@@ -84,7 +84,7 @@ One method for tuning the filter cutoff is as follows:
 
 2. Tap the vehicle at its end in the axis under evaluation.  Directly commanding the servo in question to move may also be used. In the tricopter example, tap the end of the tail boom from the side, or command a yaw using your transmitter.
 
-3. If your vehicle oscillates for several seconds or even continues oscillating indefinitely, then the filter cutoff frequency should be reduced. Reduce the value of `servo_lowpass_freq` by half its current value and repeat the previous step.
+3. If your vehicle oscillates for several seconds or even continues oscillating indefinitely, then the filter cutoff frequency should be reduced. Reduce the value of `servo_lpf_hz` by half its current value and repeat the previous step.
 
 4. If the oscillations are dampened within roughly a second or are no longer present, then you are done.  Be sure to run `save`.
 

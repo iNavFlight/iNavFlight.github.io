@@ -8,7 +8,7 @@ description: All about configuring autoland for fixed wings
 INAV supports advanced automatic landings for fixed wing aircraft from version 7.1.
 The procedure is based on landings for man-carrying aircraft so that safe landings at a specific location are possible.
 Supported are landings at Safehome after "Return to Home" or at a defined LAND waypoint for missions. 
-Every landing locations can be defined with a target point and 2 different approach headings (colinear to the landing strips) with exclusive direction or opposite directions allowed. 
+Every landing locations can be defined with a target point and 2 different approach headings (collinear to the landing strips) with exclusive direction or opposite directions allowed. 
 This enables up to 4 different approach directions, based on the landing site and surrounding area. 
 
 ## General Procedure:
@@ -84,7 +84,7 @@ In cm/s. Min: 0; Max: 3000, Default: 140
 
 ## Landing Site Parameters
 
-### The following parameters are set for each landing site (Safefome/LAND waypoint):
+### The following parameters are set for each landing site (Safehome/LAND waypoint):
 
 All settings can also be conveniently made in the Configurator via Mission Control.
 
@@ -105,17 +105,17 @@ This means that practically 4 landing directions can be saved.
 
 :::warning
 > [!CAUTION]
-The Configuator automatically determines the ground altitude based on databases on the Internet, which may be inaccurate.
+The Configurator automatically determines the ground altitude based on databases on the Internet, which may be inaccurate.
 Please always compare with the measured GPS altitude at the landing site to avoid crashes.
 :::
 
 
 
-### General Paramters And Tuning Tips
+### General Parameters And Tuning Tips
 
 * `nav_fw_wp_tracking_accuracy`: Its highly recommended that this parameter is used and tuned well.
 Only with WP-Tracking enabled, the Aircraft will try to precisely align with the runway during approach. 
-If WP-Tracking is not used, the Plane will head straight to the landiung location without flying in line with the intended landing strip.
+If WP-Tracking is not used, the Plane will head straight to the landing location without flying in line with the intended landing strip.
 Wind can intensively alter the final landing heading.
 
 * `nav_fw_pitch2thr`: The navigation throttle modifier has to be tuned well to allow stable navigation during climbs and descents to prevent a stall.

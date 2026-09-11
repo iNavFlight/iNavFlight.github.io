@@ -31,8 +31,8 @@ The difference is only seen in the way plane's climb or descend in a loitering s
 - [Extra](./rth.mdx#extra-altitude)
 - [Fixed](./rth.mdx#fixed-altitude)
 - [Max](./rth.mdx#maximum-altitude-since-launch)
-- [Atleast](./rth.mdx#at-least-predefined-altitude-above-launch-point)
-- [Altleast + Linear descent](./rth.mdx#at-least-predefined-altitude-with-linear-descent-legacy-setting)
+- [At least](./rth.mdx#at-least-predefined-altitude-above-launch-point)
+- [At least + Linear descent](./rth.mdx#at-least-predefined-altitude-with-linear-descent-legacy-setting)
 - [Linear (INAV 7.0+)](./rth.mdx#linear-descent)
 
 **Climb first modes**
@@ -315,7 +315,7 @@ When [nav_landing_bump_detection](https://github.com/iNavFlight/inav/blob/master
 
 - The Z axis touch-down rebound exceeds 2g, then falls back below 1g within 100mS.
 - The XY (horizontal) velocity must be low. (requiring GNSS fix)
-- Throttle is below `hover_throttle`.
+- Throttle is below `nav_mc_hover_thr`.
 
 ### Failsafe inverted crash detection - Multicopter only
 

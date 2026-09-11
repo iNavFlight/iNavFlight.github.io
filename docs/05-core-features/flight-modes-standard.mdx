@@ -124,7 +124,7 @@ There is little to no benefit to having Airmode enabled with other flight modes 
 
 For Fixedwing Airmode to become active for flight, it requires `airmode_throttle_threshold` to be met, which uses different settings for [airmode_type](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#airmode_type) than for multicopter.
 They are - `STICK_CENTER` and `STICK_CENTER_ONCE`.
-`STICK_CENTER_ONCE` is activated by the same method - using `airmode_throttle_threshold`, but instead of disabling Airmode when the throttle is lowered below the `throttle_threshold`, it will keep Airmode active until disarmed. 
+`STICK_CENTER_ONCE` is activated by the same method - using `airmode_throttle_threshold`, but instead of disabling Airmode when the throttle is lowered below the `airmode_throttle_threshold`, it will keep Airmode active until disarmed. 
 This is more beneficial for fixedwing platforms like powered gliders so they maintain Airmode stabilization at zero throttle.
 The requirement to also move the sticks from center to activate Airmode prevents I-term windup before launch if you don't throw the airplane immediately after raising the throttle.
 
@@ -160,7 +160,7 @@ It was designed so it can also be used with - `COURSE HOLD` or `ALT HOLD`. Altho
 
 ## ARM
 
-Arm activates numerous conditions required for fligh and allows the motor/s to become active for propulsion.
+Arm activates numerous conditions required for flight and allows the motor/s to become active for propulsion.
 Some of these conditions are:
 * Starts flight logging. Including Blackbox and flight stats
 * Records the RTH location and altitude
@@ -501,7 +501,7 @@ Also note that the automatic version of this introduced in 3.0 requires a GPS an
 
 *The purpose of this mode is to set new midpoints for servos 2 to 5.
 Make sure you assign these servo numbers to your control surfaces or they will not be trimmed.
-If you have another servo (e.g. a servo gimbal) assigned to to servos 2 to 5, then this servo will be trimmed.*
+If you have another servo (e.g. a servo gimbal) assigned to servos 2 to 5, then this servo will be trimmed.*
 
 This is so when switching into manual mode the plane will fly straight, its also to help the PIFF controller know where the plane is expected to fly straight.
 
@@ -516,7 +516,7 @@ New midpoints will be saved.
 
 You may want to inspect your new midpoints after landing, if the servo offset is a lot you may alter your linkage mechanically and redo servo midpoint.
 
-This is not to be confused with tuning your aircraft for leveled flight in `ANGLE` and other attitude-conteolled modes. to do this use [AUTO LEVEL TRIM](./flight-modes-standard.mdx#auto-level-trim-fw).
+This is not to be confused with tuning your aircraft for leveled flight in `ANGLE` and other attitude-controlled modes. to do this use [AUTO LEVEL TRIM](./flight-modes-standard.mdx#auto-level-trim-fw).
 
 ## SOARING (FW)
 
