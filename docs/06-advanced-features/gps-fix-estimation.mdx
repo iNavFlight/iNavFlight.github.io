@@ -22,15 +22,15 @@ It works for fixed wing only.
 
 Plane should have the following sensors:
 
-- acceleromenter, gyroscope
+- accelerometer, gyroscope
 - barometer
 - GPS
 - magnetometer (optional, highly recommended)
 - pitot (optional)
 
-By befault, all navigation modes are disabled when GPS fix is lost. If RC signal is lost also, plane will not be able to enable RTH. Plane will switch to LANDING instead. When flying above unreachable spaces, plane will be lost.
+By default, all navigation modes are disabled when GPS fix is lost. If RC signal is lost also, plane will not be able to enable RTH. Plane will switch to LANDING instead. When flying above unreachable spaces, plane will be lost.
 
-GPS fix estimation allows to recover plane using magnetometer and baromener only.
+GPS fix estimation allows to recover plane using magnetometer and barometer only.
 
 GPS Fix is also estimated on GPS Sensor timeouts (hardware failures).
 
@@ -52,7 +52,7 @@ To navigate without GPS fix, we make the following assumptions:
 - plane is flying in the direction where nose is pointing
 - (if pitot tube is not installed) plane is flying with constant airspeed, specified in settings
 
-It is possible to roughly estimate position using theese assumptions.
+It is possible to roughly estimate position using these assumptions.
 To increase accuracy, plane will use information about wind direction and speed, estimated before GPS fix was lost.
 To increase groundspeed estimation accuracy, plane will use pitot tube data(if available).
 
@@ -73,15 +73,15 @@ The problem that emerges without a compass is heading drift.
 The longer a plane flies without magnetometer or GPS, the bigger is its course estimation error.
 
 After few minutes and few turns, "north" direction estimation can be completely broken.
-In general, accuracy is enough to perform RTH U-turn when both RC controls and GPS are lost, and roughtly keep RTH direction in areas with occasional GPS outages.
+In general, accuracy is enough to perform RTH U-turn when both RC controls and GPS are lost, and roughly keep RTH direction in areas with occasional GPS outages.
 
 ![image](/img/features-adv/gps-estimation.png)
 
 (purple line - estimated position, black line - real position).
 
-It is recommened to use GPS fix estimation without magnetometer as last resort only.
+It is recommended to use GPS fix estimation without magnetometer as last resort only.
 For example, if plane is flying above lake, landing means loss of plane.
-With GPS Fix estimation, plane will try to do RTH in very rought direction, instead of landing.
+With GPS Fix estimation, plane will try to do RTH in a very rough direction, instead of landing.
 
 It is up to user to estimate the risk of fly-away.
 
@@ -155,7 +155,7 @@ To decrease drift:
 - use airspeed sensor.
 If airspeed sensor is not installed, fly in cruise mode without throttle override.
 - do smooth, large turns
-- make sure compass is pointing in nose direction precicely
+- make sure compass is pointing in nose direction precisely
 - calibrate compass correctly
 
 This video shows real world test where GPS was disabled occasionally. Wind is 10km/h south-west:
@@ -165,8 +165,8 @@ This video shows real world test where GPS was disabled occasionally. Wind is 10
 </video>
 
 The purple line shows estimated position. Black line shows real position.
-"EST ERR" sensor shows estimation error in metters. Estimation is running when satellite icon displays "ES".
-Estimated position snaps to real position when GPS fix is reaquired.
+"EST ERR" sensor shows estimation error in meters. Estimation is running when satellite icon displays "ES".
+Estimated position snaps to real position when GPS fix is reacquired.
 
 ## Is It Possible to Implement This for Multirotors?
 

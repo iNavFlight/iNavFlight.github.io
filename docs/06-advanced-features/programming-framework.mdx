@@ -3,7 +3,7 @@ title: INAV Programming Framework (IPF)
 description: Add additional functionality through programming logic
 ---
 
-INAV Programming Framework (IPF) is a mechanism that allows you to to create
+INAV Programming Framework (IPF) is a mechanism that allows you to create
 custom functionality in INAV.
 You can choose for certain actions to be done based on custom conditions you select.
 
@@ -84,7 +84,7 @@ for complete documentation on using JavaScript to program your flight controller
 | 12            | NOT                           | The boolean opposite to `Operand A` |
 | 13            | Sticky                        | `Operand A` is the activation operator, `Operand B` is the deactivation operator. After the activation is `true`, the operator will return `true` until Operand B is evaluated as `true`|
 | 14            | Basic: Add                    | Add `Operand A` to `Operand B` and returns the result |
-| 15            | Basic: Subtract               | Substract `Operand B` from `Operand A` and returns the result |
+| 15            | Basic: Subtract               | Subtract `Operand B` from `Operand A` and returns the result |
 | 16            | Basic: Multiply               | Multiply `Operand A` by `Operand B` and returns the result |
 | 17            | Basic: Divide                 | Divide `Operand A` by `Operand B` and returns the result. NOTE: If `Operand B` = `0`, the `Divide` operation will simply return `Operand A`|
 | 18            | Set GVAR                      | Store value from `Operand B` into the Global Variable addressed by `Operand A`. Bear in mind, that operand `Global Variable` means: Value stored in Global Variable of an index! To store in GVAR 1 use `Value 1` not `Global Variable 1` |
@@ -93,7 +93,7 @@ for complete documentation on using JavaScript to program your flight controller
 | 21            | Set IO Port                   | Set I2C IO Expander pin `Operand A` to value of `Operand B`. `Operand A` accepts values `0-7` and `Operand B` accepts `0` and `1` |
 | 22            | Override Arming Safety        | Allows the craft to arm on any angle even without GPS fix. WARNING: This bypasses all safety checks, even that the throttle is low, so use with caution. If you only want to check for certain conditions, such as arm without GPS fix. You will need to add logic conditions to check the throttle is low. |
 | 23            | Override Throttle Scale       | Override throttle scale to the value defined by operand. Operand type `0` and value `50` means throttle will be scaled by 50%. |
-| 24            | Swap Roll & Yaw               | basically, when activated, yaw stick will control roll and roll stick will control yaw. Required for tail-sitters VTOL during vertical-horizonral transition when body frame changes |
+| 24            | Swap Roll & Yaw               | basically, when activated, yaw stick will control roll and roll stick will control yaw. Required for tail-sitters VTOL during vertical-horizontal transition when body frame changes |
 | 25            | Set VTx Power Level           | Sets VTX power level. Accepted values are `0-3` for SmartAudio and `0-4` for Tramp protocol |
 | 26            | Invert Roll                   | Inverts ROLL axis input for PID/PIFF controller |
 | 27            | Invert Pitch                  | Inverts PITCH axis input for PID/PIFF controller  |
@@ -121,7 +121,7 @@ for complete documentation on using JavaScript to program your flight controller
 | 49            | Timer                         | A simple on - off timer. `true` for the duration of `Operand A` [ms]. Then `false` for the duration of `Operand B` [ms]. |
 | 50            | Delta             | This returns `true` when the value of `Operand A` has changed by the value of `Operand B` or greater within 100ms. ( \|ΔA\| >= B )  |
 | 51            | Approx Equals (A ~ B)         | `true` if `Operand B` is within 1% of `Operand A`. |
-| 52            | LED Pin PWM                   | Value `Operand A` from [`0` : `100`] PWM / PINIO generation on LED Pin. See [LED pin PWM](https://github.com/iNavFlight/inav/blob/master/docs/LED%20pin%20PWM.md). Any other value stops PWM generation (stop to allow ws2812 LEDs updates in shared modes). |
+| 52            | PINIO PWM                     | `Operand A` = duty cycle (0-100). `Operand B` = channel (0 for LED strip idle level, 1-4 for PINIO channels). Channels 1-4 support full PWM; channel 0 is binary (>0 = HIGH). See [PINIO PWM](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/PINIO%20PWM.md). |
 | 53            | Disable GPS Sensor Fix        | Disables the GNSS sensor fix. For testing GNSS failure. |
 | 54            | Mag calibration               | Trigger a magnetometer calibration. |
 | 55            | Set Gimbal Sensitivity        | Scales `Operand A` from [`-16` : `15`]
@@ -167,7 +167,7 @@ for complete documentation on using JavaScript to program your flight controller
 | 20            | Is Controlling Position               | Is the position being controlled? boolean `0`/`1` |
 | 21            | Is Emergency Landing                  | Is the aircraft emergency landing? boolean `0`/`1` |
 | 22            | Is RTH                                | Is RTH active? boolean `0`/`1` |
-| 23            | Is Landing                            | Is the aircaft automatically landing? boolean `0`/`1` |
+| 23            | Is Landing                            | Is the aircraft automatically landing? boolean `0`/`1` |
 | 24            | Is Failsafe                           | Is the flight controller in a failsafe? boolean `0`/`1` |
 | 25            | Stabilized Roll                       | Roll PID controller output `[-500:500]` |
 | 26            | Stabilized Pitch                      | Pitch PID controller output `[-500:500]` |
@@ -180,20 +180,20 @@ for complete documentation on using JavaScript to program your flight controller
 | 33            | Active Control Profile                | Integer for the active config profile `[1..MAX_PROFILE_COUNT]` |
 | 34            | Battery cells                         | Number of battery cells detected |
 | 35            | AGL status [0/1]                      | Boolean `1` when AGL can be trusted, `0` when AGL estimate can not be trusted |
-| 36            | AGL [cm]                              | Integer altitude above The Groud Altitude in `cm` |
+| 36            | AGL [cm]                              | Integer altitude above the ground altitude in `cm` |
 | 37            | Rangefinder [cm]                      | Integer raw distance provided by the rangefinder in `cm` |
 | 38            | Active Mixer Profile                  | Which mixer is currently active (for vtol etc) |
 | 39            | Mixer Transition Active               | Boolean `0`/`1`. Are we currently switching between mixers (quad to plane etc) |
 | 40            | Yaw [deg]                             | Current heading (yaw) in `degrees` |
-| 41            | FW Land Sate                          | Integer `1` - `5`, indicates the status of the FW landing, 0 Idle, 1 Downwind, 2 Base Leg, 3 Final Approach, 4 Glide, 5 Flare |
+| 41            | FW Land State                         | Integer `1` - `5`, indicates the status of the FW landing, 0 Idle, 1 Downwind, 2 Base Leg, 3 Final Approach, 4 Glide, 5 Flare |
 | 42            | Current battery profile               | The active battery profile. Integer `[1..MAX_PROFILE_COUNT]` |
 | 43            | Flown Loiter Radius [m]               | The actual loiter radius flown by a fixed wing during hold modes, in `meters` |
 | 44            | Downlink Link Quality                 | |
 | 45            | Uplink RSSI [dBm]                     | |
 | 46            | Minimum Ground Speed [m/s]            | The current minimum ground speed allowed in navigation flight modes |
-| 47            | Horizontal Wind Speed [cm/s]          | Estimated wind speed. If the wind estimator is unavailble or the wind estimation is invalid, -1 is returned |
-| 48            | Wind Direction [deg]                  | Estimated wind direction. If the wind estimator is unavailble or the wind estimation is invalid, -1 is returned |
-| 49            | Relative Wind Offset [deg]            | The relative offset between the heading of the aircraft and the heading of the wind. 0 indicates flying directly into a headwing. Negative numbers are a left offset. For example, if -20° is shown, turning right will correct towards 0. If the wind estimator is unavailble or the wind estimation is invalid, 0 is returned |
+| 47            | Horizontal Wind Speed [cm/s]          | Estimated wind speed. If the wind estimator is unavailable or the wind estimation is invalid, -1 is returned |
+| 48            | Wind Direction [deg]                  | Estimated wind direction. If the wind estimator is unavailable or the wind estimation is invalid, -1 is returned |
+| 49            | Relative Wind Offset [deg]            | The relative offset between the heading of the aircraft and the heading of the wind. 0 indicates flying directly into a headwind. Negative numbers are a left offset. For example, if -20° is shown, turning right will correct towards 0. If the wind estimator is unavailable or the wind estimation is invalid, 0 is returned |
 
 #### FLIGHT_MODE
 
@@ -254,7 +254,7 @@ They are not the Waypoint User Actions. See the [Waypoints](./programming-framew
 
 ### Flags
 
-All flags are reseted on ARM and DISARM event.
+All flags are reset on ARM and DISARM event.
 
 | bit   | Decimal   | Function  |
 |-------|-----------|-----------|
@@ -271,7 +271,7 @@ All flags are reseted on ARM and DISARM event.
 
 ## Programming PID
 
-IPF makes a set of general user PIDFF controllers avaliable for use in your program.  These PIDFF controllers are not tied to any roll/pitch/yaw profiles or other controls.
+IPF makes a set of general user PIDFF controllers available for use in your program.  These PIDFF controllers are not tied to any roll/pitch/yaw profiles or other controls.
 The output of these controllers can be used in an IPF program by using the `Programming PID` operand.
 The `<setpoint value>` of the controller is the target value for the controller to hit.  The `<measurement value>` is the measurement of the current value. 
 For instance, `<setpoint value>` could be the speed you want to go, and `<measurement value>` is the current speed.
@@ -354,7 +354,7 @@ logic 3 1 -1 31 4 2 0 0 0
 ```
 
 Steps:
-1. Normalize range `[1000:2000]` to `[0:1000]` by substracting `1000`
+1. Normalize range `[1000:2000]` to `[0:1000]` by subtracting `1000`
 2. Scale range `[0:1000]` to `[0:7]`
 3. Increase range by `1` to have the range of `[1:8]`
 4. Assign LC#2 to VTX channel function
@@ -371,7 +371,7 @@ logic 3 1 -1 25 4 2 0 0 0
 ```
 
 Steps:
-1. Normalize range [1000:2000] to [0:1000] by substracting `1000`
+1. Normalize range [1000:2000] to [0:1000] by subtracting `1000`
 2. Scale range [0:1000] to [0:3]
 3. Increase range by `1` to have the range of [1:4]
 4. Assign LC#2 to VTX power function

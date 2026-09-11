@@ -15,7 +15,7 @@ The main parts of this page are:
 1. [Wiring](./02-fwsetup.mdx#hooking-everything-up)
 1. [Software Configuration](./02-fwsetup.mdx#inav-configuration)
 
-## Prerequsites
+## Prerequisites
 
 1. Have [INAV Configurator](../02-system-preparation.mdx) installed and working.
 1. [Flash the FC](../03-install-inav.mdx#flash-inav-to-the-fc) with its firmware through INAV Configurator
@@ -45,7 +45,7 @@ The mixer tab in INAV Configurator where this setting is configured is shown bel
 
 1. **Timer Outputs** - shows the available timers and their functions.
 By default, all timers are set as `AUTO`.
-To manually set the fuction, click the dropdown.
+To manually set the function, click the dropdown.
 The available functions are: MOTOR, SERVO, and LED.
 
 1. **Output Mapping** - is a table that shows which timers in Box 1 are mapped to which motor and/or servos.
@@ -54,7 +54,7 @@ The available functions are: MOTOR, SERVO, and LED.
 To add a motor, press *Add new mixer rule* and a new motor index will automatically populate the table. 
 
 
-1. **Servo Mixer** - is wher servo outputs are mapped to their respective pins. 
+1. **Servo Mixer** - is where servo outputs are mapped to their respective pins. 
 Just like a motor, press *Add new mixer rule* and a new servo index will automatically populate the table. 
 
 :::tip
@@ -98,7 +98,7 @@ Digital video systems are connected to a UART, typically one that is paired with
 ## INAV Configuration
 
 After the airplane is physically wired up, the next step is to configure everything in software using INAV Configurator.
-At this stage, the FC should have had its accelerometer calibrated as descibed in the earlier [Acceleromter Calibration Page](../04-accel-calibration.mdx).
+At this stage, the FC should have had its accelerometer calibrated as described in the earlier [Accelerometer Calibration Page](../04-accel-calibration.mdx).
 The proceeding subsections will outline how to configure the rest of INAV to have a working airplane.
 Each subsection is titled based off the respective tab in INAV Configurator and should be followed sequentially.
 
@@ -152,7 +152,7 @@ Before continuing any further, now is a good time to configure the receiver to e
 1. Assuming that a CRSF based serial receiver was used during the FC wiring steps and that the wiring diagram was followed for the respective FC used, assign the UART that the receiver is connected to as RX in the Ports tab in INAV Configurator.
 Save and reboot.
 
-1. Then head to the Reciever tab and select receiver type as *Serial*.
+1. Then head to the Receiver tab and select receiver type as *Serial*.
 
 After rebooting, the Receiver tab will show the working channels that it is receiving from the radio.
 

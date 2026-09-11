@@ -54,7 +54,7 @@ Due to GNSS data processing losses than occur when `gps_ublox_nav_hz` is set hig
 In general, **lower** UBLOX update rates will allow your GNSS module to provide better position accuracy when **more** constellations are selected. But there is also a trade-off. The update positions will becoming more broadly spread-out at higher flight speeds.  
 Changes can be made in the _Configurator GPS Tab_ to suit your hardware and flight requirements.
 
-Read [PR](https://github.com/iNavFlight/inav/pull/11262) , [Issue](https://github.com/iNavFlight/inav/issues/11202#issue-3758761282) and [GPS and Compass setup](https://github.com/iNavFlight/inav/wiki/GPS-and-Compass-setup#gnss-ublox-update-rate) for more information on the topic if required.
+Read [PR](https://github.com/iNavFlight/inav/pull/11262) , [Issue](https://github.com/iNavFlight/inav/issues/11202#issue-3758761282) and [GNSS Ublox Update Rate](./05-core-features/gps.mdx#gnss-ublox-update-rate) for more information on the topic if required.
 
 ### Multicopter set magless heading
 
@@ -77,7 +77,7 @@ Relevant commits - [#11270 ](https://github.com/iNavFlight/inav/pull/11270) , [#
 
 - The handling of the OSD STATS after disarming has been improved. CRSF RX data is now being displayed. As well as the `Saving Setting` and `Disarmed by` advisories are again working correctly on HD. [link](https://github.com/iNavFlight/inav/pull/11506)
 - System message updates and improvements have been added for Surface mode and Geozones. [link](https://github.com/iNavFlight/inav/pull/11425)
-- Simplification of the OSD [Multifunction](https://github.com/iNavFlight/inav/wiki/Modes#multi-function) mode tools operation. With the addition of battery Voltage and Capacity, Pitot failure and Compass calibration.
+- Simplification of the OSD [Multifunction](./05-core-features/flight-modes-standard.mdx#multi-function) mode tools operation. With the addition of battery Voltage and Capacity, Pitot failure and Compass calibration.
 - If multicopter compass deviation occurs (toilet bowling) in Poshold, a system message warning is displayed until the mode is cancelled. [link](https://github.com/iNavFlight/inav/pull/10854)
 
 ### Other changes
@@ -293,12 +293,12 @@ Please follow the instructions on [this](https://github.com/iNavFlight/inav/wiki
 
 ### Fixedwing airspeed APA and pitch angle enhanced TPA support
 
-Fixeding aircraft can now use a pitot sensor or virtual airspeed to dynamically adjust the PIDFF gains inflight. This adds the advantage of a tighter stabilization response across the whole flight speed envelope.  
-Full details of setup and tuning can be found [here](https://github.com/iNavFlight/inav/wiki/PID-Attenuation-and-scaling). Under the topics `APA` and `TPA and Pitch angle`.
+Fixedwing aircraft can now use a pitot sensor or virtual airspeed to dynamically adjust the PIDFF gains inflight. This adds the advantage of a tighter stabilization response across the whole flight speed envelope.  
+Full details of setup and tuning can be found [here](./07-pid-tuning/pid-attentuation-and-scaling.mdx). Under the topics `APA` and `TPA and Pitch angle`.
 
 ### Minimum ground speed flexibility
 
-Via the [Programming Framework](https://github.com/iNavFlight/inav/blob/master/docs/Programming%20Framework.md). It allows the user to have more flexibility when flying in higher wind conditions. To ensure the airplane makes headway.  
+Via the [Programming Framework](./06-advanced-features/programming-framework.mdx). It allows the user to have more flexibility when flying in higher wind conditions. To ensure the airplane makes headway.  
 In addition, you can program it to dynamically adjust the minimum ground speed according to the Wind direction and Wind speed.  
 More information can be found in this [link](https://github.com/iNavFlight/inav/pull/10720).
 
@@ -314,7 +314,7 @@ Changes have been made to improve its operation on a broader range of airframes.
 - Altitude Velocity controller `nav_fw_alt_use_position = OFF` (default)
 - Altitude Position controller `nav_fw_alt_use_position = ON`
 
-See [here](<https://github.com/iNavFlight/inav/wiki/Navigation-PID-tuning-(FW)#altitude-control-methods>) for more information. And the _required_ PID tune settings for either control method.
+See [here](./07-pid-tuning/navigation-pid-tuning-fw.mdx#altitude-control-methods) for more information. And the _required_ PID tune settings for either control method.
 
 ### Position estimator improvements
 
@@ -345,7 +345,7 @@ QMC5883P magnetometer driver
 - Improved yaw estimation for magless multicopter operation. [PR link](https://github.com/iNavFlight/inav/pull/11114) - _The default `ahrs_acc_ignore_rate` setting has also been lowered from 20 to 15._
 - Mavlink clean-ups and fixes - [11060](https://github.com/iNavFlight/inav/pull/11060) [11061](https://github.com/iNavFlight/inav/pull/11061) [11062](https://github.com/iNavFlight/inav/pull/11062)
 - MSP changes - [11146](https://github.com/iNavFlight/inav/pull/11146) [11171](https://github.com/iNavFlight/inav/pull/11171) [11093](https://github.com/iNavFlight/inav/pull/11093) [11032](https://github.com/iNavFlight/inav/pull/11032) [10571](https://github.com/iNavFlight/inav/pull/10571) [11099](https://github.com/iNavFlight/inav/pull/11099)
-- JavaScript support tab for INAV programming framework. [PR link](https://github.com/iNavFlight/inav/pull/11143) [Docs update](https://github.com/iNavFlight/inav/blob/master/docs/Programming%20Framework.md#javascript-based-programming-alternative)
+- JavaScript support tab for INAV programming framework. [PR link](https://github.com/iNavFlight/inav/pull/11143) [Docs update](./06-advanced-features/programming-framework.mdx#javascript-based-programming-alternative)
 
 ### OSD/CMS changes
 
@@ -374,7 +374,7 @@ The **Minimum Ground Speed** and **Throttle Gauge** additions to the OSD require
 | Programming Framework | Minimum Ground Speed [m/s]    | The current minimum ground speed allowed in navigation flight modes                                                                                                                                                                                                                                                              |
 | Programming Framework | Horizontal Wind Speed [cm/s]  | Estimated wind speed. If the wind estimator is unavailable or the wind estimation is invalid, -1 is returned                                                                                                                                                                                                                     |
 | Programming Framework | Wind Direction [deg]          | Estimated wind direction. If the wind estimator is unavailable or the wind estimation is invalid, -1 is returned                                                                                                                                                                                                                 |
-| Programming Framework | Relative Wind Offset [deg]    | The relative offset between the heading of the aircraft and the heading of the wind. 0 indicates flying directly into a headwing. Negative numbers are a left offset. For example, if -20° is shown, turning right will correct towards 0. If the wind estimator is unavailable or the wind estimation is invalid, 0 is returned |
+| Programming Framework | Relative Wind Offset [deg]    | The relative offset between the heading of the aircraft and the heading of the wind. 0 indicates flying directly into a headwind. Negative numbers are a left offset. For example, if -20° is shown, turning right will correct towards 0. If the wind estimator is unavailable or the wind estimation is invalid, 0 is returned |
 
 ## CLI
 
@@ -390,14 +390,14 @@ The first three CLI settings have been renamed or changed in INAV 9.0. When load
 | [mixer_control_profile_linking](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#mixer_control_profile_linking)               | Renames old `mixer_pid_profile_linking`                                                 |
 | [osd_pan_servo_range_decadegrees](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#osd_pan_servo_range_decadegrees)           | Renames old `osd_pan_servo_pwm2centideg`                                                |
 | [blackbox_arm_control](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#blackbox_arm_control)                                 | Can extend blackbox logging up to 60 seconds after disarming                            |
-| [acc_temp_correction](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#acc_temp_correction)                                   | Accelerometer temperature correction factor to compensate for acceleromter drift        |
+| [acc_temp_correction](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#acc_temp_correction)                                   | Accelerometer temperature correction factor to compensate for accelerometer drift        |
 | [baro_temp_correction](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#baro_temp_correction)                                 | Baro temperature correction factor to compensate for Baro altitude drift                |
 | [osd_adsb_warning_style](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#osd_adsb_warning_style)                             | ADSB warning element style - COMPACT or EXTENDED                                        |
 | [nav_fw_alt_use_position](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_alt_use_position)                           | Use position for fixed wing altitude control rather than velocity                       |
 | [mavlink_autopilot_type](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#mavlink_autopilot_type)                             | Sets the Mavlink telemetry type - GENERIC or ARDUPILOT                                  |
-| [transition_pid_mmix_multiplier_pitch](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#transition_pid_mmix_multiplier_pitch) | Intended to solve pitch coupling in transtion mode on tilting rotor VTOL                |
-| [transition_pid_mmix_multiplier_roll](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#transition_pid_mmix_multiplier_roll)                                                                                                      | intended to solve roll/yaw coupling oscillation in transtion mode on tilting rotor VTOL |
-| [transition_pid_mmix_multiplier_yaw](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#transition_pid_mmix_multiplier_yaw)     | Intended to solve yaw/roll coupling oscillation in transtion mode on tilting rotor VTOL |
+| [transition_pid_mmix_multiplier_pitch](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#transition_pid_mmix_multiplier_pitch) | Intended to solve pitch coupling in transition mode on tilting rotor VTOL                |
+| [transition_pid_mmix_multiplier_roll](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#transition_pid_mmix_multiplier_roll)                                                                                                      | intended to solve roll/yaw coupling oscillation in transition mode on tilting rotor VTOL |
+| [transition_pid_mmix_multiplier_yaw](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#transition_pid_mmix_multiplier_yaw)     | Intended to solve yaw/roll coupling oscillation in transition mode on tilting rotor VTOL |
 | [apa_pow](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#apa_pow)                                                           | Sets the strength and speed range of dynamic airspeed PID scaling                       |
 | [tpa_pitch_compensation](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#tpa_pitch_compensation)                             | Sets the strength which pitch angle will override the throttle dynamic PID scaling      |
 
