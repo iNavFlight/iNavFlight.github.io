@@ -1,6 +1,6 @@
 # INAV: The New Documentation Project
 
-![INAV](static/img/inav_home_dark.svg)
+![INAV](static/img/inav_home.png)
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/iNavFlight/inav/nightly-build.yml?label=Nightly)
 ![GitHub Tag](https://img.shields.io/github/v/tag/iNavFlight/inav?label=Release)
@@ -62,4 +62,4 @@ Linking to headings within the document work as well by using `#` following the 
 
 There is now a `Contributors.tsx` component that automatically fetches the top 100 most recent contributors and caches that data in `/static/contributors-cache.json` on build.
 Contributors are sorted by the last contribution date while preserving total contributions.
-Post build, the list refreshes weekly using a CORS proxy for seamless updates even after the site is built and deployed.
+Post build, the list refreshes weekly by a cron job that builds the website via Github Actions.
