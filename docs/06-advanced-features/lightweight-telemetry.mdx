@@ -15,7 +15,7 @@ Since its introduction to INAV, a number of extension have been added; these are
 ### Overview
 
 The LTM protocol starts with "$T", followed by a function byte, the payload and a simple CRC checksum.
-Its weakness is that there is no length parameter (so the receiver needs to know, apriori,the length for each function), and the single byte checksum is not as robust as the multi-byte checksum in for example the ublox GPS protocol.
+Its weakness is that there is no length parameter (so the receiver needs to know, a priori, the length for each function), and the single byte checksum is not as robust as the multi-byte checksum in for example the ublox GPS protocol.
 However, the high data rate ensures that good data should be delivered over occasional transmission errors.
 In practice, LTM is an excellent light weight telemetry solution. 
 
@@ -47,7 +47,7 @@ The follow telemetry frames are supported:
 | S | Status Frame | 5Hz at > 2400 baud | 
 | O | Origin Frame | 1 Hz rate | 
 | N | Navigation Frame (INAV extension) | ~4 Hz rate |
-| X | GPS eXended data (INAV extension) | 1 Hz rate |
+| X | GPS eXtended data (INAV extension) | 1 Hz rate |
 
 In addition, LTM was used by NRF24L01 / deviationtx INAV protocol, which defines an additional frame for in-TX tuning. 
 This frame is not transmitted by INAV for telemetry.

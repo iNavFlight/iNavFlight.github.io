@@ -1,0 +1,61 @@
+---
+title: Map Generator Tab
+description: Generate .TER terrain elevation files for INAV and offline map tiles for radio mapping widgets
+---
+
+The Map Generator tab creates the `.TER` terrain elevation files that feed INAV's terrain system, including [Terrain AGL Hold](../06-advanced-features/terrain-agl-hold.mdx). It can also make offline map tiles for radio mapping widgets. The tab works without a flight controller connection. Select a target, draw an area on the map, and sync the output to an SD card or export it as a ZIP.
+
+![The Map Generator tab](/img/app/map-generator-tab.jpg)
+
+## Targets
+
+| Target | Output | Goes to |
+|--------|--------|---------|
+| Terrain — see [Terrain AGL Hold](../06-advanced-features/terrain-agl-hold.mdx) | `.TER` elevation files | Flight controller SD card |
+| [b14ckyy ETHOS Mapping Widget](https://github.com/b14ckyy/ETHOSMappingWidget-Revisited) | Map tiles | Radio SD card |
+| [Yaapu Telemetry Widget](https://github.com/yaapu/EthosMappingWidget) (ETHOS / EdgeTX) | Map tiles | Radio SD card |
+
+## Generating terrain files
+
+1. Select **Terrain** as the target. The map switches to a 1°×1° grid overlay with the `.TER` file names.
+2. Pick the **Elevation Source**. Copernicus GLO-30 is the default.
+3. Draw a rectangle over your flying area. The status shows which `.TER` files will be generated and their estimated size. **Make sure the tile for your take-off site is in the selection.** INAV reads the home tile first, and without it no terrain data is shown at all.
+4. Link your SD card folder, or use **Export as ZIP**.
+5. Click **Sync to SD Card**. The elevation data is downloaded, converted to `.TER` and written to the card.
+6. Enable terrain in the INAV CLI: `set terrain_enabled = ON` then `save`.
+
+![Terrain target selected, with the grid and the drawn area](/img/app/map-generator-terrain-target.jpg)
+
+![Generation complete](/img/app/map-generator-complete.jpg)
+
+## The SD card
+
+- For a new terrain installation, format the card first. Use the [SD Memory Card Formatter](https://www.sdcard.org/downloads/formatter/), not the Windows format dialog. A freshly formatted card has no `FREESPAC.E` file yet, INAV makes one on the first boot.
+- If you write to a card that has already been used in the flight controller (adding a tile for a new area, replacing files), delete the card's `FREESPAC.E` file first. The **Sync to SD Card** button does this automatically, so only manual copying needs it done by hand. INAV makes a fresh one on the next boot. The tab shows these reminders as well.
+- The fastest way to write the files is an external SD card reader. INAV's MSC mode (the flight controller mounted as a USB drive) works too, but it is very slow.
+- Use a quality SD card. Cheap cards can cause read errors in flight.
+
+## The data
+
+| Detail | Value |
+|--------|-------|
+| Source | **Copernicus GLO-30** (default) or NASA SRTM1 |
+| Resolution | 1 arc-second (about 30 m) |
+| Output | One `.TER` file per 1°×1° square (about 111 km), around 30 MB each |
+| Coverage | 84°N to 90°S (Copernicus), 60°N to 56°S (SRTM) |
+
+Copernicus is the default because it is about twice as accurate on bare earth (mean error around 1 m versus 2 m for SRTM, measured against ICESat-2 satellite laser ground truth) and because it covers latitudes above 60°N, where SRTM has no data. The `.TER` format is identical for both sources. If the Copernicus service cannot be reached, the Configurator asks before falling back to SRTM. The full accuracy methodology and numbers are in [this PR comment](https://github.com/iNavFlight/inav-configurator/pull/2599#issuecomment-5085961982).
+
+![DEM accuracy of both sources measured against the ICESat-2 laser](/img/app/map-generator-dem-accuracy.png)
+
+## Good to know
+
+- Downloaded elevation data is cached locally. Repeat generations reuse it, and the two sources are stored separately, so they never mix.
+- After generation, hover the mouse over the map to see the elevation under the cursor.
+- Files already on the SD card are skipped, unless **Force Overwrite** is checked.
+- Ocean depths are clamped to 0 m.
+- The tab can also search locations by name, measure distances on the map, safely eject the SD card, and save your settings across sessions.
+
+## Radio map tiles
+
+The other two targets make offline map tiles for the **b14ckyy ETHOS Mapping Widget** and the **Yaapu Telemetry Widget**. Pick the widget, pick a map provider, draw the area, and sync to the radio's SD card. The provider list, the MapTiler key setup and the output paths are described in the [Configurator README](https://github.com/iNavFlight/inav-configurator/blob/maintenance-10.x/README.md#map-generator).

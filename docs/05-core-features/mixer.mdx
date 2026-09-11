@@ -14,7 +14,7 @@ To use a mixer preset first select the platform type then the mixer preset match
 The `Load and apply` button will load the mixer, save it and ask to reboot the flight controller.
 The `Load mixer` button only loads the preset mixing rules, you can then edit them to suit your needs and when you are done you need to press the `Save and Reboot` button to save the rules.
 
-Watch [this video](https://www.youtube.com/watch?v=0cLFu-5syi0) for a detailed description of the GUI and the documentation bellow for more details.
+Watch [this video](https://www.youtube.com/watch?v=0cLFu-5syi0) for a detailed description of the GUI and the documentation below for more details.
 
 ## Platform type
 
@@ -33,7 +33,7 @@ Currently, following platform types are supported:
 
 A motor mixing rule is needed for each motor.
 Each rule defines weights that determine how the motor it applies to will change its speed relative to the requested throttle and flight dynamics: roll rate, pitch rate and yaw rate.
-The heigher a weight the more the input will have an impact on the speed of the motor. Refer to the following table for the meaning of each weight.
+The higher a weight the more the input will have an impact on the speed of the motor. Refer to the following table for the meaning of each weight.
 
 | Weight | Definition |
 | ---------------------- | ---------- |
@@ -62,7 +62,7 @@ The absolute value of the index is not important, what matters is only the relat
 The rule with the smaller servo index will apply to the first servo, the next higher servo index to the second servo, etc.
 More than one rule can use the same servo index.
 The output of the rules with the same servo index are added together to give the final output for the specified servo.
-* Input: the input for the mixing rule, see a summary of the input types table bellow.
+* Input: the input for the mixing rule, see a summary of the input types table below.
 * Weight: percentage of the input to forward to the servo. Range [-1000, 1000]. Mixing rule output = input * weight.
 If the output of a set of mixing rules is lower/higher than the defined servo min/max the output is clipped (the servo will never travel farther than the set min/max).
 * Speed: maximum rate of change of the mixing rule output.
@@ -115,7 +115,7 @@ To disable a mixing rule set the weight to 0.
 ## Logic Conditions
 
 Logic Conditions allows to activate/deactivate `smix` rules based on user input and flight parameters.
-If Logic Condition evaluates as `false`, smix rule connected with with LC will not be active and used inside the Mixer. 
+If Logic Condition evaluates as `false`, smix rule connected with LC will not be active and used inside the Mixer. 
 
 This mechanism allows to move servos when desired conditions are met.
 For example, if an airplane is equipped with a pitot tube and flaps, flaps can be automatically deployed when airspeed goes below a threshold.

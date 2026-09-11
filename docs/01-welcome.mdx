@@ -19,11 +19,11 @@ The software suite consists of the following components:
 ## How to Use The Docs
 
 The docs have been structured in as logical manner as possible. 
-It is advisible for all newcomers to INAV to visit the Getting Started section to learn how INAV works and setup an aircraft.
+It is advisable for all newcomers to INAV to visit the Getting Started section to learn how INAV works and setup an aircraft.
 
 ### Getting Started
 
-This section is where all newcomers should visit to get acquianted with INAV.
+This section is where all newcomers should visit to get acquainted with INAV.
 It provides all the fundamental information for understanding key concepts and getting an aircraft configured for flight. 
 The sections are organized sequentially and should be followed in order.
 
@@ -52,8 +52,8 @@ C -- Forked --> E;
 ```
 
 In the beginning, there were no off-the-shelf flight controllers that were plug and play ready for your quad or plane.
-The multirotor hobby began during the Ninentdo Wii era when the accessibility of inexpensive accelerometer and gyro sensors from the Wiimote Nunchucks inspired intrepid electronics hackers to repurpose them with Arduinos for multirotor flight controls - thus the MultiWii flight controller software was born.
-The deveopment and popularity of MultiWii FC led to commercially available products like the KK/2.0 series.
+The multirotor hobby began during the Nintendo Wii era when the accessibility of inexpensive accelerometer and gyro sensors from the Wiimote Nunchucks inspired intrepid electronics hackers to repurpose them with Arduinos for multirotor flight controls - thus the MultiWii flight controller software was born.
+The development and popularity of MultiWii FC led to commercially available products like the KK/2.0 series.
 
 Because MultiWii was based around the Arduino ATmega328, limitations were quickly reached with what could be done due to limited memory.
 Allegedly, the former MultiWii flight controller rush led a small electronics company called Zhuque Intelligent New Shenzhen Co. Ltd to use their surplus STM32F103 to develop a multirotor flight controller called Freeflight, which ran their own firmware.
@@ -75,11 +75,11 @@ This system makes it easy to see which versions of INAV are compatible.
 The version number is made up of 3 sections, separated by dots.
 These are major.minor.patch.
 
-So with **INAV 7.1.2**:
+So with **INAV 9.1.0**:
 
-- **7** is the major version number
+- **9** is the major version number
 - **1** is the minor version number
-- **2** is the patch version number
+- **0** is the patch version number
 
 Both the firmware and Configurator follow the same versioning scheme. The major version numbers match.
 
@@ -88,7 +88,7 @@ This does not have to be a big change or new feature.
 It can be something as simple as adding a new symbol on the OSD (due to the font update) or changing or removing a CLI parameter.
 When the major version number is increased, the minor and patch version numbers are reset to 0.
 
-**Minor** version numbers are increased when a a feature is added or updated that does not break backwards compatibility.
+**Minor** version numbers are increased when a feature is added or updated that does not break backwards compatibility.
 This can be complete new features, even new CLI parameters.
 When the minor version number is increased, the patch version number is reset to 0.
 
@@ -97,4 +97,4 @@ When the minor version number is increased, the patch version number is reset to
 With INAV you must match the major version number of the [firmware](https://github.com/iNavFlight/inav) and [Configurator](https://github.com/iNavFlight/inav-configurator).
 This has been the case for a long time, even pre-SemVer.
 Before SemVer, the major and minor version numbers also had to be matched.
-Now, it is recommended to use the latest version of Configurator that has the same major version number of your firmware. For example with firmware 7.0.0 it is recommended to use Configurator 7.1.2.
+Now, it is recommended to use the latest version of Configurator that has the same major version number of your firmware. For example with firmware 9.0.1 it is recommended to use Configurator 9.1.1.
