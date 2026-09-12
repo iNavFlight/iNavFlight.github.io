@@ -3,9 +3,88 @@ title: Alignment Tool Tab
 sidebar_position: 16
 ---
 
-This tab lets you change the angle that you FC and compass are mounted on your aircraft. 
-This is critical to setting up INAV.
-You may have mounted the FC upside-down or backwards and this is where you can save this new orientation.
-When you go back to the Setup Tab, you should see the 3D Graphic move the same as your actual aircraft.
+This tab lets you set the mounting orientation of your flight controller and, if fitted, your compass.
+Getting this right is critical: INAV uses these settings to translate raw sensor readings into the aircraft's real-world attitude and heading.
+
+You may have mounted the FC upside-down, backwards, or at an angle, and this is where you tell INAV about it.
+Once set correctly, going to the [Setup Tab](./setup-tab.mdx) and moving the aircraft by hand should show the 3D model move the same way, on every axis.
 
 ![Alignemnt Tool Tab](/img/app/alignment-tool-tab.png)
+
+## Which Path Applies to Your Board?
+
+INAV also ships an **Experimental: Auto Alignment Wizard** on this tab that determines the board's mounting orientation automatically, from a couple of accelerometer readings, rather than you working it out and entering it by hand.
+What the wizard does next — and therefore what order you should do things in — depends on how much spare RAM your flight controller has, and whether you have a compass fitted at all:
+
+- [**RAM-capable board, with a magnetometer**](#ram-capable-boards-with-a-magnetometer) (F745/H7-class and similar): the wizard only sets the **board** alignment.
+  Afterwards, calibrate the compass on the [Calibration Tab](./calibration-tab.mdx) — INAV automatically detects the compass's mounting orientation as part of that calibration spin.
+- [**RAM-capable board, no magnetometer**](#ram-capable-boards-no-magnetometer): board alignment only — there's no compass step to do.
+- [**RAM-constrained board, with a magnetometer**](#ram-constrained-boards-with-a-magnetometer) (F405/F411-class and similar): there isn't enough spare RAM for automatic detection during calibration, so the wizard does **board alignment and compass alignment together**, in one guided flow.
+- [**RAM-constrained board, no magnetometer**](#ram-constrained-boards-no-magnetometer): board alignment only — there's no compass step to do.
+
+:::tip
+If you're not sure which class your board falls into, just launch the wizard: it detects your board's capability automatically and adjusts its own steps accordingly.
+:::
+
+:::info
+**Order matters.** On a RAM-constrained board, calibrating the compass on the Calibration tab *before* running this wizard wastes the spin — the compass's mounting orientation still needs the wizard's own east-facing step to be set. On a RAM-capable board, it's the reverse: run the wizard's board-alignment step first, then calibrate the compass, so the automatic detection has a correct board alignment to work from.
+:::
+
+## Using the Wizard
+
+Click **Launch Wizard** to begin. The steps are the same up through board alignment regardless of which path your board takes:
+
+1. **Start**: place the aircraft flat and pointing north, then confirm.
+1. **Nose up ~45°**: tilt the nose up by about 45 degrees from the first position, keeping the aircraft otherwise still, then confirm.
+   INAV uses the two readings together to work out which of the 16 standard mounts (upright or inverted, in 45° yaw steps) your board is in.
+
+From here, the wizard branches depending on your board and whether a magnetometer is fitted.
+
+### RAM-capable boards, with a magnetometer
+
+The wizard reports the detected board alignment and stops there.
+Click **Save** to save it and reboot.
+
+After reboot, go to the **Calibration** tab and click **Calibrate Magnetometer**.
+Rotate the aircraft through as many orientations as you can during the spin — INAV will try to automatically detect the compass's mounting orientation from it.
+See [Automatic Compass Orientation Detection](../05-core-features/compass.mdx#automatic-compass-orientation-detection) for how that works and its limits.
+If it can't determine the orientation with confidence, or you'd rather set it manually, the same dialog also offers a **Manual compass wizard** button, which takes you through the compass step described below.
+
+### RAM-capable boards, no magnetometer
+
+Board alignment works exactly as above.
+The finishing dialog notes that no magnetometer was detected, so there's nothing further to calibrate or align — just save and reboot.
+
+### RAM-constrained boards, with a magnetometer
+
+The wizard continues with one more step before finishing:
+
+3. **Face east**: turn the aircraft (keeping it flat) so the nose points east, then confirm.
+
+The wizard uses the heading change between the first and third readings to work out the compass's mounting orientation relative to the flight controller, and reports both the board alignment and the compass alignment it's about to save.
+Click **Save** to save both and reboot.
+
+:::info
+The compass must already be calibrated (via **Calibrate Magnetometer** on the Calibration tab) before this step will work — the wizard checks for this up front and tells you to calibrate first if it isn't.
+:::
+
+### RAM-constrained boards, no magnetometer
+
+The wizard finishes after the nose-up step — there's no east-facing step or compass alignment to determine.
+The finishing dialog shows "N/A (no magnetometer detected)" for the compass alignment.
+
+## Troubleshooting
+
+The wizard validates each reading and will stop with an explanation if something doesn't look right:
+
+- **"Readings did not match a supported mount"**: the two accelerometer readings didn't match any of the 16 supported mounts.
+  This can happen if the flight controller is mounted on its edge, if the board moved between readings, or if the nose wasn't raised close enough to 45 degrees.
+  Use a flat or upside-down mount and try again, or set the board alignment manually on this tab.
+- **"The second reading looks too similar to the first"**: the nose-up tilt wasn't big enough for the wizard to distinguish it from the flat reading.
+  Make sure the nose is raised by about 45 degrees, then try again.
+- **"The compass must be calibrated before its alignment can be determined"** (RAM-constrained boards only): calibrate the magnetometer on the Calibration tab first, then re-run the wizard.
+
+## Manual Alignment
+
+The rest of this tab lets you set board and compass alignment directly, without the wizard — useful for mounts the wizard can't resolve (e.g. tilted at a non-45° angle), or if you'd simply rather set the values by hand.
+See [Manual Compass Orientation and Placement](../05-core-features/compass.mdx#manual-compass-orientation-and-placement) for that procedure.
