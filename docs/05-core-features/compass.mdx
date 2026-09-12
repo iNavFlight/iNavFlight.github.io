@@ -211,11 +211,13 @@ This detects the compass's mounting **relative to the flight controller**, not w
 :::
 
 - It only covers upright/inverted mountings in 45° yaw steps, not a compass mounted at an arbitrary tilt (e.g. on an angled camera mount). For those, use [Manual Compass Orientation and Placement](#manual-compass-orientation-and-placement) or the [Empirical Method](#empirical-method-for-determining-compass-alignment) above.
-- **Not available on boards with 256KB of RAM or less** (F405, F411, F722, and similar) — there isn't enough spare RAM for this feature, and calibration works exactly as described above. Use the [Alignment Tool Tab](../04-inav-configurator/alignment-tool-tab.mdx)'s wizard instead, which determines board *and* compass orientation together in one guided flow on these boards.
+- **Not available on boards with 256KB of RAM or less** (F405, F411, F722, and similar) — there isn't enough spare RAM for this feature, and calibration works exactly as described above.
+  Use the [Alignment Tool Tab](../04-inav-configurator/alignment-tool-tab.mdx)'s wizard instead, which determines board *and* compass orientation together in one guided flow on these boards.
 - If the spin doesn't produce a confident result (too few samples, or an ambiguous spin), INAV leaves your existing alignment setting untouched rather than guessing — use the [Alignment Tool Tab](../04-inav-configurator/alignment-tool-tab.mdx)'s manual compass wizard fallback, or set it by hand.
 
 :::tip
-Not sure whether your board supports this, or what order to do things in? See [Which Path Applies to Your Board?](../04-inav-configurator/alignment-tool-tab.mdx#which-path-applies-to-your-board) on the Alignment Tool Tab page.
+Not sure whether your board supports this, or what order to do things in?
+See [Which Path Applies to Your Board?](../04-inav-configurator/alignment-tool-tab.mdx#which-path-applies-to-your-board) on the Alignment Tool Tab page.
 :::
 
 ### Compass Calibration Using Stick Commands

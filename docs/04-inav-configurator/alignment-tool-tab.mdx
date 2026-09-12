@@ -9,7 +9,7 @@ Getting this right is critical: INAV uses these settings to translate raw sensor
 You may have mounted the FC upside-down, backwards, or at an angle, and this is where you tell INAV about it.
 Once set correctly, going to the [Setup Tab](./setup-tab.mdx) and moving the aircraft by hand should show the 3D model move the same way, on every axis.
 
-![Alignemnt Tool Tab](/img/app/alignment-tool-tab.png)
+![Alignment Tool Tab](/img/app/alignment-tool-tab.png)
 
 ## Which Path Applies to Your Board?
 
@@ -27,12 +27,14 @@ If you're not sure which class your board falls into, just launch the wizard: it
 :::
 
 :::info
-**Order matters.** On a RAM-constrained board, calibrating the compass on the Calibration tab *before* running this wizard wastes the spin — the compass's mounting orientation still needs the wizard's own east-facing step to be set. On a RAM-capable board, it's the reverse: run the wizard's board-alignment step first, then calibrate the compass, so the automatic detection has a correct board alignment to work from.
+**Order matters.** On a RAM-constrained board, calibrating the compass on the Calibration tab *before* running this wizard wastes the spin — the compass's mounting orientation still needs the wizard's own east-facing step to be set.
+On a RAM-capable board, it's the reverse: run the wizard's board-alignment step first, then calibrate the compass, so the automatic detection has a correct board alignment to work from.
 :::
 
 ## Using the Wizard
 
-Click **Launch Wizard** to begin. The steps are the same up through board alignment regardless of which path your board takes:
+Click **Launch Wizard** to begin.
+The steps are the same up through board alignment regardless of which path your board takes:
 
 1. **Start**: place the aircraft flat and pointing north, then confirm.
 1. **Nose up ~45°**: tilt the nose up by about 45 degrees from the first position, keeping the aircraft otherwise still, then confirm.
