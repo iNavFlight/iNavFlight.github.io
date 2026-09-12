@@ -7,7 +7,7 @@ This tab lets you set the mounting orientation of your flight controller and, if
 Getting this right is critical: INAV uses these settings to translate raw sensor readings into the aircraft's real-world attitude and heading.
 
 You may have mounted the FC upside-down, backwards, or at an angle, and this is where you tell INAV about it.
-Once set correctly, going to the [Setup Tab](./setup-tab.mdx) and moving the aircraft by hand should show the 3D model move the same way, on every axis.
+Once set correctly, going to the [Status Tab](./status-tab.mdx) and moving the aircraft by hand should show the 3D model move the same way, on every axis.
 
 ![Alignment Tool Tab](/img/app/alignment-tool-tab.png)
 
@@ -37,8 +37,12 @@ Click **Launch Wizard** to begin.
 The steps are the same up through board alignment regardless of which path your board takes:
 
 1. **Start**: place the aircraft flat and pointing north, then confirm.
+
+   ![Alignment Wizard: place flat and pointing north](/img/app/alignment-wizard-step1-north.png)
 1. **Nose up ~45°**: tilt the nose up by about 45 degrees from the first position, keeping the aircraft otherwise still, then confirm.
    INAV uses the two readings together to work out which of the 16 standard mounts (upright or inverted, in 45° yaw steps) your board is in.
+
+   ![Alignment Wizard: tilt nose up 45 degrees](/img/app/alignment-wizard-step2-tilt.png)
 
 From here, the wizard branches depending on your board and whether a magnetometer is fitted.
 
@@ -47,10 +51,14 @@ From here, the wizard branches depending on your board and whether a magnetomete
 The wizard reports the detected board alignment and stops there.
 Click **Save** to save it and reboot.
 
+![Alignment Wizard: board alignment finished](/img/app/alignment-wizard-board-done.png)
+
 After reboot, go to the **Calibration** tab and click **Calibrate Magnetometer**.
 Rotate the aircraft through as many orientations as you can during the spin — INAV will try to automatically detect the compass's mounting orientation from it.
 See [Automatic Compass Orientation Detection](../05-core-features/compass.mdx#automatic-compass-orientation-detection) for how that works and its limits.
 If it can't determine the orientation with confidence, or you'd rather set it manually, the same dialog also offers a **Manual compass wizard** button, which takes you through the compass step described below.
+
+![Alignment Wizard: manual compass wizard, face east step](/img/app/alignment-wizard-compass-east.png)
 
 ### RAM-capable boards, no magnetometer
 
