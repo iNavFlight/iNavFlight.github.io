@@ -1,6 +1,6 @@
 ---
 title: Multirotor Setup Guide
-sidebar_posiiton: 6
+sidebar_position: 6
 ---
 
 > [!NOTE]
@@ -20,11 +20,11 @@ If the type of model you have is not under the presets. Go to the `Mixer Tab` an
 Many of the more common mixers are available here. (Tri, Hex, Octo etc)
 Press **Load and Apply** to make your choice.
 For less common mixer types, see [Custom mixes for exotic setups](https://github.com/iNavFlight/inav/wiki/Custom-mixes-for-exotic-setups#setups-that-can-be-implemented-with-custom-mixer).
-Other Mixer related information can also be found [here](https://github.com/iNavFlight/inav/wiki/Mixer-Tab) and [here](https://github.com/iNavFlight/inav/blob/master/docs/Mixer.md). 
+Other Mixer related information can also be found on the [Mixer Tab](../04-inav-configurator/mixer-tab.mdx) and [Mixer](../05-core-features/mixer.mdx) pages.
 
 * Go to the `Calibration Tab` and follow the instructions given to perform an `Accelerometer Calibration`. Run the advanced 6-point [sensor calibration](./04-accel-calibration.mdx).
 
-* If you use a magnetometer (recommended), it will also require setup in the `Alignment Tool Tab` and `Calibration Tab`. More specific information with regards to Flight Controller / Magnetometer alignment and calibration can be under [GPS and Compass setup](https://github.com/iNavFlight/inav/wiki/GPS-and-Compass-setup).
+* If you use a magnetometer (recommended), it will also require setup in the `Alignment Tool Tab` and `Calibration Tab`. More specific information with regards to Flight Controller / Magnetometer alignment and calibration can be found on the [Compass](../05-core-features/compass.mdx) and [GPS](../05-core-features/gps.mdx) pages.
 You may need to attach a battery for magnetometer calibration if your GNSS/mag module is not powered by the FCs 4.5v USB pins. 
 
 * Once the above is complete. Make sure the Copter moves identical to the virtual image in the `Status Tab`. 
@@ -43,26 +43,26 @@ The `Motor Mixer Wizard` in the `Mixer Tab` can be used to allocate a motor outp
 
 ## 2. Setup failsafe and a couple of important navigation settings
 
-Adjusting these setting won't take long, but they are often overlooked in setup consquently leading to poor navigation performance or a crash landing in a Failsafe condition.
+Adjusting these settings won't take long, but they are often overlooked in setup consequently leading to poor navigation performance or a crash landing in a Failsafe condition.
 
-* `nav_mc_hover_thr` - Please read [here](https://github.com/iNavFlight/inav/wiki/Navigation-modes#using-althold-with-a-multicopter-mc) for a more detailed explanation of why it is important to adjust this setting.
+* `nav_mc_hover_thr` - Please read [here](../05-core-features/flight-modes-navigation.mdx#using-althold-with-a-multicopter-mc) for a more detailed explanation of why it is important to adjust this setting.
 
-* `failsafe_throttle` and `failsafe_of_delay` - Please read through this short explanation [here](https://github.com/iNavFlight/inav/wiki/Failsafe#configuration-of-inav) to help understand why adjusting these settings is required.
+* `failsafe_throttle` and `failsafe_off_delay` - Please read through this short explanation [here](../04-inav-configurator/failsafe-tab.mdx#configuration-of-inav) to help understand why adjusting these settings is required.
 
-[Guide for setting up failsafe](https://github.com/iNavFlight/inav/wiki/Failsafe#setting-up-failsafe-for-rth)
+[Guide for setting up failsafe](../04-inav-configurator/failsafe-tab.mdx#setting-up-failsafe-for-rth)
 
-More advanced MC operation and tuning information can be found under [Navigation modes](https://github.com/iNavFlight/inav/wiki/Navigation-modes) and 
-[Navigation PID tuning (MC)](https://github.com/iNavFlight/inav/wiki/Navigation-PID-tuning-(MC)).
+More advanced MC operation and tuning information can be found under [Navigation modes](../05-core-features/flight-modes-navigation.mdx) and 
+[Navigation PID tuning (MC)](../07-pid-tuning/navigation-pid-tuning-mc.mdx).
 
 ## 3. Tune your copter's Pitch/Roll/Yaw/Level PIDs and other values
 
 INAV multicopter tuning can be made easier for new users with [EZ-Tune](https://github.com/iNavFlight/inav/wiki/EZ%E2%80%90TUNE).
 When you load a platform preset after flashing your hardware, multicopter EZ-Tune will be enabled by default in the Tuning Tab.
-If you wish to run your own tun, turn it off using the EZ-Tune ENABLED button.
+If you wish to run your own tune, turn it off using the EZ-Tune ENABLED button.
 
 
 :::tip
-The default presets many not always be correct due to the influence your selected hardware can have upon the PID tune such as frame type, motors, props, battery etc.
+The default presets may not always be correct due to the influence your selected hardware can have upon the PID tune such as frame type, motors, props, battery etc.
 > **Example:** A lower powered 5" cruiser running on a 3 cell battery, will generally require a different tune from a 5" race quad running on a 6 cell battery.
 > The reason being is because the 6s quad will provide far more impulse thrust per weight for the PID controller to work with. Actually making tuning easier. But often requires some of the gains to be lower from the default, because the PID setpoint error can be dealt with much faster.
 :::
@@ -95,7 +95,7 @@ Overlooking this step can cause your battery to become over discharged during th
 Continually discharging lithium chemistry batteries below 20% of their rated capacity under higher loads can reduce its capacity and also shorten the batteries life expectancy.
 :::
 
-More in-depth battery setup information can be found [here](https://github.com/iNavFlight/inav/blob/master/docs/Battery.md).
+More in-depth battery setup information can be found on the [Battery](../05-core-features/battery.mdx) page.
 
 ## 5. Selecting filters 
 
@@ -135,13 +135,13 @@ The gyro filters are placed in the order of importance found from flight experie
 
 ### Mechanical Filter Optimization
 
-Mechnically removing vibrations will have the most effect in reducing noise.
+Mechanically removing vibrations will have the most effect in reducing noise.
 
 - Use silicon vibration dampeners for your flight controller. 
 - Do not tighten the stack bolts too tight. 
-This will crush the dampener, reducing their ability to adsorb vibrations. Only tighten them firm enough to stop movement. You may have to use thread lock to prevent the nuts coming loose.
+This will crush the dampener, reducing their ability to absorb vibrations. Only tighten them firm enough to stop movement. You may have to use thread lock to prevent the nuts coming loose.
 
 
 ## 6. Get to know the CLI values.
 INAV offers a lot of customization through CLI variables.
-It is strongly recommended to read through [CLI Variable reference](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md) and [available CLI variables](https://github.com/iNavFlight/inav/blob/master/docs/Cli.md)
+It is strongly recommended to read through [CLI Variable reference](../cli.mdx) and [available CLI variables](https://github.com/iNavFlight/inav/blob/master/docs/Cli.md)

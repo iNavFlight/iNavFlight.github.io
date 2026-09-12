@@ -15,7 +15,7 @@ Arming and disarming is done using a switch, set up on the modes page.
 
 
 ### Arming Override
-Arming is disabled when Nav modes are configured and no GPS lock is available **or** if a waypoint mission is loaded but the first WP is farther than the `nav_wp_safe_distance` setting.
+Arming is disabled when Nav modes are configured and no GPS lock is available **or** if a waypoint mission is loaded but the first WP is farther than the `nav_wp_max_safe_distance` setting.
 This Arming block can be bypassed if need be by setting `nav_extra_arming_safety` to `ALLOW_BYPASS` and moving the Yaw stick to the high position (usually full right rudder) when the Arm switch is used. This bypasses GPS Arm blocking pre INAV 4.0.0 and both GPS and "First WP too far" Arm blocking from INAV 4.0.0.
 
 
@@ -123,7 +123,7 @@ When using the default stick arming, lowering your throttle below min_check will
 With motor stop enabled, lowering your throttle below min_check will also result in motors off and the esc's being sent min_command.
 Min_check must be set to a level that is 100% reliably met by the throttle throw.
 A setting too low may result in a dangerous condition where the copter can’t be disarmed.
-It is ok to set this below `throttle_idle` (min_throttle) because the FC will automaticly scale the output to the ESCs
+It is ok to set this below `throttle_idle` (min_throttle) because the FC will automatically scale the output to the ESCs
 
 `throttle_idle` (previously `min_throttle)` -
 Typically set to just above reliable spin up of all motors.

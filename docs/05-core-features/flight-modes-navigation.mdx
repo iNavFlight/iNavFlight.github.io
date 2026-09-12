@@ -117,7 +117,7 @@ Max. navigation speed | [nav_max_auto_speed](https://github.com/iNavFlight/inav/
 Max. CRUISE speed | [nav_manual_speed](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_manual_speed) | Maximum speed allowed when processing pilot input for POSHOLD/CRUISE control mode [cm/s] [Multirotor only]
 Max. navigation climb rate | [nav_mc_auto_climb_rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_auto_climb_rate) | Maximum climb/descent rate that UAV is allowed to reach during navigation modes. [cm/s]
 Max. Alt-hold climb rate | [nav_mc_manual_climb_rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_manual_climb_rate) | Maximum climb/descent rate firmware is allowed when processing pilot input for ALTHOLD control mode [cm/s]
-Multirotor max. banking angle | [nav_mc_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_bank_angle) | Maximum banking angle (deg) that multicopter navigation is allowed to set. Machine must be able to satisfy this angle without loosing altitude.
+Multirotor max. banking angle | [nav_mc_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_bank_angle) | Maximum banking angle (deg) that multicopter navigation is allowed to set. Machine must be able to satisfy this angle without losing altitude.
 Stick position for althold hover | [nav_mc_althold_throttle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_althold_throttle) | If set to STICK the FC remembers the throttle stick position when enabling ALTHOLD and treats it as the neutral midpoint for holding altitude. If set to MID_STICK or HOVER the neutral midpoint is set to the mid stick position or the hover throttle position respectively.
 Hover throttle | [nav_mc_hover_thr](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_hover_thr) | Multicopter hover throttle hint for altitude controller. Should be set to approximate throttle value when drone is hovering.
 Slow down when approaching waypoint | [nav_mc_wp_slowdown](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_mc_wp_slowdown) | When ON, NAV engine will slow down when switching to the next waypoint. This prioritizes turning over forward movement. When OFF, NAV engine will continue to the next waypoint and turn as it goes.
@@ -278,7 +278,7 @@ Applicable: Only when in POSHOLD
 
 MC Braking mode is a subset of POSHOLD.
 Its purpose is to allow faster braking when the pitch stick is released back to center. 
-It also provides the advantage of setting the stopping position where the copter finishes braking, isntead of it backing-up to the point you released the stick, when braking mode isn't active.
+It also provides the advantage of setting the stopping position where the copter finishes braking, instead of it backing-up to the point you released the stick, when braking mode isn't active.
 
 MC Braking mode requires the following conditions to be met for its operation:
 - Must be in POSHOLD
@@ -362,7 +362,7 @@ This will allow the airplane to loiter around the arming or safehome location un
 
 The operation of the landing detector disarming functions can be found [RTH - Landing Detector](./rth.mdx#landing-detector).
 
-There are many different RTH fly-home altitude modes, see the [RTH mode page](https://github.com/iNavFlight/inav/wiki/Navigation-Mode:-Return-to-Home) for details.
+There are many different RTH fly-home altitude modes, see the [RTH mode page](./rth.mdx) for details.
 
 ## MISSION CHANGE
 
@@ -398,7 +398,7 @@ The [MSP navigation message protocol documentation](../06-advanced-features/msp-
 ### Fixed Wing Waypoint Tracking Accuracy and Turns
 Waypoint tracking accuracy makes the craft fly along the course line between two waypoints instead of simply heading toward the next one.
 2 settings control the alignment behaviour. [nav_fw_wp_tracking_accuracy](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_accuracy) sets the deadband distance from the course line in metres. Tracking is not actively controlled within the deadband, so larger values give smoother flight adjustments but less accurate tracking. A 2 m deadband works well in most cases and 0 disables tracking entirely. [nav_fw_wp_tracking_max_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_max_angle)
-sets the maximum alignment convergence angle to the waypoint course line (see below). This is the maximum angle allowed during alignment and in reality will only be acheived when some distance away from the course line with the angle reducing as the craft gets closer to alignment. Lower values result in smoother alignment with the course line but a greater distance along the course line will be required until this is achieved.
+sets the maximum alignment convergence angle to the waypoint course line (see below). This is the maximum angle allowed during alignment and in reality will only be achieved when some distance away from the course line with the angle reducing as the craft gets closer to alignment. Lower values result in smoother alignment with the course line but a greater distance along the course line will be required until this is achieved.
 
 From INAV 10.0 the turns at the waypoints themselves are flown by the coordinated turn coordinator, selected with [nav_fw_wp_turn_mode](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_mode).
 It works out the turn radius the plane actually needs from its current speed and bank angle and begins the turn early enough to roll out aligned with the next leg.

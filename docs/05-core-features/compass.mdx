@@ -17,7 +17,7 @@ The compass must be mounted parallel to FC.
 When using an external magnetometer, 9/10 times you need to physically remove (_remove chip from board or cut a trace_) the internal one if you have on.
 
 :::info
-Two identical chips/magnetometers on the same I2C bus cannot be used. The 1/10 time you dont need to physically remove your internal mag is when you have different magnetometers on the flight controller and the external one.
+Two identical chips/magnetometers on the same I2C bus cannot be used. The 1/10 time you don't need to physically remove your internal mag is when you have different magnetometers on the flight controller and the external one.
 Example you cannot use two HMC5883L magnetometers.
 :::
 
@@ -54,7 +54,7 @@ As an example, the Matek M10Q is pictured below:
 
 :::info
 When using presets, the compass's orientation is locked relative to the FC!
-This means that even when not placing the FC in the manufacturer's default orientation (eg upsidedown or rotated 90 degrees) and modifying that in the Alignment Tab, the compass will follow that orientation change.
+This means that even when not placing the FC in the manufacturer's default orientation (eg upside down or rotated 90 degrees) and modifying that in the Alignment Tab, the compass will follow that orientation change.
 This will likely have unintended consequences so double check the compass orientation!
 :::
 
@@ -98,7 +98,7 @@ When to manually align compass:
 
 - The compass does not have any clear arrow indications
 - There is no preset available in INAV for the compass being used
-- The FC is mounted in an unconventional position and orientation (eg. upsidedown, cockeyed X degrees, etc.)
+- The FC is mounted in an unconventional position and orientation (eg. upside down, cockeyed X degrees, etc.)
 - Compass is mounted at an angle
 
 ### Steps For Manual Compass Setup

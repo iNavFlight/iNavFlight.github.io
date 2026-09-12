@@ -11,6 +11,10 @@ interface RemoteMarkdownProps {
 }
 
 const DEFAULT_TAG = 'master';
+
+// A ref starting with a digit is treated as a release tag (e.g. "9.1.0").
+// Anything else is treated as a branch (e.g. "master", "maintenance-10.x").
+const isReleaseTag = (ref: string): boolean => /^[0-9]/.test(ref);
 const CACHE_PREFIX = 'remote-markdown-';
 
 interface CacheData {
@@ -48,7 +52,7 @@ const setCachedData = (tag: string, markdown: string, html: string) => {
 };
 
 const constructUrl = (tag: string): string => {
-  const ref = tag === 'master' ? 'refs/heads/master' : `refs/tags/${tag}`;
+  const ref = isReleaseTag(tag) ? `refs/tags/${tag}` : `refs/heads/${tag}`;
   return `https://raw.githubusercontent.com/iNavFlight/inav/${ref}/docs/Settings.md`;
 };
 
@@ -64,6 +68,7 @@ const RemoteMarkdown: React.FC<RemoteMarkdownProps> = ({
   const [html, setHtml] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [staleSince, setStaleSince] = useState<number | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -71,21 +76,23 @@ const RemoteMarkdown: React.FC<RemoteMarkdownProps> = ({
     const loadMarkdown = async () => {
       setLoading(true);
       setError(null);
+      setStaleSince(null);
 
-      // Check cache for non-master tags
-      if (tag !== 'master') {
-        const cached = getCachedData(tag);
-        if (cached && cached.tag === tag) {
-          if (isMounted) {
-            setMarkdown(cached.markdown);
-            setHtml(cached.html);
-            setLoading(false);
-          }
-          return;
+      const stored = getCachedData(tag);
+      const cached = stored && stored.tag === tag ? stored : null;
+
+      // A release tag always points at the same commit, so a cached copy of it
+      // is still current and no request is needed.
+      if (cached && isReleaseTag(tag)) {
+        if (isMounted) {
+          setMarkdown(cached.markdown);
+          setHtml(cached.html);
+          setLoading(false);
         }
+        return;
       }
 
-      // Fetch from remote
+      // A branch moves, so ask for a fresh copy every time.
       try {
         const url = constructUrl(tag);
         const response = await fetch(url);
@@ -105,7 +112,16 @@ const RemoteMarkdown: React.FC<RemoteMarkdownProps> = ({
         setCachedData(tag, source, rendered);
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
-        if (isMounted) {
+        if (!isMounted) {
+          return;
+        }
+        // Show the last copy that was fetched successfully instead of replacing
+        // the whole page with an error when the request fails.
+        if (cached) {
+          setMarkdown(cached.markdown);
+          setHtml(cached.html);
+          setStaleSince(cached.fetchedAt);
+        } else {
           setError(message);
         }
       } finally {
@@ -144,11 +160,23 @@ const RemoteMarkdown: React.FC<RemoteMarkdownProps> = ({
   }
 
   return (
-    <div
-      className={className}
-      style={style}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <>
+      {staleSince !== null && (
+        <div
+          className="alert alert--warning"
+          role="alert"
+          style={{ marginBottom: '1rem' }}
+        >
+          GitHub could not be reached. This is the copy stored in your browser
+          on {new Date(staleSince).toLocaleString()}.
+        </div>
+      )}
+      <div
+        className={className}
+        style={style}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    </>
   );
 };
 

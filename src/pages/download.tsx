@@ -61,7 +61,7 @@ export default function Downloads() {
                     />
                     <p>
                       Enhance the INAV experience with the Lua widget for EdgeTX
-                      and OpenTX based radios that fully uses telemtry data.
+                      and OpenTX based radios that fully uses telemetry data.
                     </p>
                   </div>
                   <div className="card__footer">
