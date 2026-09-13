@@ -5,7 +5,7 @@ description: Fixed-wing terrain following — hold a set height above the ground
 
 Terrain AGL Hold is INAV's **terrain-following** mode for fixed wing. It is a **3D Cruise** enhancement that holds a set height **above the ground** instead of above the take-off point — *Cruise with a moving target*. As the ground rises and falls under you, the altitude target rides with it, so the aircraft keeps its clearance over hills and valleys with no stick input: downhill it descends with the valley, uphill it climbs with the ridge.
 
-It reads the ground elevation from the terrain elevation data on the SD card (see **[Terrain](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Terrain.md)** for generating and loading tiles); it never uses a physical rangefinder. With the mode switched off, the aircraft flies exactly like stock 3D Cruise — everything here is opt-in, and **the pitch stick always wins** (the mode box is an instant in-flight kill switch).
+It reads the ground elevation from the terrain elevation data on the SD card (see **[Terrain](./terrain.mdx)** for generating and loading tiles); it never uses a physical rangefinder. With the mode switched off, the aircraft flies exactly like stock 3D Cruise — everything here is opt-in, and **the pitch stick always wins** (the mode box is an instant in-flight kill switch).
 
 ## How it works
 
@@ -17,7 +17,7 @@ It reads the ground elevation from the terrain elevation data on the SD card (se
 
 - A flight controller with terrain support (SD card + barometer) and **more than 256 KB of RAM: STM32H7 or STM32F7 (F745 / F746 / F765)**. F4 and AT32 boards are not enabled for terrain by default.
 - **Fixed-wing only.** A valid **GPS fix** and a **barometer**.
-- **Terrain tiles** (`.TER`) on the SD card, **including the tile for your take-off site** — see [Terrain](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Terrain.md).
+- **Terrain tiles** (`.TER`) on the SD card, **including the tile for your take-off site** — see [Terrain](./terrain.mdx).
 - **3D Cruise must be active.** At this stage Terrain AGL Hold works **only together with NAV CRUISE** — this is a mandatory safety condition for now, not just a recommendation.
 
 ## Not the same as copter SURFACE mode
@@ -35,7 +35,7 @@ Multirotor **SURFACE** mode follows the ground *reactively* from a physical rang
 
 ## Setup
 
-1. **Prepare and enable terrain data** — see **[Terrain](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Terrain.md)**: generate `.TER` tiles for your area with the [**Map Generator** tab](../04-inav-configurator/map-generator-tab.mdx) in the INAV Configurator, or with the online [terrain generator web tool](https://martinovem.github.io/High-Resolution-Map-Generator/) (how to use it is described on its [project page](https://github.com/MartinovEm/High-Resolution-Map-Generator)). Include the tile for your take-off site. Copy the files to the SD card root (and delete the card's `FREESPAC.E` file if you find one there, INAV makes a fresh one on the next boot), then in the CLI:
+1. **Prepare and enable terrain data** — see **[Terrain](./terrain.mdx)**: generate `.TER` tiles for your area with the [**Map Generator** tab](../04-inav-configurator/map-generator-tab.mdx) in the INAV Configurator, or with the online [terrain generator web tool](https://martinovem.github.io/High-Resolution-Map-Generator/) (how to use it is described on its [project page](https://github.com/MartinovEm/High-Resolution-Map-Generator)). Include the tile for your take-off site. Copy the files to the SD card root (and delete the card's `FREESPAC.E` file if you find one there, INAV makes a fresh one on the next boot), then in the CLI:
    ```
    set terrain_enabled = ON
    save

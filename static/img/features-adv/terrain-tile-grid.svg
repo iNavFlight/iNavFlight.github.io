@@ -1,0 +1,53 @@
+<svg viewBox="0 0 640 540" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <rect x="5" y="5" width="630" height="530" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="25" y="34" font-size="16" font-weight="600" fill="#334155">Terrain tiles — named by south-west corner</text>
+
+  <!-- legend -->
+  <rect x="470" y="20" width="16" height="16" rx="3" fill="#fde68a" stroke="#f59e0b"/>
+  <text x="492" y="33" font-size="12.5" fill="#475569">Home tile</text>
+
+  <!-- neutral cells -->
+  <g fill="#f8fafc" stroke="#cbd5e1" stroke-width="1">
+    <rect x="90"  y="60"  width="110" height="110"/><rect x="200" y="60"  width="110" height="110"/><rect x="310" y="60"  width="110" height="110"/><rect x="420" y="60"  width="110" height="110"/>
+    <rect x="90"  y="170" width="110" height="110"/><rect x="200" y="170" width="110" height="110"/>                                              <rect x="420" y="170" width="110" height="110"/>
+    <rect x="90"  y="280" width="110" height="110"/><rect x="200" y="280" width="110" height="110"/><rect x="310" y="280" width="110" height="110"/><rect x="420" y="280" width="110" height="110"/>
+    <rect x="90"  y="390" width="110" height="110"/><rect x="200" y="390" width="110" height="110"/><rect x="310" y="390" width="110" height="110"/><rect x="420" y="390" width="110" height="110"/>
+  </g>
+
+  <!-- home tile -->
+  <rect x="310" y="170" width="110" height="110" fill="#fde68a" stroke="#f59e0b" stroke-width="2.5"/>
+  <!-- little flag -->
+  <line x1="330" y1="188" x2="330" y2="210" stroke="#b45309" stroke-width="2"/>
+  <path d="M330,188 L346,193 L330,198 z" fill="#ef4444"/>
+
+  <!-- tile names -->
+  <g font-size="12.5" fill="#334155" text-anchor="middle">
+    <text x="145" y="119">N50E014.TER</text>
+    <text x="475" y="119">N50E017.TER</text>
+    <text x="255" y="339">N48E015.TER</text>
+    <text x="145" y="449">N47E014.TER</text>
+    <text x="475" y="449">N47E017.TER</text>
+  </g>
+  <!-- home tile label -->
+  <text x="365" y="238" font-size="11" font-weight="700" fill="#b45309" text-anchor="middle">HOME</text>
+  <text x="365" y="254" font-size="12" fill="#334155" text-anchor="middle">N49E016.TER</text>
+
+  <!-- latitude ticks (left) -->
+  <g font-size="12" fill="#64748b" text-anchor="end">
+    <text x="80" y="64">51°N</text>
+    <text x="80" y="174">50°N</text>
+    <text x="80" y="284">49°N</text>
+    <text x="80" y="394">48°N</text>
+    <text x="80" y="504">47°N</text>
+  </g>
+
+  <!-- longitude ticks (bottom) -->
+  <g font-size="12" fill="#64748b" text-anchor="middle">
+    <text x="90"  y="520">14°E</text>
+    <text x="200" y="520">15°E</text>
+    <text x="310" y="520">16°E</text>
+    <text x="420" y="520">17°E</text>
+    <text x="530" y="520">18°E</text>
+  </g>
+
+</svg>

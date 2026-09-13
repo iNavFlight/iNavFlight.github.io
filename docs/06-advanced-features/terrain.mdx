@@ -1,0 +1,174 @@
+---
+title: Terrain (Elevation-Based Altitude)
+sidebar_label: Terrain
+description: Display altitude above ground level from preloaded SD card elevation maps, without a physical rangefinder.
+---
+
+:::warning[Experimental Feature]
+Terrain is **experimental**. Use it with caution and do not rely on it for anything beyond an informational OSD readout. It has hard hardware requirements and is sensitive to SD card quality.
+:::
+
+## 1. What Terrain Is
+
+Terrain lets INAV estimate the aircraft's altitude above ground level (AGL) from preloaded elevation maps (terrain / SRTM data) stored on an SD card, **without a physical rangefinder**. From the current GPS position, the flight controller looks up the matching point in the terrain map, reads the ground elevation, and derives the altitude above terrain.
+
+{/* Section 1 diagram — GPS position → tile lookup on SD → ground elevation → AGL → OSD */}
+![Data flow: the GPS position is looked up against a .TER tile on the SD card to read ground elevation, compute altitude above terrain, and display it in the OSD "Terrain AGL" or "Rangefinder distance" element; a valid physical rangefinder overrides only the "Rangefinder distance" element](/img/features-adv/terrain-data-flow.svg)
+
+### Where It Is Displayed
+
+Two OSD elements can display the altitude above terrain:
+
+- **"Terrain AGL"** — a dedicated element that shows the altitude above ground level calculated **exclusively by the terrain subsystem**. Rangefinder measurements are never shown by this element. If no valid terrain value is available, dashes are displayed. Use this element if you want to see the terrain-derived value regardless of whether a rangefinder is fitted.
+- **"Rangefinder distance"** — the shared element. If a physical rangefinder is present and providing valid data, its measurement always takes priority and the actual distance to the ground is shown. Only when no valid rangefinder data is available and terrain data is present on the SD card is the terrain-derived value displayed instead.
+
+![The dedicated "Terrain AGL" OSD element (mountain icon, highlighted) next to the "Rangefinder distance" (DIS) element showing the same terrain-derived value](/img/features-adv/terrain-osd-terrain-agl.png)
+
+With no rangefinder fitted, both elements show the same terrain-derived value — in the screenshot above, the highlighted element with the mountain icon is **Terrain AGL** and the `DIS` element above it is **Rangefinder distance**.
+
+![Altitude above terrain shown in the OSD "Rangefinder distance" element](/img/features-adv/terrain-osd-example.png)
+
+### Limitations
+
+In this first implementation the calculated value is **informational only**:
+
+- It does **not** behave as a true virtual rangefinder.
+- The displayed value is **not** used for navigation or automatic altitude control. (The separate, opt-in **TERRAIN AGL HOLD** flight mode does use terrain data for fixed-wing terrain following — see the note below.)
+- In the **"Rangefinder distance"** element, a physical rangefinder providing valid data **always takes priority** — the terrain estimate is shown there only as a fallback. The dedicated **"Terrain AGL"** element always shows the terrain-derived value, or dashes when it is unavailable.
+- The value is altitude **above terrain at the current GPS position**, not distance to the nearest object below the aircraft. Trees, buildings, and other local obstacles are not accounted for.
+- If terrain data becomes unavailable or an SD card read error occurs, the feature **automatically disables itself** until the next reboot.
+
+:::note
+This is the SD-card-based counterpart to a "live" rangefinder. For the sensor-based equivalent — which additionally supports Surface mode on multirotors — see [Optical Flow and Rangefinder](../05-core-features/optical-flow-rangefinder.mdx). Terrain data also powers one flight mode: the opt-in **TERRAIN AGL HOLD** box provides terrain following for fixed wings in 3D Cruise, with an enforced safety floor and predictive look-ahead — see [Navigation Terrain Following](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Navigation%20Terrain%20Following.md) in the firmware documentation.
+:::
+
+### Supported Hardware
+
+Terrain needs enough RAM to hold the elevation data plus an SD card, so support is limited to:
+
+| Requirement | Supported | Not Supported |
+|---|---|---|
+| MCU RAM | Over 256 KB | 256 KB or less |
+| MCU family | H7-based boards, and select F7-based boards (STM32F745, STM32F746, STM32F765) | F4-based boards, AT32-based boards |
+| Storage | SD card slot required | Boards without an SD card slot |
+
+F4-based and AT32-based boards do not have enough RAM and are not supported. If your flight controller has no SD card slot, this feature is not available to you.
+
+## 2. Setup
+
+Setup has two parts — preparing the **SD card**, then configuring **INAV** — followed by a pre-flight check that it actually works.
+
+{/* Optional: section 2 workflow diagram */}
+![Setup workflow: format the SD card, generate 30 m tiles with the web tool, copy .TER files to the card root, enable via CLI and reboot, then get a GPS fix before arming](/img/features-adv/terrain-setup-workflow.svg)
+
+### 2.1 SD Card Setup
+
+**Format the card.** Use a single partition, **maximum 4 GB**, formatted as **FAT32**. Always reformat before installing a new set of terrain files, even when reusing a card — this avoids filesystem errors.
+
+**Use a quality card.** Use only quality, branded SD cards from reputable manufacturers. The terrain system is sensitive to read speed and reliability; low-quality or counterfeit cards can cause read errors, display dropouts, or the feature disabling itself mid-flight. If you see problems, swap the card before troubleshooting anything else.
+
+**Generate the elevation tiles.** Use the terrain generator web tool: [https://martinovem.github.io/High-Resolution-Map-Generator/](https://martinovem.github.io/High-Resolution-Map-Generator/) — or the **Map Generator** tab built into recent versions of INAV Configurator, which produces the same `.TER` output.
+
+- The generator always produces **30 m resolution** — this is the only resolution INAV supports, there is no setting to change it.
+- Output is a set of `.TER` files, one per one-degree latitude/longitude tile.
+
+:::danger[Not compatible with ArduPilot terrain data]
+The `.TER` format is **INAV-specific**. Do not use data from [terrain.ardupilot.org](https://terrain.ardupilot.org/) or copy ArduPilot `.DAT` files onto the card — they will not be read correctly.
+:::
+
+**Copy the tiles.** Copy the generated `.TER` files into the **root directory** of the freshly formatted card:
+
+```
+SDCARD:\
+├── N47E014.TER
+├── N47E015.TER
+├── N47E016.TER
+├── N49E015.TER
+├── N49E016.TER
+├── N49E017.TER
+└── N50E016.TER
+```
+
+Each tile is named after its south-west corner (`N47E014` = 47°N, 14°E). You only need the tiles that cover your planned flight area — but the tile covering your **home / arming position is mandatory** (see [How grid loading works](#how-grid-loading-works)).
+
+Copying via INAV's MSC (Mass Storage Class) mode is **not recommended**.
+
+### 2.2 INAV Setup
+
+Enable terrain loading in the CLI:
+
+```text
+set terrain_enabled = ON
+save
+```
+
+Reboot the flight controller. INAV will begin loading terrain data automatically once conditions are met.
+
+Then enable the OSD **"Terrain AGL"** element — in the Configurator OSD tab it is listed under *Altitude* — and/or the **"Rangefinder distance"** element (see [OSD elements](../05-core-features/osd.mdx) and [Where It Is Displayed](#where-it-is-displayed)). The OSD is the only display surface for terrain data.
+
+![Enabling the Terrain AGL element in the INAV Configurator OSD tab](/img/features-adv/terrain-configurator.png)
+
+### 2.3 Verify It Works
+
+Before arming, confirm the whole chain is working on the ground:
+
+1. **Get a valid GPS fix.** Terrain data is loaded only **after** the first valid GPS fix. No fix means no data.
+2. **Confirm the home tile is present.** The `.TER` file covering your take-off position must exist on the card — it is read first to establish the altitude reference.
+3. **Wait for the OSD value to appear** in the "Terrain AGL" (or "Rangefinder distance") element while still disarmed. If it appears, the card is being read correctly and the reference is set.
+
+:::warning[Confirm the value before you arm]
+INAV reads the home-position tile as a pre-arm check, on the ground, after the first GPS fix and while disarmed. If you arm **before** that read succeeds, INAV will not attempt any SD card reads for the rest of that flight. If that happens: disarm, wait for the OSD value to appear, then arm again.
+:::
+
+## 3. How Terrain Works
+
+### Establishing the Home Reference
+
+When the first valid GPS fix is acquired and the aircraft is still disarmed, INAV tries to read the ground elevation for the **home position** from the SD card. This deliberately happens on the ground so a bad card or read failure is caught before takeoff rather than mid-flight.
+
+- If the home read **succeeds**, the altitude reference is set and terrain data starts displaying.
+- If the home read **fails** (missing home tile, read error, bad card), terrain data will not be shown for **any** position — even if tiles for the rest of your flight area are present — and the feature disables itself until the next reboot.
+
+### How Grid Loading Works
+
+Elevation data is split into **one-degree latitude/longitude tiles**, each named after its south-west corner. The home tile is loaded first to set the reference; after arming, INAV continues reading new tiles from the SD card as the aircraft moves into map areas that were not already loaded.
+
+{/* Section 3 grid diagram — lat/lon grid, tiles named N47E014-style, home tile highlighted */}
+![A latitude/longitude grid overlaid on a map, with tiles named in the N47E014.TER style and the home-position tile highlighted](/img/features-adv/terrain-tile-grid.svg)
+
+Two rules follow from this:
+
+- **The home tile is mandatory** — without it, the reference is never set and nothing is displayed.
+- **In-flight loading only happens if the pre-arm check passed.** If you armed before the home read succeeded, INAV performs no SD card reads in flight (to avoid access latency while airborne).
+
+### Self-Disabling
+
+Any SD card read failure — during the pre-arm check or in flight — automatically disables the terrain subsystem until the next reboot. In the shared "Rangefinder distance" OSD element, a valid physical rangefinder always overrides the terrain estimate regardless.
+
+## Troubleshooting
+
+**OSD shows no terrain value / "Terrain AGL" or "Rangefinder distance" shows dashes:**
+- Verify `terrain_enabled = ON` is set and saved (`set terrain_enabled = ON` → `save` → reboot).
+- Confirm the SD card is mounted — check `status` in the CLI for SD card state.
+- Confirm a valid GPS fix is present; terrain data loads only **after** the first valid fix, and the first read may take a few seconds.
+- Check that the `.TER` file covering your **home position** exists on the card.
+- If a physical rangefinder is fitted, the "Rangefinder distance" element never shows the terrain value — use the dedicated "Terrain AGL" element to see it.
+
+**Feature disables itself mid-flight:**
+- Most often caused by a slow or low-quality SD card — replace it with a branded, high-speed card.
+- Confirm the partition is ≤ 4 GB and formatted FAT32 — larger partitions or exFAT can cause intermittent read failures.
+
+**Value appears but is clearly wrong:**
+- Reformat the card and recopy the terrain files — a corrupted or partially overwritten FAT32 filesystem can produce plausible but incorrect values.
+- Remember the value is altitude **above terrain at the current GPS position**, not distance to the nearest object below the aircraft.
+
+**Terrain data was not loaded before arming:**
+- If you arm before the home-position read has succeeded, INAV attempts no SD card reads for the rest of that flight. Disarm, wait for the OSD value to appear, then arm.
+
+## Related Documentation
+
+- [Optical Flow and Rangefinder](../05-core-features/optical-flow-rangefinder.mdx) — the physical-sensor equivalent, which takes priority over Terrain in the shared "Rangefinder distance" element and additionally supports Surface mode.
+- [OSD](../05-core-features/osd.mdx) — where to enable the "Terrain AGL" and "Rangefinder distance" elements.
+- [Terrain.md](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Terrain.md) — firmware documentation and CLI reference.
+- [Navigation Terrain Following.md](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Navigation%20Terrain%20Following.md) — the TERRAIN AGL HOLD flight mode built on top of this terrain data layer.
+- Setting: `terrain_enabled` — [Settings reference](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Settings.md).
