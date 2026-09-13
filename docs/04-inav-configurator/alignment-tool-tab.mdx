@@ -50,6 +50,8 @@ From here, the wizard branches depending on whether a magnetometer is fitted and
 The wizard finishes right after the nose-up step, on either RAM class of board — there's no third step, and nothing to calibrate or align beyond the board itself.
 Click **Save** to save the board alignment and reboot.
 
+![Alignment Wizard: finished, no magnetometer detected](/img/app/alignment-wizard-nomag-done.png)
+
 ### With a magnetometer, RAM-capable boards
 
 The wizard reports the detected board alignment and stops there.
@@ -72,6 +74,8 @@ The wizard continues with one more step before finishing:
 
 The wizard uses the heading change between the first and third readings to work out the compass's mounting orientation relative to the flight controller, and reports both the board alignment and the compass alignment it's about to save.
 Click **Save** to save both and reboot.
+
+![Alignment Wizard: board and compass alignment finished](/img/app/alignment-wizard-ramconstrained-mag-done.png)
 
 :::info
 The compass must already be calibrated (via **Calibrate Magnetometer** on the Calibration tab) before this step will work — the wizard checks for this up front and tells you to calibrate first if it isn't.
