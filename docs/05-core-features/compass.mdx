@@ -197,7 +197,7 @@ Calibrate with flight battery powering up the aircraft.
 
 1. Press "Calibrate Magnetometer" button.
 
-1. Within 30 seconds, hold the aircraft in the air and rotate it so that each side (front, back, left, right, top and bottom) points down towards the earth.
+1. Within the calibration window - the CLI setting `mag_calibration_time`, default 30 seconds, range 20 to 120 - hold the aircraft in the air and rotate it so that each side (front, back, left, right, top and bottom) points down towards the earth.
    The algorithm is smart enough to calculate the proper calibration values even if each side does not see a complete rotation after pressing the "Calibrate Magnetometer" button.
 
 ### Compass Calibration Using Stick Commands
@@ -214,7 +214,7 @@ The [Stick Controls](./stick-controls.mdx) page describes the various capabiliti
    ![Compass Calibration Stick Command](/img/features-core/StickPositions_calibrate_compass.png)
 
 1. Move the craft as indicated in the paragraph above.
-   After 30 seconds, the flight controller will sound a single beep indicating the completion of the process.
+   When the time set by `mag_calibration_time` has elapsed, the flight controller will sound a single beep indicating the completion of the process.
 
 ## Calibration Tips
 
