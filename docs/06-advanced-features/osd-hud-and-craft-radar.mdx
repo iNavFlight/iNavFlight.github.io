@@ -47,6 +47,13 @@ These settings are in the Configurator OSD tab, in the CLI, and in the OSD menu 
 A multirotor usually has the camera tilted up, so `osd_camera_uptilt` is a positive value, often between 5 and 30.
 A plane with a slightly downward-looking camera needs a negative value, often between -5 and -10.
 
+:::warning Do not use the HUD to show other aircraft on a multirotor
+A multirotor can hover on the spot and rotate on its yaw axis.
+The HUD then places peers in the wrong direction, because it draws them relative to where the camera is pointing.
+On a multirotor, show peers with the fixed element instead - see [Showing other aircraft](#showing-other-aircraft) below.
+The rest of the HUD, such as the home point marker, is unaffected.
+:::
+
 The default field of view values suit a 2.8 mm lens.
 A shorter focal length sees more, so with a 2.5 mm or 2.1 mm lens raise both values in steps of 5 or 10 degrees.
 If the field of view is badly wrong, markers will drift away from their true position towards the edges of the screen.
@@ -139,14 +146,17 @@ It shows one peer at a time and cycles through the available peers, spending `os
 |---------|---------|-------|-------|
 | `osd_radar_peers_display_time` | 3 | 1 to 10 | Seconds each peer is shown before the display moves on to the next one. |
 
-:::warning
+:::warning Pick the right element
 The OSD element that shows peers is **OSD_FORMATION_FLIGHT**, which the Configurator lists under **Maps & Radar**.
 The element named **OSD_RADAR** is not the peer display at all.
 It draws a map of your home point relative to your aircraft, and it shows no other aircraft.
 :::
 
+The name refers to the OSD element, not to the hardware or the protocol.
+It displays whatever peers reach the flight controller, whether they come from a Formation Flight module or from the older ESP32 radar firmware.
+
 The fixed element needs a GPS fix and a valid heading, but it does not need the crosshair.
-That makes it a practical choice on multirotors, where the HUD is often less useful.
+That is why it is the right choice on a multirotor, and it works on a plane just as well.
 
 ## How peer data reaches the flight controller
 
@@ -205,7 +215,8 @@ Use a hardware UART.
 In the Configurator **Ports** tab, enable **MSP** on that UART and set the speed to **115200**.
 Nothing else needs to be configured on the port, because the module talks to the flight controller with standard MSP messages.
 
-Then raise `osd_hud_radar_disp` above 0 to display peers on the HUD, and add the **OSD_FORMATION_FLIGHT** element if you want the fixed display as well.
+On a plane, raise `osd_hud_radar_disp` above 0 to display peers on the HUD, and add the **OSD_FORMATION_FLIGHT** element if you want the fixed display as well.
+On a multirotor, leave `osd_hud_radar_disp` at 0 and use the **OSD_FORMATION_FLIGHT** element on its own.
 
 ## Example settings
 
