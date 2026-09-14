@@ -12,11 +12,10 @@ aircraft misconfigured or a board bricked. There's no compiler to catch it.
 ### Key Characteristics
 - **Type**: Static documentation site (Docusaurus v3)
 - **Format**: MDX, one sentence per line
-- **Versioning**: `versioned_docs/version-X.Y.Z/` = frozen release snapshots;
-  `docs/` = current-dev / unreleased tree
-- **Base branch**: `master` (directory-based versioning, not INAV firmware's
-  maintenance-branch strategy)
+- **Versioning**: `versioned_docs/version-X.Y.Z/` = frozen release snapshots; `docs/` = current-dev / unreleased tree
+- **Base branch**: `master` (directory-based versioning, not INAV firmware's maintenance-branch strategy)
 - **Build/test**: `npm run build` (fails on broken links/anchors)
+- **Audience**: Users, who may be trying INAV for the first time, or may be more experienced pilots.
 
 ## Directory Structure
 
@@ -198,8 +197,19 @@ It must report on:
    rather than recalled? For any literal string a pilot will see or search
    for (CLI setting name, OSD message), was it copied character-for-character
    from source, not paraphrased?
+7. **Update this guidance as needed** - If a type or pattern of good or bad changes
+    becomes apparent, update this document with a CONCISE, brief statement of
+    what authors should do or avoid in the future to write excellent, accurate,
+    easy-to-read documentation.
 
 Fix what the sub-agent flags, or justify in the PR why a flagged item is
 fine. Don't skip this for a change that "looks small" — the real corrections
 listed above (wrong defaults, wrong tab, renamed settings) all looked small
 too.
+
+If documentation was wholly or partially written by an AI-agent, the PR description 
+must include the statement:
+Assisted by (or Written by) $AI_MODEL using $FRAMEWORK, in accordance with AGENTS.md
+For example:
+`Written by Sonnet 4.5 using inav-claude, in accordance with AGENTS.md`
+
