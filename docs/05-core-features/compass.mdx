@@ -200,6 +200,26 @@ Calibrate with flight battery powering up the aircraft.
 1. Within 30 seconds, hold the aircraft in the air and rotate it so that each side (front, back, left, right, top and bottom) points down towards the earth.
    The algorithm is smart enough to calculate the proper calibration values even if each side does not see a complete rotation after pressing the "Calibrate Magnetometer" button.
 
+### Automatic Compass Orientation Detection
+
+INAV can automatically detect and set the compass's mounting orientation (`align_mag_roll`, `align_mag_pitch`, `align_mag_yaw`) as part of the calibration spin above, so a standard mounting no longer needs its Orientation Preset worked out by hand.
+
+There's nothing extra to do beyond the steps above: while the aircraft is spun during calibration, INAV records the raw compass reading together with the flight controller's own attitude at each moment. Once the spin finishes, it checks whether the compass mounting matches one of 16 standard orientations (upright or inverted, in 45° yaw steps) and, if it's confident in the result, sets the alignment automatically.
+
+:::info
+This detects the compass's mounting **relative to the flight controller**, not which way the flight controller itself is mounted on the airframe. FC alignment must still be set correctly first — see [Compass and Flight Controller Alignment is Coupled](#compass-and-flight-controller-alignment-is-coupled) above.
+:::
+
+- It only covers upright/inverted mountings in 45° yaw steps, not a compass mounted at an arbitrary tilt (e.g. on an angled camera mount). For those, use [Manual Compass Orientation and Placement](#manual-compass-orientation-and-placement) or the [Empirical Method](#empirical-method-for-determining-compass-alignment) above.
+- **Not available on boards with 256KB of RAM or less** (F405, F411, F722, and similar) — there isn't enough spare RAM for this feature, and calibration works exactly as described above.
+  Use the [Alignment Tool Tab](../04-inav-configurator/alignment-tool-tab.mdx)'s wizard instead, which determines board *and* compass orientation together in one guided flow on every board.
+- If the spin doesn't produce a confident result (too few samples, or an ambiguous spin), INAV leaves your existing alignment setting untouched rather than guessing — run the [Alignment Tool Tab](../04-inav-configurator/alignment-tool-tab.mdx)'s wizard instead, or set the alignment by hand.
+
+:::tip
+Not sure whether your board supports this, or what order to do things in?
+See [Which Path Applies to Your Board?](../04-inav-configurator/alignment-tool-tab.mdx#which-path-applies-to-your-board) on the Alignment Tool Tab page.
+:::
+
 ### Compass Calibration Using Stick Commands
 
 Calibrating Mag/Compass without the need to be connected to a computer can extremely convenient while out in the field.
