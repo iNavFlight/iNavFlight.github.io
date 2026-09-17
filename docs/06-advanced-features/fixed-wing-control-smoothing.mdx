@@ -1,0 +1,98 @@
+---
+title: Fixed Wing Control Smoothing
+description: What nav_fw_control_smoothness does in INAV 10.0, how to choose a value, and the related course lock behaviour
+---
+
+`nav_fw_control_smoothness` decides how gently the autopilot moves a plane when a navigation mode asks for a new bank or pitch.
+It has been in INAV for a long time, but INAV 10.0 changed how the roll axis works, so the setting deserves a fresh look even if you have used it before.
+
+:::note
+This page is about fixed wing only.
+Multicopters do not use this setting.
+:::
+
+## What the setting does
+
+[nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) takes a value from `0` to `9`.
+The default is `0`.
+It acts on two things:
+
+- **Roll.** When a navigation mode suddenly asks for a different bank angle, the change is eased in over a short window instead of being applied at once.
+  The window is `100 ms` per step, so `3` gives `300 ms` and `9` gives the maximum of `900 ms`.
+  At `0` the roll command is passed straight through.
+- **Pitch.** The pitch command is run through a low-pass filter whose cut-off drops as the value rises.
+  This part is unchanged from earlier versions.
+
+The throttle correction that follows pitch has its own knob, [nav_fw_pitch2thr_smoothing](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_pitch2thr_smoothing), and is not affected by this setting.
+
+## How the roll easing works
+
+Up to INAV 9.x the roll command was low-pass filtered.
+That gave a soft feel, but the filter was always in the loop: every course correction was delayed, including the small ones during steady tracking, and the delay grew with the setting.
+
+From INAV 10.0 the roll axis uses a triggered S-curve instead.
+The easing only starts when the commanded bank changes abruptly — a jump of more than 20 % of your configured roll rate from one navigation loop to the next.
+Typical triggers are:
+
+- A new leg at a waypoint.
+- Engaging RTH, POSHOLD or a waypoint mission from level flight.
+- Releasing the roll or yaw stick in COURSE HOLD or CRUISE.
+- Switching from a banked turn into another navigation mode.
+
+From that moment the command follows a smooth S-shaped ramp from where it was to where the autopilot wants it, over the configured window.
+Once the window has elapsed the command is passed 1:1 again.
+The window does not restart if the target keeps moving during the ramp, so the plane can never get stuck in a permanently damped state.
+
+In practice this means the setting shapes the *start* of a manoeuvre and stays out of the way afterwards.
+Steady course tracking, holding a loiter or following a leg is not delayed at any value.
+
+:::info
+The [coordinated waypoint turns](./fixed-wing-waypoint-turns.mdx) introduced in INAV 10.0 use the same window when they plan their roll-in and roll-out.
+Raising `nav_fw_control_smoothness` therefore makes waypoint corners and loiter entries start slightly earlier and roll more gently as well.
+:::
+
+## Choosing a value
+
+There is no airframe-specific magic here.
+Because the easing is purely time based, a plane whose natural roll response is slower than the window will simply not notice it.
+Start with the default and increase in steps if a manoeuvre entry feels too abrupt:
+
+| Value | Window | Typical use |
+| --- | --- | --- |
+| `0` | off | Small, agile planes and wings. The default. |
+| `2` – `4` | 200 – 400 ms | Most sport and FPV planes. Softens RTH engage and stick release without a visible delay. |
+| `5` – `7` | 500 – 700 ms | Larger or heavier models, planes with slow servos. |
+| `8` – `9` | 800 – 900 ms | Big, structurally sensitive airframes such as large gliders or twins with a lot of wing loading. |
+
+The setting can be changed in flight with the *Control Smoothness Adjustment* function on the Configurator's Adjustments tab, and the current value can be shown on the OSD with the `OSD_NAV_FW_CONTROL_SMOOTHNESS` element (labelled `CTL S`).
+That makes it easy to compare values on the same flight.
+
+:::tip
+If you carried a high value over from INAV 9.x because navigation felt twitchy in steady flight, try a lower value now.
+The steady-state lag that made higher values attractive is gone; what remains is the entry shaping, and a plane that felt fine at `7` before often flies just as well at `3` or `4`.
+:::
+
+## Course lock on level
+
+In COURSE HOLD and CRUISE the plane holds whatever course was current when you last let go of the sticks.
+A plane that is still banked at that moment keeps turning while it levels off, so locking the course right at stick release means it ends up pointing past the locked course and has to turn back to it.
+
+From INAV 10.0 [nav_cruise_lock_on_level](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_cruise_lock_on_level) waits for the roll-out instead and is `ON` by default.
+The course is only locked once the bank is below 10°; until then the target simply follows the actual ground course.
+This applies to all three ways a course can be locked:
+
+- Releasing the roll stick.
+- Releasing the yaw stick.
+- Entering COURSE HOLD or CRUISE while already banked, for example switching out of an RTH turn.
+
+The result is that the course locks where the plane has effectively stopped turning, with no overshoot and no reverse correction.
+If the plane does not get level within 2.5 s, for example in strong turbulence, the course is locked anyway so the mode can never hang waiting for a roll-out.
+Set it to `OFF` to get the legacy behaviour, where the course is locked as soon as the sticks are centred.
+Multicopter course hold is not affected either way.
+
+## Related settings
+
+- [nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) — the smoothing level described on this page, `0` to `9`.
+- [nav_cruise_lock_on_level](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_cruise_lock_on_level) — lock the COURSE HOLD / CRUISE course only once level, `ON` by default.
+- [nav_fw_pitch2thr_smoothing](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_pitch2thr_smoothing) — separate smoothing for the pitch-to-throttle correction.
+- [nav_cruise_yaw_rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_cruise_yaw_rate) — how fast the course can be changed with the sticks in COURSE HOLD / CRUISE.

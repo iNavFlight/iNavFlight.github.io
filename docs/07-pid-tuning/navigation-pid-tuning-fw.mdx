@@ -195,7 +195,7 @@ Navigation testing should **also** be done in windier conditions, to ensure yaw 
 - `nav_fw_pos_hdg_i` - When used sparingly, it can filter-out heading target drift.
 - `nav_fw_pos_hdg_d` - Can smooth abrupt heading irregularity. But better suited to aircraft that have a means of yaw control.
 - `heading_hold_rate_limit` - Limits the yaw induced rotation rate the HEADING*HOLD controller can request from PID controller inner
-  loop. It's independent from manual yaw rate and only active when HEADING_HOLD NAV flight modes are in use. \_The default value is more suited to copters, and should be used cautiously on planes that have yaw control, if `nav_fw_control_smoothness` is default or set below 7.*
+  loop. It's independent from manual yaw rate and only active when HEADING_HOLD NAV flight modes are in use. \_The default value is more suited to copters, and should be used cautiously on planes that have yaw control, if [`nav_fw_control_smoothness`](../06-advanced-features/fixed-wing-control-smoothing.mdx) is default or set below 7.*
 - `nav_cruise_yaw_rate` - Sets the yaw rotation rate in degrees that the airplane can be commanded via stick input, while in _Cruise/CourseHold_ modes.
 - `fw_yaw_iterm_freeze_bank_angle` - When enabled, it can help reduce the effect of the rudder counteracting aileron bank turns, by reducing yaw i-term error accumulation. It is only used for ANGLE, HORIZON or ACRO modes. It is not active in navigation modes, unless TURN ASSIST is disabled.
 
