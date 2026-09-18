@@ -185,7 +185,7 @@ for complete documentation on using JavaScript to program your flight controller
 | 38            | Active Mixer Profile                  | Which mixer is currently active (for vtol etc) |
 | 39            | Mixer Transition Active               | Boolean `0`/`1`. Are we currently switching between mixers (quad to plane etc) |
 | 40            | Yaw [deg]                             | Current heading (yaw) in `degrees` |
-| 41            | FW Land State                         | Integer `1` - `5`, indicates the status of the FW landing, 0 Idle, 1 Downwind, 2 Base Leg, 3 Final Approach, 4 Glide, 5 Flare |
+| 41            | FW Land State                         | Integer `0` - `6`, indicates the status of the FW landing, 0 Idle, 1 Loiter, 2 Downwind, 3 Base Leg, 4 Final Approach, 5 Glide, 6 Flare. See [Fixed Wing Autoland](./fixed-wing-autoland.mdx#logic-conditions) |
 | 42            | Current battery profile               | The active battery profile. Integer `[1..MAX_PROFILE_COUNT]` |
 | 43            | Flown Loiter Radius [m]               | The actual loiter radius flown by a fixed wing during hold modes, in `meters` |
 | 44            | Downlink Link Quality                 | |

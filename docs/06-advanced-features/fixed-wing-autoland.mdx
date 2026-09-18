@@ -1,156 +1,218 @@
 ---
 title: Fixed Wing Autoland
-description: All about configuring autoland for fixed wings
+description: How INAV lands a plane automatically at a safehome or a LAND waypoint, how the landing direction is chosen, and how to set up a landing site
 ---
 
-## Introduction
+Since INAV 7.1 a fixed wing can land itself at a prepared landing site.
+The procedure follows the pattern a pilot would fly: circle to read the wind, pick the runway direction that gives a headwind, fly a base leg and a final approach, cut the motor and glide in, flare if the plane can see the ground.
 
-INAV supports advanced automatic landings for fixed wing aircraft from version 7.1.
-The procedure is based on landings for man-carrying aircraft so that safe landings at a specific location are possible.
-Supported are landings at Safehome after "Return to Home" or at a defined LAND waypoint for missions. 
-Every landing locations can be defined with a target point and 2 different approach headings (collinear to the landing strips) with exclusive direction or opposite directions allowed. 
-This enables up to 4 different approach directions, based on the landing site and surrounding area. 
+A landing site is a safehome or a `LAND` waypoint plus a set of approach parameters: the approach and landing altitudes, the side the pattern is flown on, and up to two runway headings.
+Each heading can be used in one or in both directions, so a single site offers up to four landing directions and the wind decides which one is used.
 
-## General Procedure:
-
-1. After reaching Safehome/LAND Waypoint the altitude is corrected to "Approach Altitude".
-1. The aircraft circles for at least 30 seconds to determine the wind direction and strength.
-1. The landing direction and the approach waypoints are calculated on the basis of the measured wind parameters. If no headwind landing is possible or the wind strength is greater than "Max. tailwind" (see Global Parameters), return to point 2.
-1. The landing is initiated. The aircraft flies the downwind course, "Approach Altitude" is held.
-1. Base Leg: the altitude is reduced from 2/3 of "Approach Altitude".
-1. Final Approach: The engine power is reduced using "Pitch2throttle modifier" to reduce speed and the altitude is gradually reduced towards "Land Altitude" while approaching the Safehome coordinates.
-1. Glide: When "Glide Altitude" is reached, the motor is switched off and the pitch angle of "Glide Pitch" is held.
-1. Flare: Only if a LIDAR/Rangefinder sensor is present: the motor remains switched off and the pitch angle of "Flare Pitch" is held
-1. Landing: As soon as INAV has detected the landing, it is automatically disarmed, see setting `nav_disarm_on_landing`.
-
-From INAV 10.0 all turns between the approach legs are flown as coordinated FLY_BY corners.
-The turn is anticipated from the aircraft's actual turn radius, so the plane rolls out already aligned with the next leg.
-This applies during the landing approach whatever [nav_fw_wp_turn_mode](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_mode) is set to, see [Fixed Wing Waypoint Turns](./fixed-wing-waypoint-turns.mdx).
-
-To activate the automatic landing, the parameter `nav_rth_allow_landing` must be set to `ALWAYS` or `FAILSAFE`. 
-
-:::warning
-If landing is activated and no parameters are set for the landing site (Safehome and/or landing waypoint), the old landing procedure (circling until close to the ground, then hovering out) is performed. 
-This is probably not what you want. 
+:::note
+This page is about fixed wing only.
+For RTH the landing is only attempted when [nav_rth_allow_landing](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_rth_allow_landing) is `ALWAYS` or `FS_ONLY`.
 :::
 
-The following graphics illustrate the process:
-
-![Approach Drawing Up](/img/features-adv/fw-autoland-approach-top.png)
-
-![Approach Drawing Side](/img/features-adv/fw-autoland-approach-profile.png)
-
-## Global Landing Parameters
-
-All settings below are available via “Advanced Tuning” in INAV Configurator.
-
-![Configurator Settings Windows](/img/features-adv/fw-autoland-settings.png)
-
-
-* **Final approach length** - `nav_fw_land_approach_length`:
-  - Length of the final approach, measured from the land site (Safehome/Waypoint) to the last turning point.
-In cm. Max: 100000, Min: 100, Default: 35000
-
-* **Modifier for pitch to throttle ratio at final approach** - `nav_fw_land_final_approach_pitch2throttle_mod`:
-  - Modifier for pitch to throttle ratio at final approach.
-This parameter can be used to reduce speed during the final approach. 
-Example: If the parameter is set to 200% and Pitch To Throttle Ratio is set to 15, Pitch To Throttle Ratio is set to 30 on the final approach.
-This causes a reduction in engine power on approach when the nose is pointing downwards.
-In Percent. Min: 100, Max: 400, Default: 100
-
-* **Initial altitude of the glide phase** - `nav_fw_land_glide_alt`:
-  - Initial altitude of the glide phase.
-The altitude refers to "Landing Altitude", see "Landing site parameters"
-In cm. Min: 100, Max: 5000, Default: 200
-
-* **Initial altitude of the flare phase** - `nav_fw_land_flare_alt`:
-  - Initial altitude of the flare phase.
-The altitude refers to "Landing Altitude", see "Landing site parameters"
-In cm. Min: 0, Max: 5000, Default: 200
-
-* **Pitch value for glide flare phase** `nav_fw_land_glide_pitch`:
-  - Pitch value for glide flare phase. 
-In degrees. Min: 0, Max: 45, Default: 0
-
-* **Pitch value for landing flare phase** - `nav_fw_land_flare_pitch`:
-  - Pitch value for flare phase. 
-  In degrees. Min: 0, Max: 45, Default: 8
-
-* **Max. tailwind** - `nav_fw_land_max_tailwind`:
-  - Max. tailwind if no landing direction with downwind is available.
-Wind strengths below this value are ignored (error tolerance in the wind measurement). Landing then takes place in the main direction.
-If, for example, 90 degrees is configured, landing takes place in this direction, NOT in 270 degrees (see above).
-In cm/s. Min: 0; Max: 3000, Default: 140
-
-## Landing Site Parameters
-
-### The following parameters are set for each landing site (Safehome/LAND waypoint):
-
-All settings can also be conveniently made in the Configurator via Mission Control.
-
-CLI command `fwapproach`:
-`fwapproach <index> <Approach altitude> <Land altitude> <Approach direction> <approach heading 1> <approach heading 2> <sea level>`
-
-`fwapproach` has 17 slots in which landing parameters can be stored. In slot 0-7 the landing parameters for Safehome are stored, in 8 - 16 the parameters for waypoint missions. Only one landing point per mission can be saved. 
-
-* index: 0 - 17, 0 - 7 Safehome, 8 - 16 Mission
-* Approach direction: 0 - Left, 1 - Right. Always seen from the primary landing direction (positive value), i.e. whether the aircraft flies left or right turns on approach.
-* Approach Altitude: Initial altitude of the approach, the altitude at which the wind direction is determined and the downwind approach, in cm
-* Land Altitude: Altitude of the landing site, in cm
-* Approach heading 1 and 2: Two landing directions can be set, values: 0 - +/-360. 0 = landing direction is deactivated. 
-A positive value means that you can approach in both directions, a negative value means that this direction is exclusive.
-Example: 90 degrees: It is possible to land in 90 degrees as well as in 270 degrees. -90 means that you can only land in a 90 degree direction.
-This means that practically 4 landing directions can be saved.
-* Sea Level: 0 - Deactivated, 1 - Activated. If activated, approach and land altitude refer to normal zero (sea level), otherwise relative altitude to the altitude during first GPS fix.
-
 :::warning
-> [!CAUTION]
-The Configurator automatically determines the ground altitude based on databases on the Internet, which may be inaccurate.
-Please always compare with the measured GPS altitude at the landing site to avoid crashes.
+If landing is allowed but no approach is configured for the safehome or mission in use, INAV falls back to the old landing procedure: it circles down over the site and glides out in whatever direction it happens to be flying.
+Configure an approach for every site you might land at.
 :::
 
+## How a landing is flown
 
+![Landing pattern, top view](/img/features-adv/fw-autoland/pattern-top.svg)
 
-### General Parameters And Tuning Tips
+1. **Climb to approach altitude.** On reaching the safehome or `LAND` waypoint the plane first corrects its altitude to the approach altitude of the site.
+2. **Loiter and measure the wind.** It circles over the site for at least 30 seconds while the wind estimate settles.
+3. **Choose the direction.** From the configured headings the one closest to a headwind is picked, see [Choosing the landing direction](#choosing-the-landing-direction).
+   The three pattern points are computed once and the pattern is then frozen; the wind is not re-evaluated during the approach.
+4. **Downwind.** The plane leaves the circle and flies straight to the turn point at approach altitude.
+5. **Base leg.** From the turn point it flies to the final approach point, descending to two thirds of the approach altitude, and rolls onto final with a coordinated turn.
+6. **Final approach.** It descends towards the site along the extended centreline.
+   The pitch-to-throttle modifier reduces throttle whenever the nose is below the horizon, which is how the speed is bled off.
+7. **Glide.** At the glide altitude above the landing altitude the motor is stopped or idled, the course is locked onto the runway heading and the glide pitch is held.
+8. **Flare.** Only with a working rangefinder: at the flare altitude the pitch changes to the flare pitch.
+9. **Touchdown.** As soon as INAV detects the landing it disarms, controlled by [nav_disarm_on_landing](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_disarm_on_landing).
 
-* `nav_fw_wp_tracking_accuracy`: Its highly recommended that this parameter is used and tuned well.
-Only with WP-Tracking enabled, the Aircraft will try to precisely align with the runway during approach. 
-If WP-Tracking is not used, the Plane will head straight to the landing location without flying in line with the intended landing strip.
-Wind can intensively alter the final landing heading.
+![Landing pattern, altitude profile](/img/features-adv/fw-autoland/pattern-profile.svg)
 
-* `nav_fw_pitch2thr`: The navigation throttle modifier has to be tuned well to allow stable navigation during climbs and descents to prevent a stall.
-Make sure your plane maintains Ground or Airspeed when climbing in any navigation mode. 
-The Craft should not get slower and not speed ub significantly during a navigation climb, if P2T is tuned properly.
+<details>
+<summary>The geometry behind the pattern</summary>
 
-* `nav_wp_radius`: From INAV 10.0 the turning points for the Crosswind-Leg and Final Approach are calculated from the aircraft's own coordinated turn radius, so this parameter no longer shapes the approach corners.
-Make sure it is not set greater than 1000 (cm) so the approach waypoints are not treated as reached too early.
+Three points are placed relative to the landing site once the direction is known, with `L` = `nav_fw_land_approach_length` and `A` = approach altitude:
 
-* Test your Navigation-Tuning: A better Navigation-Tune will reward you with smoother and more reliable landings.
-To test your nav systems limit, we recommend to create a waypoint missions with many 90° turn angles with shorter and shorter tracks. 
-With this Method, you can find out how well your plane can follow a navigation path and how long it takes to align to a waypoint track.
-A well tuned plane should be able to pull of a WP Mission that looks like this, where the distance between WP6 and WP7 is recommended to be the minimum approach length: 
+| Point | Where | Altitude |
+| --- | --- | --- |
+| Final approach point | `L` before the site on the extended centreline | ⅔ `A` |
+| Turn point | Off the final approach point, perpendicular to the runway, on the configured side, at `max(4 × nav_fw_loiter_radius, L / 2)` | `A` |
+| Land point | `L` beyond the site on the centreline | ⅔ `A` *below* the landing altitude |
 
-![Test Waypoint Track](/img/features-adv/fw-autoland-wp.png)
+The land point is deliberately below ground.
+The altitude on final is interpolated between the final approach point and the land point, so aiming below the runway keeps the plane descending all the way through touchdown instead of levelling off above it.
+A consequence worth knowing: the final glide slope is roughly ¾ × `A` / `L`.
+With the default 350 m approach length, a 100 m approach altitude gives about 21 %, 150 m already 32 %.
+Raising the approach altitude therefore steepens the final; lengthen the approach if your plane cannot descend that steeply at reduced throttle.
 
+The loiter radius only enters through the turn point.
+The base leg is at least four loiter radii long, so a large loiter radius pushes the turn point further out and makes the pattern bigger.
 
-## Waypoint Missions
+</details>
 
-:::important
-Only one landing waypoint per mission can be active and saved and the landing waypoint must be the last waypoint of the mission.
-::: 
-If the altitude of the waypoint and the "Approach Altitude" are different, the altitude of the waypoint is approached first and then the altitude is corrected to "Approach Altitude".
+## Choosing the landing direction
 
-## Logic Conditions
+Each landing site has two heading slots, **heading 1** and **heading 2**, each holding the compass direction the plane flies while landing.
+`0` means the slot is unused.
 
-The current landing state can be retrieved via ID 41 in "Flight" (FW Land State).
-This allows additional actions to be executed according to the landing phases, e.g. deployment of the landing flaps.
+- A **positive** heading, say `90`, allows landing in that direction *and* in the opposite one, `270`.
+  Use it for a strip that is clear at both ends.
+- A **negative** heading, say `-90`, allows only that one direction.
+  Use it when the opposite approach would cross trees, buildings or people.
 
-| Returned value | State |
+![Choosing the landing direction](/img/features-adv/fw-autoland/direction-choice.svg)
+
+After the loiter INAV takes the measured wind and checks each configured direction:
+
+1. If the wind is weaker than [nav_fw_land_max_tailwind](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_max_tailwind) it is treated as calm.
+   The estimate is ignored and the plane lands in heading 1 exactly as configured (heading 2 if heading 1 is unused).
+   This is the strongest tailwind you accept, and a noise floor for the wind estimator at the same time; the default is 1.4 m/s.
+2. Otherwise a direction qualifies when the wind comes from within 90° of the nose, i.e. any headwind component.
+   For a positive heading whose configured direction has a tailwind, the opposite direction is tried instead.
+3. If both headings qualify, the one closer to the wind wins.
+4. If no direction qualifies, the plane keeps circling at approach altitude and checks again every 30 seconds.
+   This also applies in a failsafe RTH: INAV would rather loiter than land downwind, so make sure at least one of your directions faces the prevailing wind.
+
+The pattern side, **left** or **right**, is the direction of the base-to-final turn as seen when landing in the configured, positive direction.
+When the opposite direction is used the pattern stays on the same side of the strip, so a left pattern becomes a right pattern.
+Choose the side that keeps the base leg over open ground.
+
+## Setting up a landing site
+
+The easiest way is the Configurator: in **Mission Control** every safehome and every `LAND` waypoint has a landing settings dialog with the fields below, drawn on the map as you edit them.
+In the CLI the same data is held in the `fwapproach` table:
+
+```
+fwapproach <index> <approach altitude> <landing altitude> <approach direction> <heading 1> <heading 2> <sea level>
+fwapproach reset
+```
+
+| Field | Meaning |
 | --- | --- |
-| 0 | Idle/Inactive |
+| index | `0` – `7` belong to safehome 0 – 7, `8` – `16` to mission 1 – 9 of a multi-mission setup |
+| approach altitude | Altitude of the loiter and the downwind leg, in cm |
+| landing altitude | Altitude of the landing site, in cm |
+| approach direction | `0` = left pattern, `1` = right pattern |
+| heading 1, heading 2 | Landing directions in degrees, `-360` to `360`, `0` = unused; negative = this direction only |
+| sea level | `0` = altitudes are relative to the home (arming) altitude, `1` = altitudes are above mean sea level |
+
+Both altitudes are measured from the home position at arming unless sea level is set.
+For a strip that lies higher or lower than where you arm, set the landing altitude accordingly or use sea level references.
+
+### Landing altitude and glide altitude
+
+The landing altitude is the height INAV aims the final approach at over the site coordinates, and the glide starts at [nav_fw_land_glide_alt](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_glide_alt) above it.
+What matters for the touchdown is the sum: the glide begins when the plane is *landing altitude + glide altitude* above the real ground, and because the glide is much shallower than the final, that point decides where the plane lands.
+
+![Landing altitude and glide altitude](/img/features-adv/fw-autoland/landing-altitude.svg)
+
+- **Landing altitude at ground level** (the normal case): the final aims at the site, the glide starts a glide altitude above the ground close to the site and the plane settles a short distance beyond the coordinates.
+  Use this when the site marks the start of a strip and the plane must touch down after it.
+- **Landing altitude above the ground**: the motor stops while the plane is still well above the ground; it glides a long way and lands late.
+  A small positive value moves the touchdown further along the strip on purpose; a large one, or a wrong elevation, lands the plane beyond the strip.
+- **Landing altitude below the ground**, compensated by a larger glide altitude: the final is aimed below the site, so it is steeper and reaches the same height above the ground earlier; the glide then ends at or just before the coordinates.
+  For example a landing altitude of -5 m with a glide altitude of 8 m starts the glide 3 m above the ground, but well before the site.
+  This is useful for a short strip that is approached from both ends with the site in the middle.
+
+Whatever combination you use, landing altitude plus glide altitude must stay positive, otherwise the plane flies the steep final into the ground without ever gliding.
+
+With a rangefinder the plane measures its real height above the ground directly, and INAV uses that reading for both thresholds instead of the barometer and GPS estimate.
+The thresholds themselves do not change: the glide still starts at *landing altitude + glide altitude* and the flare at *landing altitude + [nav_fw_land_flare_alt](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_flare_alt)*, now compared against the true height.
+Two things follow from that:
+
+- The flare only exists with a rangefinder, because it has to happen in the last metre or two where barometer and GPS are not accurate enough.
+  With a negative landing altitude raise the flare altitude by the same amount, otherwise the flare threshold is below the ground and the flare never triggers.
+- Keep *landing altitude + glide altitude* within the range of your rangefinder.
+  While it cannot see the ground INAV falls back to the barometer and GPS estimate, and a threshold above the sensor's range is then met on the less accurate source.
+
+:::warning
+The Configurator fills in the ground elevation from an online database, which can be off by several metres.
+Compare it with the GPS altitude your plane reports at the landing site before you trust it: an elevation error shifts the glide start by the same amount.
+:::
+
+## Global landing settings
+
+These apply to every landing site and live in the **Advanced Tuning** tab or the CLI.
+
+![Configurator landing settings](/img/features-adv/fw-autoland-settings.png)
+
+| Setting | Default | Range | What it does |
+| --- | --- | --- | --- |
+| [nav_fw_land_approach_length](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_approach_length) | 35000 cm | 100 – 100000 | Length of the final approach from the final approach point to the site, and also the distance of the land point beyond it. |
+| [nav_fw_land_final_approach_pitch2throttle_mod](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_final_approach_pitch2throttle_mod) | 100 % | 100 – 400 | Multiplies [nav_fw_pitch2thr](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_pitch2thr) on final approach while the nose is down. At 200 % a pitch-to-throttle ratio of 15 acts as 30, cutting more throttle in the descent and slowing the plane. |
+| [nav_fw_land_glide_alt](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_glide_alt) | 200 cm | 100 – 5000 | Height above the landing altitude at which the motor stops and the glide begins. |
+| [nav_fw_land_flare_alt](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_flare_alt) | 150 cm | 0 – 10000 | Height above the landing altitude at which the flare begins. Only used with a rangefinder. |
+| [nav_fw_land_glide_pitch](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_glide_pitch) | 0° | -15 – 45 | Pitch held during the glide. |
+| [nav_fw_land_flare_pitch](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_flare_pitch) | 8° | -15 – 45 | Pitch held during the flare. |
+| [nav_fw_land_max_tailwind](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_land_max_tailwind) | 140 cm/s | 0 – 3000 | Wind below this speed is ignored and heading 1 is used as configured, see [Choosing the landing direction](#choosing-the-landing-direction). |
+
+Related settings that are not landing-specific but shape the landing:
+
+- [nav_rth_allow_landing](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_rth_allow_landing) — `NEVER`, `ALWAYS` or `FS_ONLY`; whether RTH ends in a landing at all.
+- [nav_disarm_on_landing](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_disarm_on_landing) — disarm once the landing is detected.
+- [nav_fw_loiter_radius](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_loiter_radius) — the wind loiter circle, and through it the minimum base leg length.
+- [nav_fw_launch_land_abort_deadband](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_launch_land_abort_deadband) — stick travel that aborts the landing, see [Aborting a landing](#aborting-a-landing).
+
+## Tuning for a good landing
+
+A landing is only as good as the navigation tune underneath it.
+Before you rely on autoland:
+
+- **Tune [nav_fw_pitch2thr](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_pitch2thr).** The plane must hold its speed in navigation climbs and descents; if it slows down in a climb it will stall on the base leg, if it speeds up in a descent it will float past the site.
+  Only then raise the final approach modifier to slow the plane down on final.
+- **Enable [nav_fw_wp_tracking_accuracy](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_tracking_accuracy).** It keeps the plane on the extended centreline on final instead of merely heading for the site, so a crosswind cannot push the touchdown sideways.
+  2 m is a good value for most planes.
+- **Turns are coordinated.** From INAV 10.0 the approach always uses coordinated `COORD_FLYBY` turns, whatever [nav_fw_wp_turn_mode](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_wp_turn_mode) is set to, so the base-to-final turn rolls out on the centreline, see [Fixed Wing Waypoint Turns](./fixed-wing-waypoint-turns.mdx).
+  [nav_wp_radius](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_wp_radius) no longer decides when the turns start; keep it at a sane value of 10 m or less so it does not cut the pattern short as a fallback.
+- **Glide and flare need a trustworthy height.** Without a rangefinder the glide starts on the estimated height above ground, which can be a few metres off.
+  Give the glide altitude some margin and pick a glide pitch that brings the plane down safely with the motor off; there will be no flare.
+  With a rangefinder the glide and flare heights are measured directly and the flare adds the final nose-up before touchdown.
+- **Test the tune with a waypoint mission** of 90° corners with shorter and shorter legs.
+  A plane that can fly the mission below cleanly, with the leg between WP6 and WP7 as long as your approach length, is ready for autoland.
+
+![Test waypoint mission](/img/features-adv/fw-autoland-wp.png)
+
+## Landing at a waypoint
+
+A mission can end with a `LAND` waypoint.
+The landing site is the waypoint position; the approach parameters come from the landing settings of that mission, which the Configurator stores in the `fwapproach` slots `8` to `16`, one per mission of a multi-mission setup, when you save the mission.
+
+- The `LAND` waypoint must be the last waypoint of the mission.
+  Reaching it ends the mission, so any waypoint after it would never be flown.
+- The waypoint altitude is flown on the way there, then the plane corrects to the approach altitude of the landing settings.
+  The landing altitude also comes from the landing settings, not from the waypoint.
+
+## Aborting a landing
+
+Move the roll or pitch stick beyond [nav_fw_launch_land_abort_deadband](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_launch_land_abort_deadband) and the landing is aborted, at any point from the climb to approach altitude down to the glide.
+The OSD reminds you of this while an abort is still possible.
+Once the flare has started the plane commits to the landing.
+
+After an abort the plane continues the mission if it was landing at a waypoint, otherwise it returns to the RTH loiter over home.
+It will not try another automatic landing until RTH or the mission is engaged afresh.
+
+If the position estimate is lost during the loiter or the approach, INAV switches to its emergency landing.
+Once gliding or flaring it keeps the runway heading and completes the landing.
+
+## Logic conditions
+
+The landing phase is available to the [programming framework](./programming-framework.mdx) as the flight operand **FW Land State** (ID 41), for example to deploy flaps or gear on the base leg.
+
+| Value | Phase |
+| --- | --- |
+| 0 | Idle, no landing active |
 | 1 | Loiter |
 | 2 | Downwind |
-| 3 | Base Leg |
-| 4 | Final Approach |
+| 3 | Base leg |
+| 4 | Final approach |
 | 5 | Glide |
 | 6 | Flare |
