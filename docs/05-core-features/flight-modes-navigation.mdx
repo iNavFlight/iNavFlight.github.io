@@ -95,7 +95,7 @@ Max. navigation dive angle | [nav_fw_dive_angle](https://github.com/iNavFlight/i
 Cruise Yaw Rate | [nav_cruise_yaw_rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_cruise_yaw_rate) | Max YAW rate when NAV COURSE HOLD/CRUISE mode is enabled. Set to 0 to disable on fixed wing (Note: On multirotor setting to 0 will disable Course Hold/Cruise mode completely) [dps]
 Loiter radius | [nav_fw_loiter_radius](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_loiter_radius) = 5000 | The radius of the orbit that will be used in Poshold. Values are in cm.
 Loiter direction | [fw_loiter_direction](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#fw_loiter_direction) | The direction the airplane will turn for the loiter orbit. It can turn either left or right.
-Control smoothness | [nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) = 0 | How smoothly the autopilot controls the airplane to correct the navigation error. The max value is 9 and the min is 0. The default is 0.
+Control smoothness | [nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) = 0 | How gently the autopilot enters a manoeuvre, 0 to 9. From INAV 10.0 the roll axis eases abrupt bank changes over `value × 100 ms` and adds no lag in steady flight, see [Fixed Wing Control Smoothing](../06-advanced-features/fixed-wing-control-smoothing.mdx).
 Soaring mode stop | [nav_fw_soaring_motor_stop](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_soaring_motor_stop) | When enabled, stops the motor when [Soaring mode](./flight-modes-standard.mdx#soaring-fw) is enabled.
 Soaring Mode Pitch Deadband | [nav_fw_soaring_pitch_deadband](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_soaring_pitch_deadband) | Pitch Angle deadband when soaring mode is enabled (deg). Angle mode is inactive within the deadband allowing pitch to free float whilst soaring.
 Altitude Control Response Factor | [nav_fw_alt_control_response](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_alt_control_response) | Adjusts the deceleration response of fixed wing altitude control as the target altitude is approached. Decrease value to help avoid overshooting the target altitude. Default is 40.
@@ -332,6 +332,9 @@ If the mode is enabled in conjunction with NAV ALTHOLD, the current altitude wil
 Altitude can be adjusted as usual via the pitch stick for a fixed wing or the throttle stick for a multirotor.
 ANGLE mode is automatically activated so the craft will auto level and the heading will also be held on both platforms.
 
+From INAV 10.0 a fixed wing locks its new course only once it has rolled out level after a stick input or a banked mode entry, instead of the moment the stick is released.
+This avoids overshooting the course during the level-off and is controlled by [nav_cruise_lock_on_level](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_cruise_lock_on_level), see [Course lock on level](../06-advanced-features/fixed-wing-control-smoothing.mdx#course-lock-on-level).
+
 ## NAV CRUISE
 
 This mode is equivalent to the combination of [NAV COURSE HOLD](./flight-modes-navigation.mdx#nav-course-hold) and [NAV ALTHOLD](./flight-modes-navigation.mdx#nav-althold) 
@@ -419,7 +422,7 @@ These setting can be found in the _Advanced Tuning Tab_ or the _CLI_.
 * [nav_fw_bank_angle](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_bank_angle) - The sustained bank that all turn and loiter radii are planned for, so a higher value gives tighter turns.
 From INAV 10.0 this is a planning target rather than a hard limit, see [Fixed Wing Waypoint Turns](../06-advanced-features/fixed-wing-waypoint-turns.mdx#what-nav_fw_bank_angle-means-now).
 Set it to the bank your plane can hold comfortably and continuously.
-* [nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) - Lower values can produce a more abrupt banking motion, but will also allow the plane to react faster to navigation, course, and heading commands.
+* [nav_fw_control_smoothness](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_control_smoothness) - Shapes how gently the plane rolls into a new leg. From INAV 10.0 it only acts on the start of a manoeuvre and no longer delays steady tracking, see [Fixed Wing Control Smoothing](../06-advanced-features/fixed-wing-control-smoothing.mdx).
 * [nav_use_fw_yaw_control](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_use_fw_yaw_control) - If your plane has a form of yaw control **e.g. Rudder or Differential Thrust**, this setting allows the plane to yaw as well as bank when making a turn.
 A lower `nav_fw_bank_angle` (35°) should be used, for a flatter turn.
 * [nav_fw_cruise_thr](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#nav_fw_cruise_thr) - Waypoint overshoot is more likely to occur if the plane is holding a higher velocity, especially if it is traveling on a down-wind or lateral leg before the turn.
