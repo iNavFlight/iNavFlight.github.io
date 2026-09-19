@@ -54,15 +54,15 @@ Open the **DroneCAN** tab in INAV Configurator to configure the flight controlle
 The same settings are also available via the CLI, which is useful for scripted setup or if the tab isn't available on your platform.
 
 ```
-set dronecan_node_id = 10
-set dronecan_bitrate = 1000KBPS
+set dronecan_node_id = 1
+set dronecan_bitrate_kbps = 1000
 save
 ```
 
 | Setting | Values | Default | Description |
 | --- | --- | --- | --- |
-| `dronecan_node_id` | 1-127 | 10 | CAN node ID for the flight controller |
-| `dronecan_bitrate` | 125KBPS, 250KBPS, 500KBPS, 1000KBPS | 1000KBPS | CAN bus bitrate; all peripherals must match |
+| `dronecan_node_id` | 1-127 | 1 | CAN node ID for the flight controller |
+| `dronecan_bitrate_kbps` | 125, 250, 500, 1000 | 1000 | CAN bus bitrate in kbps; all peripherals must match |
 | `dronecan_use_dna_server` | OFF, ON | ON | Whether the flight controller runs the Dynamic Node Allocation server (see [Node management](#node-management)) |
 
 :::note
