@@ -81,7 +81,7 @@ Calibrate with flight battery powering up the aircraft.
 
 Press "Calibrate Magnetometer" button. 
 
-You have 30 seconds to hold the copter in the air and rotate it so that each side (front, back, left, right, top and bottom) points down towards the earth. However the algorithm is smart enough to calculate the proper calibration values even if you simply wave the copter in the air for 30 seconds after pressing "Calibrate Magnetometer" button.
+You have 30 seconds to hold the copter in the air and rotate it so that each side (front, back, left, right, top and bottom) points down towards the earth. However the algorithm is smart enough to calculate the proper calibration values even if you simply wave the copter in the air for that time after pressing "Calibrate Magnetometer" button. The duration is the CLI setting `mag_calibration_time` (default 30, range 20 to 120 seconds); the Configurator countdown follows whatever the flight controller reports.
 
 ### Compass calibration using stick functions
 
@@ -89,7 +89,7 @@ Calibrating Mag/Compass without the need to be connected to a computer can extre
 The [Stick Controls](../05-core-features/stick-controls.mdx) page describes the various capabilities of adjusting the craft's controls using the TX sticks.
 As described in this document, calibrate the compass by moving the left stick up and to the right while at the same time, move the right stick down and to the center.
 The flight controller will sound two quick beeps indicating the start of the calibration. Move the craft as indicated in the paragraph above.
-After 30 seconds, the flight controller will sound a single beep indicating the completion of the process.
+When the time set by `mag_calibration_time` has elapsed, the flight controller will sound a single beep indicating the completion of the process.
 
 ### Verifying that compass is calibrated properly
 
