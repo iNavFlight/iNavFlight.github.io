@@ -93,7 +93,7 @@ Input `29` is called `Fixed Value` in the Configurator today and was called `MAX
 Only the label changed, the input still feeds a constant, so old rules using input `29` keep working.
 
 Input `14` is called `Flaperon Mode` in the Configurator and `FEATURE FLAPS` in the firmware settings.
-It is `0` until `FLAPERON` flight mode is active, and then carries the `flaperon_throw_offset` value, which defaults to 200 and can be set between 50 and 450. The default comes from the firmware [setting definition](https://github.com/iNavFlight/inav/blob/86a0441c0003466d54a7711e7240d8297c8d067f/src/main/fc/settings.yaml); the range is defined by `FLAPERON_THROW_MIN` and `FLAPERON_THROW_MAX` in [servos.h](https://github.com/iNavFlight/inav/blob/86a0441c0003466d54a7711e7240d8297c8d067f/src/main/flight/servos.h).
+It is `0` until `FLAPERON` flight mode is active, and then carries the configured `flaperon_throw_offset` value. Run `get flaperon_throw_offset` in the CLI to check the current value and allowed range on your installed firmware. See [FLAPERON mode](../05-core-features/flight-modes-standard.mdx#flaperon-fw) for configuration details.
 `FLAPERON` mode is only offered when the platform type is `AIRPLANE` and `has_flaps` is `ON`.
 
 The input list also grew well past the twenty-nine entries these examples use.
