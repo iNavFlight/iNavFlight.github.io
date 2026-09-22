@@ -313,7 +313,7 @@ Read [Failsafe Tab](../04-inav-configurator/failsafe-tab.mdx) for more info.
 Activating it moves both ailerons down (or up) by predefined offset.
 
 Configuration besides activating FLAPERON mode is pretty simple and consists of just one CLI variable:
-- `flaperon_throw_offset` defines throw range in us for both ailerons that will be applied when FLAPERON mode is activated. By default it 250 with max at 400.
+- `flaperon_throw_offset` defines throw range in us for both ailerons that will be applied when FLAPERON mode is activated. The default is 200, with a supported range of 50 to 450.
 
 Flaperon offset is by default is applied as a servo mixer input with ID=14 so using custom servo mixing you can configure FLAPERON mode to deflect any servos you need (including dedicated flaps).
 
