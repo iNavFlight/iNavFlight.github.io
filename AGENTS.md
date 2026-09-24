@@ -14,7 +14,11 @@ aircraft misconfigured or a board bricked. There's no compiler to catch it.
 - **Format**: MDX, one sentence per line
 - **Versioning**: `versioned_docs/version-X.Y.Z/` = frozen release snapshots; `docs/` = current-dev / unreleased tree
 - **Base branch**: `master` (directory-based versioning, not INAV firmware's maintenance-branch strategy)
-- **Build/test**: `npm run build` (fails on broken links/anchors)
+- **Build/test**: `npm run build`. This does **not** fail on broken links or
+  anchors — `docusaurus.config.ts` sets `onBrokenLinks: "warn"` and
+  `onBrokenAnchors` defaults to `warn` too — and CI never builds a PR at all
+  (`deploy.yml` has no `pull_request` trigger). A clean exit code is not
+  evidence that your links/anchors resolve; see "Build health" below.
 - **Audience**: Users, who may be trying INAV for the first time, or may be more experienced pilots.
 
 ## Directory Structure
@@ -112,7 +116,11 @@ your work so a human (or the review sub-agent below) can spot-check it.
 
 - PR #24 corrected four wrong defaults and a wrong range by checking
   `settings.yaml` on `maintenance-10.x` and naming the branch + values in the
-  PR body — this is the standard to hit, not an exceptional case.
+  PR body — this is the standard to hit, not an exceptional case. The same
+  PR's *original* page still needed a follow-up fix from Jetrell because it
+  read as multirotor setup advice no cited source established — see the
+  "Unsupported why/should claims" checklist item below; passing every
+  evidence check doesn't catch this failure mode.
 - PR #21 caught that the wiki claimed a feature had its own tab when it
   doesn't, by checking the Configurator's own tab source rather than trusting
   the existing page.
@@ -182,22 +190,45 @@ It must report on:
    the PR description? Independently re-read at least one cited source itself
    to confirm it actually supports the claim (don't just check a citation
    exists).
-2. **Staleness** — does any wording look copied from the existing page/wiki
+2. **Unsupported why/should claims** — does the page explain *why* something
+   works a certain way, or recommend what a pilot *should* do, in a way the
+   cited source doesn't actually establish? Source code shows behavior, not
+   intent or advice. Flag every such claim, unless it falls under the partial
+   exception above (a clear, attributed statement from the feature author,
+   Jetrell, or Sensei) — if so, confirm the PR description names who said it.
+   Otherwise it must be removed, softened to what the source actually shows,
+   or the PR description must explicitly ask a human test pilot to weigh in.
+   Passing every other check here does not excuse this one: PR #24's original
+   HUD/craft-radar page cited `settings.yaml` correctly for every default and
+   still needed a follow-up correction from Jetrell because it read as
+   hardware/setup advice ("use the HUD to show other aircraft on a
+   multirotor") that no cited source supported.
+3. **Staleness** — does any wording look copied from the existing page/wiki
    without independent verification?
-3. **Version correctness** — if editing `versioned_docs/`, is this a real
+4. **Version correctness** — if editing `versioned_docs/`, is this a real
    fix for that release, not a current-dev feature leaking backward? If
    editing `docs/`, is the behavior actually shipped on the branch that tree
    represents? If any cited firmware/Configurator PR is unmerged, does the
    docs PR description say so explicitly?
-4. **Tone/organization** — pilot-facing language, organized by user task,
-   no unnecessary duplication of volatile facts?
-5. **Build health** — was `npm run build` actually run, and does the PR say so?
-6. **Completeness and exactness** — for any table claimed as a "full" or
+5. **Tone/organization** — pilot-facing language, organized by user task, no
+   unnecessary duplication of volatile facts, and no citations or source
+   references left inline in the published page text (see "Where citations
+   go" above — they belong in the PR description only)?
+6. **Build health** — was `npm run build` actually run, and does the PR say
+   so? A clean exit code does **not** mean links/anchors resolve — both
+   `onBrokenLinks` and `onBrokenAnchors` are `warn`, not `throw`, and PRs
+   aren't built by CI at all. Check the build's own warning output for
+   broken-link/anchor lines, or otherwise manually confirm any new or changed
+   links and anchors actually resolve.
+7. **Completeness and exactness** — for any table claimed as a "full" or
    "complete" enumeration, were the entries actually counted against source
    rather than recalled? For any literal string a pilot will see or search
    for (CLI setting name, OSD message), was it copied character-for-character
    from source, not paraphrased?
-7. **Update this guidance as needed** - If a type or pattern of good or bad changes
+8. **AI-disclosure compliance** — if this change was wholly or partially
+   written by an AI agent, does the PR description include the required
+   attribution statement (see below)?
+9. **Update this guidance as needed** - If a type or pattern of good or bad changes
     becomes apparent, update this document with a CONCISE, brief statement of
     what authors should do or avoid in the future to write excellent, accurate,
     easy-to-read documentation.
