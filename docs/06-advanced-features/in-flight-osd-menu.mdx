@@ -20,7 +20,7 @@ When the switch is activated and held for 3 seconds while the aircraft is armed 
 ## Requirements
 
 - Aircraft must be **armed**
-- A **navigation mode** must be active (e.g. POSHOLD, NAV CRUISE, NAV WP, RTH)
+- A **navigation mode** must be active: POSHOLD, RTH, NAV WP, or ALTHOLD. (NAV CRUISE does not count on its own.)
 - **Failsafe** must not be active
 - The **IN FLIGHT MENU** RC mode switch must be assigned and held active
 
@@ -42,7 +42,7 @@ Toggling the switch off closes the menu immediately and restores full stick cont
 
 ### 2. Assign a navigation mode
 
-At least one navigation mode (POSHOLD, NAV CRUISE, etc.) must be configured and active before the in-flight menu can open.
+At least one qualifying navigation mode (POSHOLD, RTH, NAV WP, or ALTHOLD) must be configured and active before the in-flight menu can open. NAV CRUISE by itself does not satisfy this requirement.
 
 ## Opening the Menu
 
@@ -98,5 +98,5 @@ MENU IN 0.0
 If a navigation mode is not active when the switch is held, the OSD shows:
 
 ```
-USE NAV MODE FOR MENU
+USE NAV MODES FOR MENU
 ```
