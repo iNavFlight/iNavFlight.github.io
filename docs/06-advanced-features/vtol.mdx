@@ -5,10 +5,6 @@ description: How to configure INAV for VTOLs
 
 This section explains how to configure INAV for a VTOL.
 
-:::warning
-VTOL support in INAV is still very rudimentary.
-Please use at your own risk.
-:::
 
 ## Introduction
 
@@ -20,40 +16,72 @@ This tutorial is designed for those who:
 
 ### Firmware Status
 
-The firmware is in a flyable state, but it hasn't undergone extensive testing yet. This means there may be potential issues that have not yet been discovered.
+INAV 10 has seen considerable improvements to VTOL operation over the previous releases. 
+
+This document is designed as a quick start guide. More indepth information regarding operation and setup can be found in the links below.
+
+* [VTOL docs](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/VTOL.md)
+* [Mixer Profiles](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/MixerProfile.md)
+* [VTOL Navigation](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Navigation.md)
+
+INAV 10 has a new list of setting. 
+
+| Name | Description |
+| ---- | ------ |
+| `mixer_vtol_manualswitch_autotransition_controller` | Starts one automatic VTOL transition each time the switch moves from OFF to ON  |
+| `mixer_vtol_transition_airspeed_timeout_ms`  | Maximum wait time [ms] for the required airspeed during an airspeed-controlled transition  | 
+| `mixer_vtol_transition_dynamic_mixer`   |  Turns on smooth VTOL transition power and control scaling   |
+| `mixer_vtol_transition_scale_ramp_time_ms` |  Controls time-based smooth VTOL motor, power, and transition-servo movement |
+| `nav_vtol_mission_transition_min_altitude_cm`  | Do not start a mission-requested VTOL transition below this altitude  |
+| `nav_vtol_mission_transition_user_action`  |  Chooses which waypoint USER flag (`USER1`..`USER4`) tells INAV which flight mode to use at each navigable waypoint  | 
+| `nav_vtol_transition_fail_action_fw_to_mc`  |  What INAV should do if FW->MC transition fails |
+| `nav_vtol_transition_fail_action_mc_to_fw` | What INAV should do if MC->FW transition still fails after the final attemp |
+| `nav_vtol_transition_retry_on_airspeed_timeout` |  If ON, INAV gets one extra MC->FW attempt after an airspeed timeout during mission or RTH |
+| `vtol_autotransition_always` | When enabled, an armed manual VTOL profile switch between a multicopter-like profile and a fixed-wing profile starts the auto-transition controller instead of switching profiles directly  |
+| `vtol_fw_to_mc_auto_switch_airspeed_cm_s` |  Extra low-speed fixed-wing safety fallback |
+| `vtol_mc_protection_mode` | Enables extra protection for VTOL aircraft while the active mixer profile is multicopter-like and another mixer profile is fixed-wing  |  
+| `vtol_mc_thr_reserve_percent` | Throttle range percentage reserved on both low and high side for VTOL MC attitude authority while navigation/altitude control owns throttle |
+| `vtol_transition_fw_authority_min_percent`| Lowest fixed-wing stabilisation used during transition, in percent. In MC->FW, fixed-wing stabilisation starts from this value and rises to full strength as the transition progresses |
+| `vtol_transition_lift_min_percent` | Lowest lift motor base throttle used during transition, in percent. This scales the throttle/lift component of MC lift motors, not their roll/pitch/yaw stabilisation correction |
+| `vtol_transition_mc_authority_min_percent` | Lowest multicopter stabilisation authority used during transition, in percent |
+| `vtol_transition_to_fw_min_airspeed_cm_s`  | Minimum airspeed needed before MC->FW transition is considered complete while a usable transition airspeed source is available |
+| `vtol_transition_to_mc_max_airspeed_cm_s` |  When slowing down from FW to MC, the transition is considered complete once airspeed remains at this value or lower for the internal 300 ms confirmation while a usable transition airspeed source is available.|
+
+A full explaination of their functions can be found under the [main setting docs](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Settings.md).
+
 
 ### Future Changes
 
 Please be aware that both the setup procedure and firmware may change in response to user feedback and testing results.
-
-### Your Feedback Matters
-
 We highly value your feedback as it plays a crucial role in the development and refinement of INAV VTOL capabilities. Please share your experiences, suggestions, and any issues you encounter during testing. Your insights are invaluable in making INAV VTOL better for everyone.
 
 ## VTOL Logic
 
 VTOL functionality is achieved by switching/transitioning between two configurations stored in the FC.
 The configurations are defined by the Mixer Profile with its associated Control Profile.
-One profile set is for fixed-wing (FW) mode and the other for multi-copter (MC) mode.
-Global Configuration/Settings other than Mixer/control profiles are shared among two modes.
+
+* Mixer profile 1 is for the fixed-wing (FW) flight mode. It is found in the CLI under -  
+`# control_profile 1` and `# mixer_profile 1`
+
+* Mixer profile 2 is for the multi-copter (MC) VTOL mode. It is found in the CLI under -  
+`# control_profile 2` and `# mixer_profile 2`
+
+* Global Configuration/Settings other than Mixer/control profiles are shared between the two modes. They are found in the CLI under -    
+`# master`
 
 ![Vtol mixer flow](/img/features-adv/vtol-mixerprofile-flow.png)
 
-### High Level Setup
+### Configuration and setup
 
-1. _(Optional)_ Find a DIFF ALL file for your model and start from there.
-   - Be aware that `MIXER PROFILE 2` RC mode setting introduced by diff file can get you stuck in a mixer_profile.
-     Remove or change channel to proceed.
-1. Setup Profile 1:
-   - Configure it as a normal fixed-wing/multi-copter.
-1. Setup Profile 2:
-   - Configure it as a normal multi-copter/fixed-wing.
-1. Mode Tab Settings:
-   - Set up switching in the mode tab.
-1. Transition Mixing (Multi-Rotor Profile)
-   - Configure transition mixing to gain airspeed in the multi-rotor profile.
-1. _(Optional)_ Automated Switching (RTH):
-   - Optionally, set up automated switching in case of failsafe.
+When making changes to either MixerProfile in the configurator or the CLI. You are requied to place the relevant changes in to the correct Mixer or Profile.  
+Go to the top right corner of the Configurator status bar, next to the Disconnect button. And select either MixerProfile 1 or MixerProfile 2.  
+Once you do this. The Configurator will ask you to continue with a reboot. Any changes now made or added to the CLI will be applied to the MixerProfile you just selected.
+
+:::note
+Continuous switching back and forth between Mixerprofiles in the Configurator can occasionally cause issues, which prevents the data being saved.    
+If this occurs, please close and restart the Configurator and unplug the FC and reboot it.
+:::
+
 
 ## Tilt Rotor Setup
 
@@ -211,7 +239,7 @@ The steps below describe how you can fine-tune the tilting servos to obtain the 
 1. **Set the tilt servos at 45 degrees:**
    - Connect and power the tilting servos with your flight controller.
    - Enter transition mode (your switch should be in the mid-position).
-   - Check the Outputs tab and make sure that the tilt servo channels are exactly at 1500μs.
+   - Check the Outputs tab and make sure that the tilt servo channels are exactly at 1500µs.
    - In this mode, your tilt servos should be at the 45-degree position and you can now mount the motor and prop to your tilt servo such that the angle of the motor mounting plate is at 45 degrees upwards.
    - NOTE 1: If you have dedicated tilt servos, you may have engraved indices on the servos and tilting motor assembly to help you with this step. If the servos don't end up exactly at 45 degrees due to the teeth on the servo and the control arm/plate, don't worry, this will be automatically adjusted after completing the other steps below.
    - NOTE 2: If you are using control rods to adjust the tilt of the servos, adjust the length of your control rod and the position of the control arm to position the control arm as close as possible to the mid position. It will depend on the orientation of the servo, but generally speaking, the control arm of the servo should be pointed perpendicular to the fuselage when the motor mounts are at the 45 degree setting.
@@ -354,10 +382,6 @@ To enable this, in motor mixer set:
 
 ## Automated Switching (RTH) (Optional):
 
-:::warning
-This is one of the least tested features.
-This feature is primarily designed for Return to Home (RTH) in the event of a failsafe.
-:::
 
 When configured correctly, the model will use the Fixed-Wing (FW) mode to efficiently return home and then transition to Multi-Copter (MC) mode for easier landing.
 
