@@ -78,6 +78,13 @@ If you have migrated from BetaFlight to INAV. These gains will provide a safer s
 
 ![MR Pids Safe](/img/gettingstarted/mr-pids-safe.png)
 
+:::Warning
+Make sure you also alter the default TPA values when using the above gain changes. To these -   
+TPA_RATE = 35   
+TPA_BREAKPOINT = 1550
+:::
+
+
 
 ## 4. Battery settings
 
@@ -85,8 +92,8 @@ Add your batteries specifications into the CLI, under `# battery_profile` or in 
 This is a very important step.
 Overlooking this step can cause your battery to become over discharged during the flight, leading to a crash. 
 
-* `vbat_warning_cell_voltage` - _Pre-warning_. Set to 3.6v is good for a LiPo. 
-* `vbat_min_cell_voltage` - _Time to land_. Set to 3.4v is good for a LiPo.   
+* `vbat_warning_cell_voltage` - _Pre-warning_. Set to 3.65v is good for a LiPo. 
+* `vbat_min_cell_voltage` - _Time to land_. Set to 3.55v is good for a LiPo.   
 * `battery_capacity` - Set to the rated `mAh` capacity of your battery pack.  
 * `battery_capacity_warning` - Generally set to 25%. Which is 25% of the batteries rated capacity. 
 * `battery_capacity_critical` - Set to 20%. 
@@ -99,39 +106,45 @@ More in-depth battery setup information can be found on the [Battery](../05-core
 
 ## 5. Selecting filters 
 
-INAV has the following software filter methods.
-They are used to isolate and remove vibration induced noise from the Gyro and Accelerometer data.
+INAV has the following software filter methods. They are used to isolate and remove vibration induced noise from the Gyro and Accelerometer data.  
+I've placed the gyro filters in the order of the ones I personally use from flight experience and log data, on both copters and planes, from first to last. Providing the best filtering and lowest latency.
 
 **Gyro Filters**
-* `gyro_filter_mode` - STATIC, DYNAMIC, ADAPTIVE
-* `dynamic_gyro_notch_enabled` (default ON - aka Matrix filter)
-* `rpm_gyro_filter_enabled` (default OFF - ESC telemetry, non bi-directional Dshot)
-* `gyro_anti_aliasing_lpf_hz` (default ON - zero = OFF)
-* `gyro_lulu_enabled` (default OFF)
-* `smith_predictor_delay` (zero = default OFF)
-* `setpoint_kalman_enabled` (default ON - aka Unicon filter) 
+|           Type              |        Activation state     |                     Details                            |
+|         ------------        |        ----------------     |                    ---------                           |
+| `dynamic_gyro_notch_enabled`|       Default ON            |        aka Matrix filter                               |
+| `gyro_filter_mode`          | `STATIC, DYNAMIC, ADAPTIVE` | ADAPTIVE works best with `dynamic_gyro_notch_enabled`  |
+| `gyro_main_lpf_hz`          |       Default ON            | Can be increased for lower latency, leaving the `gyro_filter_mode = ADAPTIVE` and `dynamic_gyro_notch` to adequately do the work |
+| `rpm_gyro_filter_enabled`   |       Default OFF           |  ESC telemetry, NON bi-directional Dshot               |
+| `gyro_lulu_enabled`         |       Default OFF           |                                                        |
+| `smith_predictor_delay`     |       Default OFF           |                                                        |
+| `setpoint_kalman_enabled`   |   Default ON                |    **Turn it OFF**  - aka Unicon filter                |
+| `gyro_anti_aliasing_lpf_hz` |   Default ON                |         Do not alter                                   |
 
 **Accelerometer Filters**
-* `acc_lpf_hz` (default of 15Hz is a good balance between performance and noise handling)
-* `acc_lpf_type` (filter type) - BIQUAD, PT1
-* `acc_notch_hz` (center frequency of the noise peak) - **Should only be used if the peak is narrow and known by log data**
-* `acc_notch_cutoff` (lowest practical frequency the notch should be set). **Only set if the above is used**
+|      Type               |        Activation state          |           Details                                     |
+|     --------            |        ---------------           |          --------                                     |
+| `acc_lpf_hz`            |     Default ON                   | Default LP cutoff of 15Hz is a good balance between performance and noise handling |
+| `acc_lpf_type`          |     BIQUAD, PT1                  | BIQUAD is default. It provides better filtering, but also adds more latency than a PT1 |
+| `acc_notch_hz`          |     Default 0 = OFF              | Center frequency of the noise peak - **Should only be used if the peak is narrow and known by log data** |  
+| `acc_notch_cutoff`      |     Default 1                    | **Only set if the above is used**. Lowest practical frequency the notch should be set, should not be below 8Hz |
 
 :::tip 
-Accelerometer vibrations more often cause issues for navigation control, than Gyro induced vibrations.
-Lowering `acc_lpf_hz` below 7Hz in an attempt to filtering out vibrations, will begin to cause it's own problems, making navigation control loose.
+Accelerometer vibrations more often cause issues for navigation control than Gyro vibrations.  
+Check `accVib` in your logs to see the crafts accelerometer vibration levels. Levels _continuously_ above 5000 are reason for concern.  
+Lowering `acc_lpf_hz` below 7Hz in an attempt to filtering out vibrations, will begin to cause it's own problems. Making navigation control loose.
 :::
 
 ### Filter Utilization
 
-*Filters add signal delay* and can only remove so much noise before they begins to effect flight performance. 
-For this reason it is always better to mechanically setup the hardware first and eliminate as many vibrations as possible eg. by balancing props and ensuring FC is mounted properly.
-Just because the hardware is new, it does not mean it is well balanced from factory.
-If a motor isn't balanced correctly, the imbalance can be heard audibly.
+*Filters add signal delay*. And they can only remove so much noise before it begins to effect flight performance.  
+For this reason it is always better to mechanically setup your hardware first, and eliminate as many vibrations as possible. By balancing the motors and the props.   
+Just because the hardware is new. Does not mean it is well balanced from factory.   
+If a motor isn't balanced correctly, the imbalance can be heard audibly by REMOVING THE PROPS and running each of the motors individually through their rev range, using the motor sliders in the Outputs Tab.
 
-It's better to run a few good filters, than to run every filter available, which will only add even more control latency, and often add no extra improvement.
-The gyro filters are placed in the order of importance found from flight experience.
-
+:::Note
+It's better to run a few good filters, than to run every filter available. Which will only add even more latency, and often add no extra improvement.
+:::
 
 ### Mechanical Filter Optimization
 
