@@ -61,57 +61,58 @@ Perform hard rolls, hard loops and one 360° yaw turn. Apply **full stick** defl
 You can take multiple samples and average them for better accuracy.  
 You can also use a [Python script](https://gist.github.com/nmaggioni/e42d3f4eb242808df751b13413ebf22c) to help automate the process.
 
-* Typical starting values for Rates that are suitable for most airplanes are:
- Roll = 300°/s
- Pitch = 110°/s
- Yaw = 70°/s
+* Typical starting values for Rates that are suitable for most airplanes are:  
+ Roll = 280°/s  
+ Pitch = 110°/s  
+ Yaw = 70°/s  
 
 * Zero out P, I and D gains on the Roll, Pitch and Yaw controllers.
-* Set `tpa_rate = 0` 
+* Enable Virtual Pitot airspeed if you don't have a real Pitot.
+* Set `apa_pow = 115` and `fw_reference_airspeed =  1944.000`.
 * Increase FF-gain until you get about 90% of full servo throw in `ACRO` mode compared to `MANUAL` mode when sticks are at full throw.
 * This ensures the FF-gain does most of the work turning the airplane while leaving some authority for the P and I gains to correct residual error.
 * For this step it's convenient to have the two modes `MANUAL` and `ACRO` available on a switch, so you can easily move between the two, and compare the throws.
 * The 90% deflection value can also be calculated by dividing 13950 by the maximum rate for the axis (for example, for a 360°/s maximum roll `13950 / 360 = 38.75` FF). For 80% deflection, divide 12400 by the rate. 
 
-* Now set some PID gain as a starting point.
-   `fw_p_pitch = 15`
-   `fw_i_pitch = 8`
-   `fwd_pitch = 2`
-   `fw_p_roll = 15`
-   `fw_i_roll = 7`
-   `fw_i_roll = 3`
-   `fw_p_yaw = 10`
-   `fw_i_yaw = 2`
+* Now set some PID gain as a starting point.  
+   `fw_p_pitch = 15`  
+   `fw_i_pitch = 8`  
+   `fw_d_pitch = 3`  
+   `fw_p_roll = 18`  
+   `fw_i_roll = 5`  
+   `fw_d_roll = 3`  
+   `fw_p_yaw = 10`  
+   `fw_i_yaw = 2`  
     
 ## General ACRO PID Tuning
 
 _Other settings which can influence the tune are:_
-* [Looptime](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#looptime) can influence PID tuning. It is recommended to tune with the specific looptime you choose, and not change once tuned.
-Higher looptime allows the I-term to respond faster to target error, both in accumulating it (windup) and in correcting for overshoot (unwind), but it is not always beneficial for fixedwing platforms. 
 
 * [Gyro_main_lpf_hz](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#gyro_main_lpf_hz) can reduce axis jitter if set lower, by reducing the update rate, which can make stabilization more fluid and less jittery under some wind conditions.   
-* Alternatively, you can increase it to reduce filter latency, which might allow the servos to react faster to stabilization correction if tuned with fixedwing airspeed PID attenuation and boost.
+But if your model is relatively free from propeller/motor vibrations. It is better to increase the `Gyro_main_lpf_hz` to reduce filter latency. Which will allow the servo's to react faster to stabilization correction, if tuned tighter using fixedwing airspeed PID attenuation and boost.  
+Also see other [filters](https://github.com/iNavFlight/inav/wiki/Multirotor-guide#5-selecting-filters). And the influence they have on control latency. Regardless of whether it is a multicopter or a fixedwing.
+
 
 * [Servo_lpf_hz](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#servo_lpf_hz) can be increased to provide less servo latency and a slightly faster reaction time for stabilization response. But it should also be noted that less filtering of the servo signal may cause the brushes in the servo motor to wear faster, leading to premature failure.
 * If you increase `servo_lpf_hz`, do so in sync with [servo_pwm_rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#servo_pwm_rate); `servo_lpf_hz` should not be set higher than half the value of `servo_pwm_rate`.
 
 
-**I-term:**
 
-If the airplane drifts slightly from center on an axis once _Autotune_, _AutoLevel_ and _Servo_Autotrim_ are complete, increasing the I-gain on that axis can reduce the effect.
-Be cautious: too much Integral gain can cause oscillations because of the time it takes the accumulated integral error to unwind.
-Values should be limited in the mid teens, accounting for the use of [pid_iterm_limit_percent](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#pid_iterm_limit_percent) and [Fixedwing I-term Lock](./tune-pidff-fw.mdx#fixedwing-i-term-lock) mentioned below.
+**I-term:**  
+If the airplane drifts slightly from center on any axis once _Autotune_, _AutoLevel_ and _Servo_Autotrim_ are complete, increasing the I-gain on that axis can reduce the effect susstained wind has upon the aircraft.  
+Be cautious: too much Integral gain can cause oscillations because of the time it takes the accumulated integral error to unwind, making stabilization response worse in buffeting wind conditions.
+Values should be limited in the mid teens, accounting for the use of [pid_iterm_limit_percent](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#pid_iterm_limit_percent) and [Fixedwing I-term Lock](./tune-pidff-fw.mdx#fixedwing-i-term-lock) mentioned below in this document.
 
 
-**P-term:**
+**P-term:**  
 If you want a greater stabilization response against wind buffeting, try increasing the P-gain, but only up to a point.
 Too much Proportional gain can cause oscillations as airspeed increases; in that case apply some [Fixedwing APA or TPA](./pid-attentuation-and-scaling.mdx#fixedwing-info), which is required performance tuning in INAV 9.0 and later.
 P-term cannot **completely** correct for fixedwing roll axis motion in windy conditions at lower airspeeds due to processing time, servo reaction lag, and limited airflow over the control surfaces.
 
-**D-term:**
+**D-term:**  
 Once the P-gain is tuned to about 80% of its optimal value at a given airspeed, start applying some Derivative gain in small amounts to dampen any overcorrection.
 Adding D-term can help tighten the response once P-term is optimally tuned, but be cautious with the amount you apply.
-For optimal servo motor life, 5 should be the limit; if you accept the risk of premature servo wear, you can push D-term higher for extra damping.
+For optimal servo motor life, 5 should be the limit. But if you accept the risk of premature servo wear, you can push D-term higher for extra damping of higher P gains.
 
 After **manually** tuning your Rates, Feedforwards and Gains, you can reduce the throws slightly to suit your stick feel and flight requirements; if you have full servo throw at this stage you would likely overshoot the target deg/s, leaving the P-term to do the rest.
 
