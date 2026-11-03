@@ -497,7 +497,13 @@ In flight adjustment of servo midpoint for straight flight
 Only servos with a "stabilized" rule on the Servo Mixer are trimmed.
 :::
 
-Also note that the automatic version of this introduced in 3.0 requires a GPS and detectable motion in order to work.
+Also note that the automatic version of this introduced in 3.0 only trims while INAV detects that the aircraft is flying. This needs at least two of the following:
+
+- a valid GPS heading (GPS fix, 6 or more satellites and groundspeed above 3 m/s),
+- an airspeed sensor reading above 3.5 m/s,
+- a barometer altitude more than 5 m above or below the altitude at arming.
+
+An airspeed sensor is not required: GPS plus the barometer is enough.
 
 *The purpose of this mode is to set new midpoints for servos 2 to 5.
 Make sure you assign these servo numbers to your control surfaces or they will not be trimmed.
