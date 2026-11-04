@@ -3,10 +3,11 @@ title: Multirotor Setup Guide
 sidebar_position: 6
 ---
 
-> [!NOTE]
->This page provides a general guide for things specific to Multicopter setup and tuning.  
- It assumes you have already setup your `Ports`, `Modes`, `Navigation`, `Receiver`, `GPS`, `OSD` etc. 
- They are outside the scope of this document.
+:::note 
+This page provides a general guide for things specific to Multicopter setup and tuning.  
+It assumes you have already setup your `Ports`, `Modes`, `Navigation`, `Receiver`, `GPS`, `OSD` etc. 
+They are outside the scope of this document.
+:::
 
 
 ## 1. Getting your flight controller ready.
@@ -78,10 +79,10 @@ If you have migrated from BetaFlight to INAV. These gains will provide a safer s
 
 ![MR Pids Safe](/img/gettingstarted/mr-pids-safe.png)
 
-:::Warning
-Make sure you also alter the default TPA values when using the above gain changes. To these -   
-TPA_RATE = 35   
-TPA_BREAKPOINT = 1550
+:::warning
+Make sure you also alter the default TPA values when using the above gain changes to these.   
+`TPA_rate = 35`   
+`TPA_breakpoint = 1550`.
 :::
 
 
@@ -142,7 +143,7 @@ For this reason it is always better to mechanically setup your hardware first, a
 Just because the hardware is new. Does not mean it is well balanced from factory.   
 If a motor isn't balanced correctly, the imbalance can be heard audibly by REMOVING THE PROPS and running each of the motors individually through their rev range, using the motor sliders in the Outputs Tab.
 
-:::Note
+:::note
 It's better to run a few good filters, than to run every filter available. Which will only add even more latency, and often add no extra improvement.
 :::
 
