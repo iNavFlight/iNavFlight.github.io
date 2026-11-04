@@ -26,6 +26,7 @@ Scroll down to the [AUXILIARY CONFIGURATION](./flight-modes-standard.mdx#auxilia
 - [ALTHOLD](./flight-modes-standard.mdx#althold)
 - [AUTO LEVEL TRIM](./flight-modes-standard.mdx#auto-level-trim-fw) **FW**
 - [AUTOTUNE](./flight-modes-standard.mdx#autotune-fw) **FW**
+- [FW AUTO SPEED](#fw-auto-speed) **FW** 
 - [BEEPER](./flight-modes-standard.mdx#beeper)
 - [BEEPER MUTE](./flight-modes-standard.mdx#beeper-mute)
 - [BLACKBOX](./flight-modes-standard.mdx#blackbox)
@@ -39,6 +40,7 @@ Scroll down to the [AUXILIARY CONFIGURATION](./flight-modes-standard.mdx#auxilia
 - [HEADING HOLD](./flight-modes-standard.mdx#heading-hold)
 - [HOME RESET](./flight-modes-standard.mdx#home-reset)
 - [HORIZON](./flight-modes-standard.mdx#horizon)
+- [IN FLIGHT STICK MENU](#inflight-stick-menu)
 - [KILLSWITCH](./flight-modes-standard.mdx#killswitch)
 - [LEDLOW](./flight-modes-standard.mdx#ledlow)
 - [LOITER CHANGE](./flight-modes-standard.mdx#loiter-change-fw) **FW**
@@ -56,6 +58,7 @@ Scroll down to the [AUXILIARY CONFIGURATION](./flight-modes-standard.mdx#auxilia
 - [SOARING](./flight-modes-standard.mdx#soaring-fw) **FW**
 - [SURFACE](./flight-modes-standard.mdx#surface)
 - [TELEMETRY](./flight-modes-standard.mdx#telemetry)
+- [TERRAIN AGL HOLD](#terrain-agl-hold) **FW**
 - [TURN ASSIST](./flight-modes-standard.mdx#turn-assist) **FW**
 - [TURTLE](./flight-modes-standard.mdx#turtle-mc) **MC**
 - [USER1 & USER2 & USER3 & USER4](./flight-modes-standard.mdx#user)  (aka PinIO)
@@ -87,8 +90,8 @@ Since two motors can't go any lower, you essentially get half the power (half of
 If your input command calls for more than 100% difference between the high and low motors, the low motors will get clipped, breaking the symmetry of the motor balance by unevenly reducing the gain.
 
 This is when MC Airmode will allow full PID correction during zero throttle maneuvers, providing for inverted hang-time aerobatics.
-It will also make cornering and turns much tighter since full stabilization correction is active.
-You can set Airmode to be always active via `feature PERMANENTLY_ENABLE_AIRMODE` or ONLY by enabling it together with ACRO mode in the modes tab.
+It will also make cornering and turns much tighter since full stabilization correction is active.  
+You can set Airmode to be always active via `feature PERMANENTLY_ENABLE_AIRMODE` or ONLY by enabling it together with ACRO mode in the modes tab.  
 Airmode will keep I-term fully enabled at zero throttle, once [airmode_throttle_threshold](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#airmode_throttle_threshold) is exceeded the first time, until you disarmed.
 This adds protection on the ground when the throttle is below `min_check` to prevent I-term windup before takeoff, which could flip-over more powerful models. 
 
@@ -119,17 +122,16 @@ Because permanently enabled Airmode is often selected, most people overlook the 
 When ACRO or RATE mode is active by itself and you move the airplane on an axis, you will see the control surface on that corresponding axis quickly deflect to apply correction against that motion, then return the control surface to the center position again.
 
 However, if Airmode is enabled with ACRO mode and you have Airmode activated via `Airmode_throttle_threshold` and run the same test as above by moving the airplane on an axis, you will observe the control surfaces begin to deflect and hold that deflection until the airplane is brought back to the attitude it started from.
-The strength Airmode will apply to holding a specific flight attitude is determined by how much I-term applied to that axis.
-There is little to no benefit to having Airmode enabled with other flight modes that are ANGLE based because they use the LEVEL controller.
+The strength Airmode will apply to holding a specific flight attitude is determined by how much I-term applied to that axis.  
+There is little to no benefit to having Airmode enabled with other flight modes that are ANGLE based because they use the LEVEL PI controller.
 
 For Fixedwing Airmode to become active for flight, it requires `airmode_throttle_threshold` to be met, which uses different settings for [airmode_type](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#airmode_type) than for multicopter.
 They are - `STICK_CENTER` and `STICK_CENTER_ONCE`.
-`STICK_CENTER_ONCE` is activated by the same method - using `airmode_throttle_threshold`, but instead of disabling Airmode when the throttle is lowered below the `airmode_throttle_threshold`, it will keep Airmode active until disarmed. 
-This is more beneficial for fixedwing platforms like powered gliders so they maintain Airmode stabilization at zero throttle.
+`STICK_CENTER_ONCE` is activated by the same method as `STICK_CENTER`, using `airmode_throttle_threshold`, but instead of disabling Airmode when the throttle is lowered below the `airmode_throttle_threshold`, it will keep Airmode active until disarmed. This is more beneficial for fixedwing platforms like powered gliders so they maintain Airmode stabilization at zero throttle.  
 The requirement to also move the sticks from center to activate Airmode prevents I-term windup before launch if you don't throw the airplane immediately after raising the throttle.
 
 :::info
-An Attitude stabilizer which uses a passive means to implement control, like control surfaces, opposed to an active means like motors can only hold the attitude it is commanded if it is provided enough airflow over the control surface to do the work.
+An Attitude stabilizer which uses a passive means to implement control, like control surfaces, opposed to an active means like motors can only hold the attitude it is commanded if it is provided enough airflow over the control surface to do the work. Or if the control surface throws are great enough.
 :::
 
 Please see [PIDFF Controller for Fixed Wings](../07-pid-tuning/tune-pidff-fw.mdx) for additional information on this topic related to Fixedwings.
@@ -209,15 +211,15 @@ However, if you have a feature enabled which saves on disarm, such as Continuous
 AUTOTUNE will only attempt to tune the Roll and Pitch **FeedForward** and **Rates** on a fixed-wing airplane.
 :::
 
-Autotune will monitor the behavior of the airplane and attempt to tune the FeedForward gains for the maximum rate of rotation on each axis.
-This will provide optimal stabilization and navigation performance for your aircraft.
+This provides optimal stabilization and navigation performance for your aircraft.   
+An axis you don't stress with hard stick input during the tune won't change much - if you only do hard rolls and pitches, your yaw FeedForward and rate will stay close to where they started, not because AUTOTUNE skips yaw but because it had no hard yaw maneuvers to learn from.
 
 :::note
 Autotune should ideally be performed at the approximate airspeed the airplane will cruise at.
 
 This isn't always an easy thing to accomplish, especially when performing pitch climb maneuvers.
 Getting this correct can make a considerable difference to overall flight performance.
->**Full stick** deflection MUST be applied for a reasonable duration in the tuning process. Otherwise the controller will not be tuned to provide the maximum axis rotation rate.
+>Stick deflection must exceed 50% `fw_autotune_min_stick` for the tuning process to work. **Full stick** deflection must also be applied for a reasonable duration in the tuning process. Otherwise the controller will not be tuned to provide the maximum axis rotation rate.
 :::
 
 ### Usage
@@ -229,8 +231,8 @@ ACRO is the best option and should be chosen over Angle or Horizon modes.
 The **Advanced** ROLL/PITCH method MUST be performed in ACRO mode!
 :::
 
-*The more maneuvers you do via the **Standard** method, the better results AUTOTUNE will provide, up to a point.*
-While the **Advanced** method will provide a more sustained snap shot of you airplanes maximum axis rotation rate.
+*The more maneuvers you do via the **Standard** method, the better results AUTOTUNE will provide, up to a point.*  
+While the **Advanced** method will provide a more sustained snap shot of your airplanes maximum axis rotation rate.
 Meaning it will complete the tuning process faster and generally provide a more accurate tune.
 
 **Make sure you provide yourself enough altitude and flight area to perform the following tasks.**
@@ -238,32 +240,38 @@ Meaning it will complete the tuning process faster and generally provide a more 
 - **Standard ROLL** - From level, bank **hard** left, then **hard** right as far as you feel confident, then repeat several times.
 *Initially you may notice a soft/slow response if the Rates and Feedforward where far from correct.*
 
-- **Standard PITCH -** When flying level, quickly pull UP full stick for a moment, so the airplane climbs rapidly to an angle you're comfortable with, and then bring the airplane back to level flight, to regain its airspeed.
-Then do the same for DOWN, pushing full pitch stick for a moment so the plane dives at an angle you're comfortable with, and then bring the airplane back to level flight; repeating the process again several times.
+- **Standard PITCH -** When flying level, quickly pull UP full stick for a moment, so the airplane climbs rapidly to an angle you're comfortable with, and then bring the airplane back to level flight, to regain its airspeed.  
+Then do the same for DOWN, pushing full pitch stick for a moment so the plane dives at an angle you're comfortable with, and then bring the airplane back to level flight; repeating the process again several times.  
 _Initially you may notice a soft/slow response if the Rates and Feedforward where far from correct._
+
+- **Standard YAW -** From level, hard-rudder full stick left, then full stick right, repeating several times. Yaw is easy to overlook since roll and pitch maneuvers dominate a typical autotune flight - if you skip hard yaw input, your yaw FeedForward and rate won't be tuned.
 
 - **Advanced ROLL** - IF you and your airplane are **capable** of completing a full 360° roll at full stick deflection, both left and right.
 *This should complete the autotune process in only one or two attempts.*
 
 - **Advanced PITCH** - IF you and your airplane are **capable** of completing a full 360° forward and/or inverted loop.
-**Not recommended on larger aircraft, or those that have a lower thrust to weight ratio.**
-Increase the throttle just before you apply enough UP elevator stick to start the loop. 
-Once at the top of the loop, start applying full elevator stick.
-Then as you are about to exit the bottom half of the loop, start backing off the elevator a little and the throttle.
-For an inverted loop.
-Gain some good altitude, and push full DOWN elevator.
+**Not recommended on larger aircraft, or those that have a lower thrust to weight ratio.**  
+Increase the throttle just before you apply enough UP elevator stick to start the loop.   
+Once at the top of the loop, start applying full elevator stick.  
+Then as you are about to exit the bottom half of the loop, start backing off the elevator a little and the throttle.  
+For an inverted loop. Gain some good altitude, and push full DOWN elevator.
 Remember to start applying full throttle at the bottom half of the inverted loop, as you simultaneously back off the DOWN elevator stick enough to prevent a stall when the plane is commencing the vertical climb-out half of the loop.
 *This should complete the autotune process in only one or two attempts.*
   
-AUTOTUNE will adjust the gains continuously throughout the flight, but it will take a snapshot of current gains every 5 seconds.
-When you disable it, the AUTOTUNE gains from last snapshot will be restored. If you turn AUTOTUNE on and off before the 5 seconds elapse; the FF gains and Rates won't be changed.
+AUTOTUNE will adjust the gains continuously throughout the flight by taking a snapshot every 5 seconds.  
+When you disable it, the AUTOTUNE gains from last snapshot will be stored. If you turn AUTOTUNE on and off before the 5 seconds elapse; the FF gains and Rates won't be changed.
 
 :::tip
-Currently AUTOTUNE doesn't save gains to the EEPROM - you have to save it manually using a [stick combo](./stick-controls.mdx) or by using it in combination with continuous trim servos or the Odometer Stats, which automatically saves settings to the eeprom at disarming.
+Currently AUTOTUNE doesn't save gains to the EEPROM. You have to save it manually when you land, by using a [stick combo](https://github.com/iNavFlight/inav/blob/master/docs/Controls.md) or by use it in combination with continuous servo auto trim or the Odometer Stats, which automatically saves settings to the eeprom at disarming.
 :::
 
 For detailed description go to [PIDFF Controller for fixed wings](../07-pid-tuning/tune-pidff-fw.mdx)
 
+### FW AUTO SPEED
+
+Fixedwing Auto Speed allows your airplane to hold the flight speed you choose, in place of thrust based speed.  
+Speed targets can be either Airspeed, or GPS/Baro based 3D Ground speed, which will require a GNSS satellite fix.  
+Full setup details can be found [here](https://github.com/iNavFlight/inav/wiki/Auto-Speed-Mode).
 
 ## BEEPER
 
@@ -364,6 +372,12 @@ This can catch newer pilots off guard, but can be made smoother by altering thes
 `fw_d_level = 95` OR `mc_d_level = 95`.
 This will allow for a more linear stick feel, equivalent to Acro and only permit the transition to occur near maximum stick deflection, or around 85° roll or pitch angle from level when you're certain you want to command a roll or flip.
 This can be applied to both MC and FW platforms.
+
+## INFLIGHT STICK MENU
+
+The OSD Command Menu System can also be accessed while in-flight via a mode switch. This allows you to alter and tune setting using the sticks, while in a navigation flight mode that holds altitude. 
+
+Full details are found [here](https://inavflight.github.io/docs/next/advanced-features/in-flight-osd-menu).
 
 ## KILLSWITCH
 
@@ -549,9 +563,16 @@ Set these values to your rangefinder's **reliable** range, not its maximum range
 **For complete setup and configuration guide, see [Optic Flow and Rangefinder](./optical-flow-rangefinder.mdx).**
 
 
-### TELEMETRY
+## TELEMETRY
 
 > Stay tuned for description
+
+## TERRAIN AGL HOLD
+
+Terrain AGL Hold works in the same way as fixedwing Cruise mode. But instead of holding a set altitude above launch, it follows the altitude of the terrain under the aircraft. It will cause the aircraft to climb or descend according to the topography of your flight location. 
+This mode requires the Terrain AGL altitude data of your flight region to be loaded onto the flight controllers SD logging card.
+
+Full details can be found [here](https://inavflight.github.io/docs/next/advanced-features/terrain-agl-hold).
 
 ## TURN ASSIST
 
