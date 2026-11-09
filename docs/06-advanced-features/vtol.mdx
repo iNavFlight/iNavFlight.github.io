@@ -14,6 +14,12 @@ This tutorial is designed for those who:
 - Know how to create a custom mixer for their model.
 - Know basic physics of VTOL operation
 
+### Platform type reference links
+
+- [Tilt Rotor Setup](./vtol.mdx#Tilt-Rotor-Setup)
+- [Tailsitter Setup](./vtol.mdx#Tailsitter-Setup)
+- [QuadPlane Setup](./vtol.mdx#Quad-plane-Setup)
+
 ### Firmware Status
 
 INAV 10 has seen considerable improvements to VTOL operation over the previous releases. 
@@ -24,7 +30,7 @@ This document is designed as a quick start guide. More indepth information regar
 * [Mixer Profiles](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/MixerProfile.md)
 * [VTOL Navigation](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/Navigation.md)
 
-INAV 10 has a new list of setting. 
+INAV 10 has a new list of settings to provide smoother automated transition control. 
 
 | Name | Description |
 | ---- | ------ |
@@ -83,33 +89,37 @@ If this occurs, please close and restart the Configurator and unplug the FC and 
 :::
 
 
-## Tilt Rotor Setup
+# Tilt Rotor Setup
 
 ### STEP 0: Load Parameter Preset/Templates
 
-Find a working diff file if you can and start from there.
-If not, select keep current settings and apply following parameter in cli but read description about which one to apply.
+<details>
+<summary>A working diff file can be found here.    
+If not, select _Keep current settings_ and apply following parameter in cli but read description about which one to apply.</summary>
 
 ```
+aux 0 62 7 1400 2025
+aux 1 63 7 1400 1600
+
 set small_angle = 180
 set gyro_main_lpf_hz = 80
 set dynamic_gyro_notch_min_hz = 50
 set dynamic_gyro_notch_mode = 3D
-set motor_pwm_protocol = DSHOT300 #Try dshot first and see if it works
+set motor_pwm_protocol 
 set airmode_type = STICK_CENTER_ONCE
 
-
-set nav_disarm_on_landing = OFF  #band-aid for false landing detection in NAV landing of multi-copter
 set nav_rth_allow_landing = FS_ONLY
 set nav_wp_max_safe_distance = 500
 set nav_fw_control_smoothness = 2
 set nav_fw_launch_max_altitude = 5000
 
-set servo_pwm_rate = 160 #If model using servo for stabilization in MC mode and servo can tolerate it
-set servo_lpf_hz = 30 #If model using servo for stabilization in MC mode
+set servo_pwm_rate = 60 
+set servo_lpf_hz = 25 
 
 
 ## profile 1 as airplane and profile 2 as multi rotor
+
+# mixer_profile
 mixer_profile 1
 
 set platform_type = AIRPLANE
@@ -117,13 +127,16 @@ set model_preview_type = 26
 set motorstop_on_low = ON
 set mixer_pid_profile_linking = ON
 
+# mixer_profile
 mixer_profile 2
 
 set platform_type = TRICOPTER
 set model_preview_type = 1
 set mixer_pid_profile_linking = ON
 
-profile 1 #control profile
+# mixer_profile
+mixer_profile 1
+
 set dterm_lpf_hz = 10
 set d_boost_min =  1.000
 set d_boost_max =  1.000
@@ -138,7 +151,9 @@ set fw_ff_roll = 50
 set fw_p_pitch = 15
 set fw_p_roll = 15
 
-profile 2
+# mixer_profile
+mixer_profile 2
+
 set dterm_lpf_hz = 60
 set dterm_lpf_type = PT3
 set d_boost_min =  0.800
@@ -148,7 +163,7 @@ set antigravity_gain =  2.000
 set antigravity_accelerator =  5.000
 set smith_predictor_delay =  1.500
 set tpa_rate = 20
-set tpa_breakpoint = 1200
+set tpa_breakpoint = 1500
 set tpa_on_yaw = ON #If model using control surface/tilt mechanism for stabilization in MC mode
 set roll_rate = 18
 set pitch_rate = 18
@@ -157,6 +172,7 @@ set mc_iterm_relax = RPY
 
 save
 ```
+</details>
 
 ### STEP 1: Configure as a Normal Fixed-Wing in Profile 1
 
@@ -300,62 +316,258 @@ This will allow tilting the motor for tilting rotor model.
 
 ![vtol mixer profile servo transition](/img/features-adv/vtol-mixerprofile-servo-transition-mix.png)
 
-## TailSitter Setup
+# TailSitter Setup
 
-Tailsitters require a little different setup, but largely follows the same logic as tilt rotors.
+### Important information
 
-### Step 1: Initial Setup
+- A Tailsitter requires a minimum of two tractor motors, one on each wing. It will not function correctly using pusher motors.
 
-To start, ensure that both mixer profile and control profiles are linked to each other as seen in the [general CLI preset](./vtol.mdx#step-0-load-parameter-presettemplates).
-This appears as a switch called Control Profile will use same index as Mixer Profile index in the Mixer Tab.
+- Tailsitter VTOL aircraft require high airflow from the propellers over the Elevator and Ailerons.  
+Both these control surfaces must also have a minimum of 45° throws in the SMIX of MixerProfile 2. If you do not setup your Tailsitter to provide both of these, the flight controller will not be able to maintain attitude stabilization while hovering or especially descending.
 
-### Step 2: Configure Profile 1 (Fixed Wing)
+- A Flying Wing platform with large Elevons will provide the greatest chance of success for a Tailsitter VTOL. This is due to each Elevon receiving the full airflow from each propeller. However an airplane with a tail can also be made work, providing the control surfaces are receiving a minimum of 50% of the propellers airflow. But the chances of a successful landing descent will be significantly reduced.
 
-This step is easy.
-Setup profile 1 as a flying wing with dual motors or more motors if applicable.
-To add more motors, simply add a new motor mixer rule.
-Verify that all the motors work in the Outputs Tab.
+- **Throttle control is of the highest importance for a Tailsitter VTOL**. You must never lower the throtlle more than a few percent below what the Tailsitter requires to hold a stationary hover. Doing so while hovering or landing can lead to reduced airflow over the control surfaces and a loss of attitude control.   
+If the aircraft starts to fall out of the hover. Recovery is best performed by increasing the throttle 10 -20% above hover, until it's stable again. Then slowly reduce the throttle back to the hover point again.
 
-### Step 3: Configure Profile 2 (Multirotor)
+:::tip Setting up a variometer with audible alert tones on your radio transmitter, based on VSpd. Is a good way to inform you if you're keeping the throttle close to hover.
+:::
 
-#### Motor Mix
+<details>
+<summary>A tested diff template of an Elevon Tailsitter can be found here. It is recommended to at least base your setup on this diff. Then by reading through the other information below, you can alter the motor and servo mixer to suit a different hardware layout.</summary>
 
-1. If using a twin motor tailsitter, first start with the Quad X preset.
-1. Then, delete motors 3 and 4 as they don't exist.
-1. Modify the mixer parameters for motors 1 and 2 so that Pitch and Yaw are 0 and Roll is 1 and -1.
-   To properly determine which motor will have a Roll value of 1 or -1, set it arbitrarily at first.
-   The actual values will be determined with a controls check.
+```
+# Modes [aux]
+aux 0 62 7 1400 2025
+aux 1 63 7 1400 1600
 
-#### Servo Mix
+# features
+feature -TX_PROF_SEL
+feature -AIRMODE
+feature THR_VBAT_COMP
+feature PWM_OUTPUT_ENABLE
 
-While in multicopter mode, the differential thrust of the motors provide roll control.
-Yaw and pitch are provided by the air moving over the elevons.
-Just like in fixed wing mode, create an elevon mix for yaw and pitch or copy the same mix over.
+# Programming: logic
+logic 0 1 -1 1 2 38 0 2 0
+logic 1 1 0 24 0 0 0 0 0
+logic 2 1 0 26 0 0 0 0 0
 
-### Step 4: Enable FC Offset
+# master
+set looptime = 1000
+set gyro_main_lpf_hz = 80
+set gyro_filter_mode = ADAPTIVE
+set setpoint_kalman_enabled = OFF
+set gyro_zero_x = -3
+set gyro_zero_y = 3
+set gyro_zero_z = 9
+set gyro_adaptive_filter_min_hz = 40
+set pitot_hardware = VIRTUAL
+set motor_pwm_protocol = DSHOT300
+set failsafe_procedure = RTH
+set servo_pwm_rate = 60
+set servo_lpf_hz = 25
+set applied_defaults = 1
+set yaw_deadband = 0
+set airmode_type = STICK_CENTER_ONCE
+set nav_auto_speed = 556
+set nav_max_auto_speed = 556
+set nav_manual_speed = 556
+set nav_land_maxalt_vspd = 100
+set nav_land_slowdown_minalt = 150
+set nav_land_slowdown_maxalt = 500
+set nav_rth_linear_descent_start_distance = 600
+set nav_rth_use_linear_descent = ON
+set nav_mc_bank_angle = 22
+set nav_mc_auto_climb_rate = 250
+set nav_mc_manual_climb_rate = 300
+set nav_fw_bank_angle = 38
+set nav_fw_manual_climb_rate = 900
+set nav_fw_control_smoothness = 9
+set nav_use_fw_yaw_control = ON
+set vtol_transition_to_fw_min_airspeed_cm_s = 1111
+set vtol_autotransition_always = ON
 
-Because the FC changes its orientation while in tailsitter mode (multicopter), INAV needs to be told about this so the IMU is able to properly control the aircraft.
-This is enabled with the parameter `tailsitter_orientation_offset = ON `.
+# control_profile
+control_profile 1
 
-- The baseline board aliment is FW mode (ROLL axis is the thrust axis).
-  Set `tailsitter_orientation_offset = ON ` in the tail_sitting MC mode.
-- Configure mixer ROLL/YAW mixing according to tail_sitting orientation in the tail_sitting MC mode. YAW axis is the thrust axis.
+set fw_p_pitch = 15
+set fw_i_pitch = 9
+set fw_d_pitch = 6
+set fw_ff_pitch = 95
+set fw_p_roll = 20
+set fw_i_roll = 6
+set fw_d_roll = 6
+set fw_ff_roll = 45
+set fw_p_yaw = 25
+set fw_i_yaw = 5
+set fw_d_yaw = 12
+set fw_ff_yaw = 120
+set max_angle_inclination_rll = 550
+set max_angle_inclination_pit = 550
+set dterm_lpf_hz = 50
+set fw_reference_airspeed =  1900.000
+set fw_yaw_iterm_freeze_bank_angle = 10
+set mc_iterm_relax_cutoff = 1
+set d_boost_min =  1.000
+set d_boost_max =  1.000
+set apa_pow = 130
+set tpa_rate = 95
+set tpa_breakpoint = 1450
+set rc_expo = 35
+set rc_yaw_expo = 10
+set roll_rate = 30
+set pitch_rate = 13
+set yaw_rate = 6
+
+# control_profile
+control_profile 2
+
+set mc_p_pitch = 90
+set mc_i_pitch = 32
+set mc_d_pitch = 7
+set mc_cd_pitch = 160
+set mc_p_roll = 50
+set mc_i_roll = 35
+set mc_d_roll = 16
+set mc_cd_roll = 75
+set mc_p_yaw = 28
+set mc_i_yaw = 35
+set mc_d_yaw = 4
+set mc_cd_yaw = 100
+set mc_p_level = 35
+set max_angle_inclination_rll = 400
+set max_angle_inclination_pit = 400
+set dterm_lpf_hz = 80
+set dterm_lpf_type = PT3
+set yaw_lpf_hz = 10
+set pid_iterm_limit_percent = 50
+set heading_hold_rate_limit = 60
+set nav_mc_pos_z_p = 55
+set nav_mc_vel_z_p = 110
+set nav_mc_vel_z_i = 51
+set mc_iterm_relax = RPY
+set mc_iterm_relax_cutoff = 9
+set d_boost_min =  1.000
+set d_boost_max =  1.100
+set antigravity_gain =  3.000
+set antigravity_accelerator =  4.500
+set smith_predictor_delay =  3.000
+set tpa_rate = 35
+set tpa_breakpoint = 1650
+set tpa_on_yaw = ON
+set fw_tpa_time_constant = 0
+set rc_expo = 40
+set rc_yaw_expo = 10
+set roll_rate = 19
+set pitch_rate = 16
+set yaw_rate = 14
+
+
+# mixer_profile
+mixer_profile 1
+
+set platform_type = AIRPLANE
+set model_preview_type = 27
+set mixer_control_profile_linking = ON
+set mixer_vtol_manualswitch_autotransition_controller = ON
+
+# Mixer: motor mixer
+
+mmix reset
+
+mmix 0  1.000  0.000  0.000  0.400
+mmix 1  1.000  0.000  0.000 -0.400
+
+# Mixer: servo mixer
+smix reset
+
+smix 0 1 0 35 0 -1
+smix 1 1 1 35 0 -1
+smix 2 2 0 -35 0 -1
+smix 3 2 1 35 0 -1
+
+# mixer_profile
+mixer_profile 2
+
+set platform_type = TRICOPTER
+set model_preview_type = 1
+set mixer_control_profile_linking = ON
+set mixer_switch_trans_timer = 30
+set mixer_vtol_manualswitch_autotransition_controller = ON
+set tailsitter_orientation_offset = ON
+set transition_pid_mmix_multiplier_roll = 900
+
+# Mixer: motor mixer
+
+mmix reset
+
+mmix 0  1.000 -1.000  0.000  0.000
+mmix 1  1.000  1.000  0.000  0.000
+
+# Mixer: servo mixer
+smix reset
+
+smix 0 1 2 100 0 -1
+smix 1 1 1 100 0 -1
+smix 2 2 2 -100 0 -1
+smix 3 2 1 100 0 -1
+
+# save configuration
+save
+```
+</details>
+
+### Step 1: 
+
+When setting up control surface travels in both mixers. Leave the servo weights in the OUTPUTS tab at 1000 - 2000us. And adjust the servo SMIX weight in MixerProfile 1 & 2 according to the travel required. The MC servo travels as seen in the template are set higher to provide 45° or more control surface throws for VTOL flight. But control surface travels in the FW flight mode may only require 1/3 of that travel to provide smooth stabilization.
+
+Based on the loaded template above. 
+Alter the motor and servo mixers according to your requirements in both MixerProfiles, to suit your hardware installation.
+You can add more motors MMIX rules if your installation uses for example 4 motors.  
+And you can add extra Servo SMIX mixer rules for an Elevator (Stabilized Pitch) or Rudder(RC Yaw), if your Tailsitter requires it, or is based on a plane with a tail.
+
+### Step 2: 
+
+Make sure your motor mixer rules for Yaw in MixerProfile 1 and Roll in MixerProfile 2 have the motor weight sign set in the correct direction. (`-0.4  0.4` and `-1.0  1.0`). If the motors are driving the stabilization or stick input e.g right instead of left. Swap the *negative sign* on that mixer.
+
+When a Tailsitter is in a vertical hover (MC MixerProfile 2), the differential thrust from the motors provides *Stabilized Roll* action.
+*Stabilized Yaw* action is provided by the ailerons. And *Stabilized Pitch* by the elevator.
+
+### Step 3
+
+- One of the easiest parts of Tailsitter setup to overlook in the mixers is SWAP ROLL and YAW. And INVERT ROLL. The diff template has them added in the Programming framework Tab. In LC 0, 1 and 2. 
+In INAV 10 it will swap the motor and servo stick input by default. And they may not be required for some pilots. It will depend on the Stick mode you use on your radio.    
+Some pilots fly FPV and some also fly Line of Sight. So when the plane transitions to a nose upward stance. It will depend on whether you want your Roll and Yaw stick control to also swap.   
+This is understandable for a conventional VTOL, but not so much for a Tailsitter. Because hovering nose up isn't any different (by control stick input) than climbing vertically as an airplane.
+
+
+### Other related information
+
+The Tailsitter diff template will load the required settings for these functions to operate. But it is useful to understand what some of these settings do.
+
+- `tailsitter_orientation_offset = ON` automatically rotates the IMU and Magnetometers orientation offset so it always maintains a 0° gravity reference as the planes axis transitions to 45° and then to 90° in MC VTOL mode (nose-up). The baseline board alignment is set in fixedwing MixerProfile 1.
+
+- INAV 10 provides the abilty to automatically transition from a MC VTOL to a FW or FW to a VTOL hover. This can be done with a 3 Position switch. Which requires you to toggle the switch to the new mode state, then after the transition is complete, move the swich to that state position. Which can be confusing.  
+But these changes also provide a means to simply transition with a 2 Position switch `mixer_vtol_manualswitch_autotransition_controller = ON` in both MIxerProfiles. Which is more simple to use and setup. *The diff template includes this method*.   
+All you need is one switch position for FW and the other for MC VTOL. Then soon as you move the switch to that position, it will automatically start one full transition cycle, which uses a timer and virtual airspeed reference to complete the transition.   
+What YOU are required to do to use this function, is go to the modes tab and set the RC channel you require to control **Mixer Profile 2 mode**, so that it becomes active when your switch is in the VTOL position, and not be active in the FW switch position. The Transition box mode was also added to the template, but not actually required for it to work.
+- `mixer_switch_trans_timer = 30` sets the transition timer to 3s. 
+- `vtol_transition_to_fw_min_airspeed_cm_s = 1111` sets the transition airspeed to 35km/h. Which is enough for forward flight when the motors are already producing hover thrust.
+- Always use ANGLE mode as the base flight mode when flying in MC VTOL mode. It uses the earth frame LEVEL controller. Acro mode will not provide enough hover stability to control most Tailsitter aircraft.
+
+:::warning The use of navigation auto transition is not recommended for Tailsitters. The MC navigation throttle controller used with Poshold and RTH was not specifically designed to handle fast Z fluctuations while holding XY horizontal position as well. However ALTHOLD with ANGLE mode can handle Z fluctuation much faster, and can be useful. But it doesn't provide a quick bailout. So use with caution.:::
+
+
+### Step 4: Test Roll Output in Tailsitter Mode
+
 - Conduct a bench test and see the orientation of the model changes in inav-configurator setup tab
 
-With this parameter, a 45 degree offset will be added to target pitch angle for angle mode in the firmware.
-Your model should be able to enter fixed-wing profile without stalling.
+- Arm or force arm (WITH PROPS OFF) and apply roll inputs on your radio.
 
-### Step 5: Test Roll Output in Tailsitter Mode
+- When applying left Roll, the right motor will increase speed and the left will decrease. And when you tilt the right wing to the right, the right motor should increase in speed and the left reduce, in response to roll stabilization. Ensure that this is the behaviour in both cases.
+- When you apply Yaw stick, the elevon/ailerons will move. Make sure they and the elevator moves to counteract the opposing forces in a Tailsitter hover.
 
-In Step 3 when multicopter mode was configured, arbitrary values for the Roll parameter for the two motors were selected.
-To determine which one is -1 and 1, power on the aircraft in angle mode while in multicopter mode.
-Arm or force arm (WITH PROPS OFF) and apply roll inputs on your radio.
-
-- When applying left roll, the right motor will increase speed and the left will decrease.
-  Ensure that this is the behaviour.
-  If it is not, simply reverse the roll values in the Mixer Tab.
-
-## Quad Plane Setup
+# Quad Plane Setup
 
 A quad plane is one where there are 4 individual lift motors that are used for the vertical lift phase of flight that are then switched off for forward flight in fixed wing mode.
 
