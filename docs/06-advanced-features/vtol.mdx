@@ -14,17 +14,17 @@ This tutorial is designed for those who:
 - Know how to create a custom mixer for their model.
 - Know basic physics of VTOL operation
 
-### Platform type reference links
+### Contents
 
-- [Tilt Rotor Setup](./vtol.mdx#Tilt-Rotor-Setup)
-- [Tailsitter Setup](./vtol.mdx#Tailsitter-Setup)
-- [QuadPlane Setup](./vtol.mdx#Quad-plane-Setup)
+- [TILT ROTOR SETUP](./vtol.mdx#Tilt-Rotor-Setup)
+- [TAILSITTER SETUP](./vtol.mdx#Tailsitter-Setup)
+- [QUADPLANE SETUP](./vtol.mdx#Quad-plane-Setup)
 
 ### Firmware Status
 
 INAV 10 has seen considerable improvements to VTOL operation over the previous releases. 
 
-This document is designed as a quick start guide. More indepth information regarding operation and setup can be found in the links below.
+This document is designed as a quick start guide. More **indepth information** regarding operation specifics and setup can be found in the links below. Please take the time to at least skim through these documents.
 
 * [VTOL docs](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/VTOL.md)
 * [Mixer Profiles](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/MixerProfile.md)
@@ -94,8 +94,7 @@ If this occurs, please close and restart the Configurator and unplug the FC and 
 ### STEP 0: Load Parameter Preset/Templates
 
 <details>
-<summary>A working diff file can be found here.    
-If not, select _Keep current settings_ and apply following parameter in cli but read description about which one to apply.</summary>
+<summary>A working diff file can be found here to assist setup.</summary>
 
 ```
 aux 0 62 7 1400 2025
@@ -107,17 +106,18 @@ set dynamic_gyro_notch_min_hz = 50
 set dynamic_gyro_notch_mode = 3D
 set motor_pwm_protocol 
 set airmode_type = STICK_CENTER_ONCE
-
 set nav_rth_allow_landing = FS_ONLY
 set nav_wp_max_safe_distance = 500
 set nav_fw_control_smoothness = 2
 set nav_fw_launch_max_altitude = 5000
+set vtol_transition_to_fw_min_airspeed_cm_s = 1527
+set vtol_mc_protection_mode = NAV
+set vtol_autotransition_always = ON
+set servo_pwm_rate = 100 
+set servo_lpf_hz = 30 
 
-set servo_pwm_rate = 60 
-set servo_lpf_hz = 25 
 
-
-## profile 1 as airplane and profile 2 as multi rotor
+## MixerProfile 1 as airplane and MixerProfile 2 is multicopter
 
 # mixer_profile
 mixer_profile 1
@@ -126,6 +126,9 @@ set platform_type = AIRPLANE
 set model_preview_type = 26
 set motorstop_on_low = ON
 set mixer_pid_profile_linking = ON
+set mixer_switch_trans_timer = 7
+set mixer_vtol_transition_dynamic_mixer = ON
+set mixer_vtol_manualswitch_autotransition_controller = ON
 
 # mixer_profile
 mixer_profile 2
@@ -133,6 +136,10 @@ mixer_profile 2
 set platform_type = TRICOPTER
 set model_preview_type = 1
 set mixer_pid_profile_linking = ON
+set mixer_switch_trans_timer = 40
+set mixer_vtol_transition_dynamic_mixer = ON
+set mixer_vtol_manualswitch_autotransition_controller = ON
+set mixer_vtol_transition_airspeed_timeout_ms = 6000
 
 # mixer_profile
 mixer_profile 1
@@ -164,7 +171,7 @@ set antigravity_accelerator =  5.000
 set smith_predictor_delay =  1.500
 set tpa_rate = 20
 set tpa_breakpoint = 1500
-set tpa_on_yaw = ON #If model using control surface/tilt mechanism for stabilization in MC mode
+set tpa_on_yaw = ON 
 set roll_rate = 18
 set pitch_rate = 18
 set yaw_rate = 9
@@ -330,7 +337,8 @@ Both these control surfaces must also have a minimum of 45° throws in the SMIX 
 - **Throttle control is of the highest importance for a Tailsitter VTOL**. You must never lower the throtlle more than a few percent below what the Tailsitter requires to hold a stationary hover. Doing so while hovering or landing can lead to reduced airflow over the control surfaces and a loss of attitude control.   
 If the aircraft starts to fall out of the hover. Recovery is best performed by increasing the throttle 10 -20% above hover, until it's stable again. Then slowly reduce the throttle back to the hover point again.
 
-:::tip Setting up a variometer with audible alert tones on your radio transmitter, based on VSpd. Is a good way to inform you if you're keeping the throttle close to hover.
+:::tip 
+Setting up a variometer with audible alert tones on your radio transmitter, based on VSpd. Is a good way to inform you if you're keeping the throttle close to hover.
 :::
 
 <details>
@@ -548,14 +556,16 @@ The Tailsitter diff template will load the required settings for these functions
 - `tailsitter_orientation_offset = ON` automatically rotates the IMU and Magnetometers orientation offset so it always maintains a 0° gravity reference as the planes axis transitions to 45° and then to 90° in MC VTOL mode (nose-up). The baseline board alignment is set in fixedwing MixerProfile 1.
 
 - INAV 10 provides the abilty to automatically transition from a MC VTOL to a FW or FW to a VTOL hover. This can be done with a 3 Position switch. Which requires you to toggle the switch to the new mode state, then after the transition is complete, move the swich to that state position. Which can be confusing.  
-But these changes also provide a means to simply transition with a 2 Position switch `mixer_vtol_manualswitch_autotransition_controller = ON` in both MIxerProfiles. Which is more simple to use and setup. *The diff template includes this method*.   
+But these changes also provide a means to simply transition with a 2 Position switch using `vtol_autotransition_always`. And `mixer_vtol_manualswitch_autotransition_controller = ON` in both MIxerProfiles. Which is more simple to use and setup. *The diff template includes this method*.   
 All you need is one switch position for FW and the other for MC VTOL. Then soon as you move the switch to that position, it will automatically start one full transition cycle, which uses a timer and virtual airspeed reference to complete the transition.   
 What YOU are required to do to use this function, is go to the modes tab and set the RC channel you require to control **Mixer Profile 2 mode**, so that it becomes active when your switch is in the VTOL position, and not be active in the FW switch position. The Transition box mode was also added to the template, but not actually required for it to work.
 - `mixer_switch_trans_timer = 30` sets the transition timer to 3s. 
 - `vtol_transition_to_fw_min_airspeed_cm_s = 1111` sets the transition airspeed to 35km/h. Which is enough for forward flight when the motors are already producing hover thrust.
 - Always use ANGLE mode as the base flight mode when flying in MC VTOL mode. It uses the earth frame LEVEL controller. Acro mode will not provide enough hover stability to control most Tailsitter aircraft.
 
-:::warning The use of navigation auto transition is not recommended for Tailsitters. The MC navigation throttle controller used with Poshold and RTH was not specifically designed to handle fast Z fluctuations while holding XY horizontal position as well. However ALTHOLD with ANGLE mode can handle Z fluctuation much faster, and can be useful. But it doesn't provide a quick bailout. So use with caution.:::
+:::warning 
+The use of navigation auto transition is not recommended for Tailsitters. The MC navigation throttle controller used with Poshold and RTH was not specifically designed to handle fast Z fluctuations while holding XY horizontal position as well. However ALTHOLD with ANGLE mode can handle Z fluctuation much faster, and can be useful. But it doesn't provide a quick bailout. So use with caution.
+:::
 
 
 ### Step 4: Test Roll Output in Tailsitter Mode
@@ -592,37 +602,54 @@ To enable this, in motor mixer set:
 
 ![Quad plane Mix](/img/features-adv/vtol-mixerprofile-4puls1-mix.png)
 
-## Automated Switching (RTH) (Optional):
+## Automated Switching (RTH):
 
 
 When configured correctly, the model will use the Fixed-Wing (FW) mode to efficiently return home and then transition to Multi-Copter (MC) mode for easier landing.
 
 To enable this feature, type following command in cli
 
-1. In your MC mode mixer profile (e.g., mixer_profile 2), set `mixer_automated_switch` to `ON`. leave it to `OFF` if burning remaining battery capacity on the way home is acceptable.
+1. If the model is in MC VTOL mode and a FS/RTH is triggered. These settings will allow it to transition back to FW flight mode.   
+With the setting below in the Master and MixerProfile 2. Transition will commence and be complete when either of these occur first. The airspeed reaches 60km/h or the 4.5s transition timer expires.   
 
 ```
-mixer_profile 2or1
-set mixer_automated_switch= ON
+# master
+
+set nav_rth_allow_landing = FS_ONLY (or ALWAYS)
+set vtol_transition_to_fw_min_airspeed_cm_s = 1667
+set vtol_autotransition_always = ON
+set vtol_mc_protection_mode = NAV
 ```
 
-2. Set `mixer_switch_trans_timer` ds in cli in the MC mode mixer profile to specify the time required for your model to gain sufficient airspeed before transitioning to FW mode.
-
 ```
-mixer_profile 2or1
-set mixer_switch_trans_timer = 30 # 3s, 3000ms
-```
+# mixer_profile
+mixer_profile 2
 
-3. In your FW mode mixer profile (e.g., mixer_profile 1), also set `mixer_automated_switch` to `ON`. leave it to `OFF` if automated landing in fixed-wing is acceptable.
-
-```
-mixer_profile 1or2
 set mixer_automated_switch = ON
+set mixer_switch_trans_timer = 45
+set mixer_vtol_transition_dynamic_mixer = ON
+set mixer_vtol_manualswitch_autotransition_controller = ON
+set mixer_vtol_transition_airspeed_timeout_ms = 6000
+
 ```
 
-4. Save your settings. type `save` in cli.
+2. When the airplane reaches the home location after a FS/RTH, it will transition back from a fixedwing to a MC VTOL and commence a landing.  
+Transition time is only 0.7s with no airspeed check. Because you want the airplane to slow as quickly as possible, so it doesn't have to reverse too far back to the home location.
 
-If you set `mixer_automated_switch` to `OFF` for all mixer profiles (the default setting), the model will not perform automated transitions. You can always enable navigation modes after performing a manual transition.
+```
+# mixer_profile
+mixer_profile 1
+
+set mixer_automated_switch = ON
+set mixer_switch_trans_timer = 7
+set mixer_vtol_transition_dynamic_mixer = ON
+set mixer_vtol_manualswitch_autotransition_controller = ON
+
+```
+
+3. Save your settings. type `save` in cli.
+
+If you set `mixer_automated_switch = OFF` for both mixer profiles (the default setting), the model will not perform automated transitions. You can always enable navigation modes after performing a manual transition.
 
 ## Notes and Experiences
 
