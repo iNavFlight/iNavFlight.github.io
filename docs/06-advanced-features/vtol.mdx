@@ -3,7 +3,7 @@ title: VTOL
 description: How to configure VTOLs in INAV 10
 ---
 
-This section explains how to configure INAV for a VTOL.
+This section explains how to configure INAV 10 for a VTOL.
 
 
 ## Introduction
@@ -14,14 +14,15 @@ This tutorial is designed for those who:
 - Know how to create a custom mixer for their model.
 - Know basic physics of VTOL operation
 
-:::info
+## VTOL mode switch operation changes
+
 One of the main things that has changed for all VTOL platforms in INAV 10, is how transition now works on your VTOL mode switch.     
 INAV 10 provides the ability to automatically transition from a MC VTOL to a FW or FW to a VTOL hover. However this can still be done by a manual transition with the old legacy method using a 3 Position switch, if desired.  
 Using the new 3 Position method, you now move the switch to the middle position from the flight mode state you were in (FW or MC VTOL) and it will commence and complete the transition phase by itself. But you are still required to move the switch to the flight mode position you are selecting, after the transition complete message is displayed on the OSD. Which can be confusing at first.         
 But these changes also provide a means to simply transition with a 2 Position switch using `vtol_autotransition_always`. And setting `mixer_vtol_manualswitch_autotransition_controller = ON` in both MixerProfiles. Which is simpler to use and setup. *The diff templates include this method*.   
 All you need is one switch position for FW and the other for MC VTOL. Then soon as you move the switch to that position, it will automatically start one full transition cycle, which also uses a timer and virtual airspeed reference to complete the transition.     
 What YOU are required to do to use this function, is go to the modes tab and set the RC channel you require to control **Mixer Profile 2 mode**, so that it becomes active when your switch is in the VTOL position, and not active in the FW switch position. The Transition box mode was also added to the template, but not actually required for it to work.
-:::
+
 
 ### Contents
 
