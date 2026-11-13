@@ -601,9 +601,20 @@ A Quad-plane has 4 individual lift motors that are used for the Take-off, Hover,
 QuadPlanes are the heaviest VTOL platform, but they are also the easiest to setup, and the most stable in windy conditions.
 
 :::tip
-Depending on the quadcopter motor boom mounting position you choose. It maybe beneficial to select Props_OUT or Props_IN, to account for a quad X or quad + format. This option will allow the YAW rotation to work with more effectiveness, due to boom flex/twist that may occur on certain builds, which can cancel-out the torque motion that drives the YAW axis.  
-It can also be beneficial to tilt all the MC lift motors in-wards 2° (towards the fuselage). This will also enhance the effect MC YAW produces. 
+Depending on the quadcopter motor boom mounting position you choose. It maybe beneficial to select Props_OUT or Props_IN, to account for a quad X or quad + format. This option will allow the Yaw rotation to work more effectively, because of the Yaw cancellation that can occur from boom flex/twist on certain builds, which opposes the torque action that drives the Yaw axis.  
+It can also be beneficial when using Props_OUT, to tilt all the MC lift motors in-wards 1 - 2° (towards the fuselage). This will also enhance Yaw effectiveness. Do the opposite for Props_IN.
 :::
+
+### Lift motors and wing incidence
+
+Mounting the motor booms may seem straight forward. You just mount them to the bottom of each wing with a 3D printed mount, or sideways through the front and rear of the fuselage ?? But a critical step can be easily overlooked when doing this.  
+It is important that the airplanes "Angle of Incidence" be accounted for. Most airplanes, when flying level, have between 2 - 6° positive incidence on their wing. This is so the aerofoil produces its optimal lift in forward flight.   
+But you do NOT want the motors with their propellers having that same incidence angle. The propellers of all 4 lift motors must be parallel to the incoming air flow when the airplane is flying with its specific incidence angle.  
+If this isn't accounted for. The airplane will loose altitude during transition, even if you apply up elevator, because the lift motors will fight the wings natural incidence as forward speed is increasing. This occurs due to the lift motors pushing their thrust downwards, but also slightly forwards, causing a braking effect.  
+But it can be mitigated a little by lowering `vtol_transition_mc_authority_min_percent`.  
+The image below shows how your hardware is best aligned. It can be useful to workout this angle using fw AutoTrim before you print the boom mount or motor shims.
+
+![Quad plane mount](/img/features-adv/vtol-motor-angle.png)
 
 <details>
 <summary>A tested diff template of an elevon 4 + 1 QuadPlane can be found here. It is recommended to base your setup on this diff. Then by reading through the other information below you can alter the motor and servo mixer to suit a different hardware layout.</summary>
@@ -844,11 +855,13 @@ The fixedwing propulsion motor is driven as normal in MixerProfile 1.
 Make sure you are in MixerProfile 1, then go to the **Mixer Tab** > **Motor mixer**. Based on the setup template you loaded. You will see motors 1 to 4 are orange, with -1 under the Throttle[T] mixer. -1 or orange means that motor will not be mixed to the Output.  
 But motor 5 will not be orange. it will be 1, which means it is 100% mixed to the Output. That indicates only motor mixer 5 (the fixedwing motor) will be operational in MixerProfile 1. The other 4 motor positions are just place holders.
 
+![Quad plane Mix](/img/features-adv/vtol-mixerprofile-4puls1-mix.png)
+
 ### Motor Transition Mixing: MC VTOL Lift Motor Configuration
 
 The Multicopter VTOL motors are driven in MixerProfile 2.  
 Make sure you are in MixerProfile 2, then go to the **Mixer Tab** > **Motor mixer**. Based on the setup template you loaded. You will now see motors 1 to 4 are not orange, with 1 under each Throttle[T] mixer. This means those 4 motors will be active in MixerProfile 2 and the Transition mode state.  
-But when you now look at motor 5, which is the fixedwing motor. It **will** be orange, which is normal. You will see its value greater than -1. This is because throttle mixer 5 is set to corrispond to the throttle value which is used to drive the fixedwing motor during the MC VTOL to FW Transition phase. **It will ONLY be operational in the Transition phase**.
+But when you now look at motor 5, which is the fixedwing motor. It **will** be orange, which is normal due to its value being greater than -1. This is because Throttle[T] mixer 5 corrisponds to the throttle value used to drive the fixedwing motor during the MC VTOL to FW Transition phase. **It will ONLY be operational in the Transition phase**.
 
 ### Fixedwing motor throttle during Transition
 
@@ -868,14 +881,14 @@ But when you now look at motor 5, which is the fixedwing motor. It **will** be o
 
 Ideally a Quadplane should have the front and rear motors equally spaced for/aft of the airplanes C.G. This ensures the front and rear motors are applying equal thrust when Throttle, Pitch and Roll commands are given.   
 The flight controller can handle a small offset. But if it's too great, the stabilization command will momentarily over-drive the motors carrying the lesser load. This can lead to hover instability.  
-However if you do find your build has a little too much motor offset from the airplanes C.G.. It is possible to lower the mixer weights of the motors carrying the lesser load. This should be applied to the Roll and Pitch axis mixers. Do not lower the throttle mixer weight on those motors. And never take the mixer weight below 0.65.
+However if you do find your build has a little too much motor offset from the airplanes C.G.. It is possible to calculate the offst and lower the mixer weights of the motors carrying the lesser load. This should be applied to the Roll[R] and Pitch[P] axis mixers. Do not lower the Throttle[T] mixer weight on those motors. And never take the mixer weight below 0.65.
 
 :::warning
 Airmode type must NOT be set to "THROTTLE_THRESHOLD".
 If set to `throttle_threshold`, the (-)Throttle mixer sign, will cause the fixedwing motor to spin at idle during VTOL take-off, until the throttle-threshold (us) is exceeded.
 :::
 
-![Quad plane Mix](/img/features-adv/vtol-mixerprofile-4puls1-mix.png)
+
 
 ## Automated Switching (RTH):
 
