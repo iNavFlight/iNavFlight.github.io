@@ -16,19 +16,24 @@ Multiple methods are used to accomplish this depending on whether it's a multico
 
 **Settings :**
 
-* [TPA_Rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#tpa_rate) - percentage of PID attenuation that will occur when the throttle is increased above the `TPA_breakpoint`.  Range `0 - 100`
+* [TPA_Rate](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#tpa_rate) - The percentage of PID attenuation that will occur when the throttle is increased above the `TPA_breakpoint`.  Range `0 - 100`
 
-* [TPA_Breakpoint](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#tpa_breakpoint) - is the throttle [`uS`] value in the curve at which `TPA_Rate` will be applied. Below this value the PIDs are not attenuated at all.
+* [TPA_Breakpoint](https://github.com/iNavFlight/inav/blob/master/docs/Settings.md#tpa_breakpoint) - is the throttle [`uS`] value in the curve at which `TPA_Rate` will begin to be applied. Below this value the PIDs are not attenuated at all.
 
 ### How to use it?
 
-* Firstly, set `TPA_Rate = 15` as a starting point.
-The PIDs should be tuned in the approximate throttle range your copter will comfortably cruise at.
-* Once the throttle is moved higher than that point, you may start experiencing motor oscillations, so begin increasing the `TPA_breakpoint` to a throttle value just prior to the onset of those oscillations.
-* Then incrementally increase the `TPA_rate` value until the oscillations in the higher throttle ranges are gone.
-_You may have to increase it more on powerful freestyle or race quads._
+* Firstly, set `TPA_Rate = 0`. This will prevent the gains from being attenuated while you are tuning.
 
-**Note** - TPA is not recommended for reverse motor 3D installs.
+* The PID's should be tuned in the approximate throttle range your copter will comfortably fly. This can be anywhere between 1300 to 1600us for a typical multicopter.
+
+* When hovering in Acro mode. Perform some sharp stick moves on the Pitch, Roll and Yaw, and return the multicopter to level after each. Land and look over your logs. Then alter the gains according to your builds requirements.
+
+* Once tuned, start doing some higher throttle speed runs. As the speed increases you may start experiencing motor oscillations. Take note of the throttle value this begins to occur. Land and add a throttle value 50us below that to the `TPA_breakpoint`. e.g. Oscillation occurs at 1700us, add 1650us to the breakpoint. And set `TPA_rate = 20` as a starting value.
+
+* Takeoff again and run a few more higher throttle speed runs. If the oscillations are gone. You are finished. But if the motors still oscillate a little. Increase the `TPA_rate` another 10 percent. Continue to do this until the multicopter flys smoothly.
+_It may require increasing `TPA_rate` considerably higher on more powerful freestyle or race quads._  
+
+**Note** - TPA is not recommended for multicopters that use forward/reverse motor operation for 3D freestyle flying.
 
 ### Example of Multicopter TPA curve
 
@@ -132,9 +137,9 @@ Setting `tpa_pitch_compensation = 0` causes fixedwing TPA to work as it did in p
 :::
 
 * `fw_tpa_time_constant` - is a smoothing and time delay constant, reflecting the non-instantaneous speed response of an airplane to throttle changes, based on relative drag, inertia and thrust. Range `0 - 5` seconds.  
-This asymmetric filter accounts for throttle adjustments. And the influence gravity has upon speed during a climb or dive.  
+This asymmetric filter accounts for throttle adjustments, and the influence gravity has upon speed during a climb or dive.  
 An airplane that is very aerodynamic is slower to wash-off speed when the throttle is lowered, or when a climb is commanded. This generally requires a higher time constant value.  
-While an airplane that is under powered, will take longer for the speed to rise after the throttle is increased; also requiring a higher time constant.    
+While an airplane that is under powered will take longer for the speed to rise when the throttle is rapidly increased; also requiring a higher time constant.    
 The only time you may need to decrease the time constant. Is if your airplane is over powered and also has a very high drag coefficient.
 
 
@@ -148,11 +153,11 @@ Because this method accounts for the pitch angle. It can override the convention
 **Example :**
 If your airplane is flying level at 80% throttle, the gains will have some attenuation applied to them at that airspeed to prevent control surface oscillations.
 But if you then pull back on the elevator stick and the airplane begins climbing at a high angle.
-The vertical airspeed generally starts to wash-off if your airplane is not over powered. Leading to a transition from the gain attenuation to mild gain boost.
+The vertical airspeed generally starts to wash-off if your airplane is not over powered. Leading to a transition from gain attenuation to mild gain boost.
 This will tighten the gains as the airplane slows closer to a stall, even when the throttle is higher. 
  
 The same applies if the airplane is placed into a low throttle steep downward dive.
-When using the old TPA method, having the throttle low in this case would cause the gains to boost. But because this method knows the airplane is in a dive, it will override the raw throttle command and start attenuating the gains to prevent oscillations; because the airplanes free-fall speed is increasing, irrespective of the throttle.
+When using the old TPA method, having the throttle low in this case would cause the gains to boost. But because this method knows the airplane is in a dive, it will override the throttle commanded boosting of the gains, and start attenuating them by pitch to prevent control surface oscillations; because the airplanes free-fall speed is increasing, irrespective of the throttle.
 
 
 ### How to use this?
@@ -200,7 +205,7 @@ This plot shows how adjusting the `TPA_rate` will effect the scaling of the gain
 ### Example of a Fixedwing TPA + pitch angle
 
 This plot shows the collective effect pitch angle and throttle have on PID scaling, and the influence which lowering `tpa_pitch_compensation` has on those gains, to prevent oscillations on powerful planes while in a sustained high speed climb.  
-The plot also shows a slight increase in the gains while in a dive at lower throttle. This is why reducing `tpa_pitch_compensation` below 5 is not recommended. Especially if your airplane is very aerodynamic.
+The plot also shows a slight increase in the gains while in a dive at lower throttle, which is why reducing `tpa_pitch_compensation` below 5 is not recommended. Especially if your airplane is very aerodynamic.
 
 ![FW TPA Curve](/img/pid-tune/pid-fw-tpa-pitch-angle.png)
 
