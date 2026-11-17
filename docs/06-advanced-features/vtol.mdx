@@ -14,15 +14,6 @@ This tutorial is designed for those who:
 - Know how to create a custom mixer for their model.
 - Know basic physics of VTOL operation
 
-## VTOL mode switch operation changes
-
-One of the main things that has changed for all VTOL platforms in INAV 10, is how transition now works on your VTOL mode switch.     
-INAV 10 provides the ability to automatically transition from a MC VTOL to a FW or FW to a VTOL hover. However this can still be done by a manual transition with the old legacy method using a 3 Position switch, if desired.  
-Using the new 3 Position method, you now move the switch to the middle position from the flight mode state you were in (FW or MC VTOL) and it will commence and complete the transition phase by itself. But you are still required to move the switch to the flight mode position you are selecting, after the transition complete message is displayed on the OSD. Which can be confusing at first.         
-But these changes also provide a means to simply transition with a 2 Position switch using `vtol_autotransition_always`. And setting `mixer_vtol_manualswitch_autotransition_controller = ON` in both MixerProfiles. Which is simpler to use and setup. *The diff templates include this method*.   
-All you need is one switch position for FW and the other for MC VTOL. Then soon as you move the switch to that position, it will automatically start one full transition cycle, which also uses a timer and virtual airspeed reference to complete the transition.     
-What YOU are required to do to use this function, is go to the modes tab and set the RC channel you require to control **Mixer Profile 2 mode**, so that it becomes active when your switch is in the VTOL position, and not active in the FW switch position. The Transition box mode was also added to the template, but not actually required for it to work.
-
 
 ### Contents
 
@@ -34,7 +25,7 @@ What YOU are required to do to use this function, is go to the modes tab and set
 
 INAV 10 has seen considerable improvements to VTOL operation over the previous releases. 
 
-This document is designed as a quick start guide. More **indepth information** regarding operation specifics and setup can be found in the links below. Please take the time to at least skim through these documents.
+This document is designed as a quick start guide. More **indepth information** regarding operation specifics and setup can be found in the links below. Please take the time to at least skim through these documents. 
 
 * [VTOL docs](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/VTOL.md)
 * [Mixer Profiles](https://github.com/iNavFlight/inav/blob/maintenance-10.x/docs/MixerProfile.md)
@@ -74,7 +65,7 @@ We highly value your feedback as it plays a crucial role in the development and 
 ## VTOL Logic
 
 VTOL functionality is achieved by switching/transitioning between two configurations stored in the FC.
-The configurations are defined by the Mixer Profile with its associated Control Profile.
+The configurations are defined by the _Mixer_Profile_ with its associated _Control_Profile_.
 
 * Mixer profile 1 is for the fixed-wing (FW) flight mode. It is found in the CLI under -  
 `# control_profile 1` and `# mixer_profile 1`
@@ -89,7 +80,7 @@ The configurations are defined by the Mixer Profile with its associated Control 
 
 ### Configuration and setup
 
-When making changes to either MixerProfile in the configurator or the CLI. You are requied to place the relevant changes in to the correct Mixer or Profile.  
+When making changes to either MixerProfile in the configurator or the CLI. You are requied to place the relevant changes in to the correct _Mixer_Profile_ or _Control_Profile_.  
 Go to the top right corner of the Configurator status bar, next to the Disconnect button. And select either MixerProfile 1 or MixerProfile 2.  
 Once you do this. The Configurator will ask you to continue with a reboot. Any changes now made or added to the CLI will be applied to the MixerProfile you just selected.
 
@@ -98,6 +89,30 @@ Continuous switching back and forth between Mixerprofiles in the Configurator ca
 If this occurs, please close and restart the Configurator and unplug the FC and reboot it.
 :::
 
+### VTOL mode switch operation:
+
+One of the main things that has changed for all VTOL platforms in INAV 10, is how transition now works on your VTOL mode switch.     
+INAV 10 provides the ability to automatically transition from a MC VTOL to a FW or FW to a VTOL hover. However this can still be done by a manual transition with the old legacy method using a 3 Position switch, if desired.  
+Using the new 3 Position method, you now move the switch to the middle position from the flight mode state you were in (FW or MC VTOL) and it will commence and complete the transition phase by itself. But you are still required to move the switch to the flight mode position you are selecting, after the transition complete message is displayed on the OSD. Which can be confusing at first.         
+But these changes also provide a means to simply transition with a 2 Position switch using `vtol_autotransition_always`. And setting `mixer_vtol_manualswitch_autotransition_controller = ON` in both MixerProfiles. Which is simpler to use and setup. *The diff templates include this method*.   
+All you need is one switch position for FW and the other for MC VTOL. Then soon as you move the switch to that position, it will automatically start one full transition cycle, which also uses a timer and virtual airspeed reference to complete the transition.     
+What YOU are required to do to use this function, is go to the modes tab and set the RC channel you require to control **Mixer Profile 2 mode**, so that it becomes active when your switch is in the VTOL position, and not active in the FW switch position. The Transition box mode was also added to the template, but not actually required for it to work.
+
+
+#### Here is a example in the Modes tab:
+
+![vtol mixer profile](/img/features-adv/vtol-mixer-profile.png)
+| 1000~1300 | 1300~1700 | 1700~2000 |
+| :-- | :-- | :-- |
+| Profile1(FW) with transition off | Profile2(MC) with transition on | Profile2(MC) with transition off |
+
+- Profile file switching becomes available after completing the runtime sensor calibration (15-30s after booting). And It is **not available** when a navigation mode or position hold is active.
+
+- By default, `mixer_profile 1` is used. `mixer_profile 2` is used when the `MIXER PROFILE 2` mode is activate. Once configured successfully, you will notice that the profiles and model preview changes accordingly when you refresh the relevant INAV Configurator tabs.
+
+- Use the `MIXER TRANSITION` mode to gain airspeed in MC profile, set `MIXER TRANSITION` accordingly.
+
+Conduct a bench test on the model (without props attached). The model can now switch between fixed-wing and multi-copter modes while armed. Furthermore, it is capable of mid-air switching, resulting in an immediate stall upon entering fixed-wing profile
 
 ## Tilt Rotor Setup
 
@@ -115,7 +130,7 @@ set dynamic_gyro_notch_min_hz = 50
 set dynamic_gyro_notch_mode = 3D
 set motor_pwm_protocol 
 set airmode_type = STICK_CENTER_ONCE
-set nav_rth_alt_mode = FIXED
+set nav_rth_alt_mode = MAX
 set nav_rth_allow_landing = ALWAYS
 set small_angle = 180
 set nav_wp_max_safe_distance = 500
@@ -148,7 +163,7 @@ set fw_ff_pitch = 80
 set fw_ff_roll = 50
 set fw_p_pitch = 15
 set fw_p_roll = 15
-set apa_pow = 130
+set apa_pow = 120
 set tpa_rate = 95
 set tpa_breakpoint = 1450
 
@@ -191,7 +206,7 @@ set mixer_switch_trans_timer = 40
 set mixer_vtol_transition_dynamic_mixer = ON
 set mixer_vtol_manualswitch_autotransition_controller = ON
 set mixer_vtol_transition_airspeed_timeout_ms = 6000
-set transition_pid_mmix_multiplier_roll = 900
+set transition_pid_mmix_multiplier_roll = 800
 set transition_pid_mmix_multiplier_pitch = 900
 
 save
@@ -232,7 +247,7 @@ If you don't do this, the motors will point in the direction assigned by the tra
      ```
      mixer_profile 2
      set mixer_pid_profile_linking = ON
-     set platform_type = MULTIROTOR/TRICOPTER
+     set platform_type = TRICOPTER
      save
      ```
 
@@ -247,28 +262,7 @@ If you don't do this, the motors will point in the direction assigned by the tra
 
 ![Alt text](/img/features-adv/vtol-mixerprofile-mc-mixer.png)
 
-### STEP 3: Mode Tab Settings:
-
-:::info
-We recommend using an 3-pos switch on you radio to activate these modes, So the pilot can jump in or bail out at any moment.
-:::
-
-#### Here is a example, in the bottom of inav-configurator Modes tab:
-
-![vtol mixer profile](/img/features-adv/vtol-mixer-profile.png)
-| 1000~1300 | 1300~1700 | 1700~2000 |
-| :-- | :-- | :-- |
-| Profile1(FW) with transition off | Profile2(MC) with transition on | Profile2(MC) with transition off |
-
-- Profile file switching becomes available after completing the runtime sensor calibration (15-30s after booting). And It is **not available** when a navigation mode or position hold is active.
-
-- By default, `mixer_profile 1` is used. `mixer_profile 2` is used when the `MIXER PROFILE 2` mode is activate. Once configured successfully, you will notice that the profiles and model preview changes accordingly when you refresh the relevant INAV Configurator tabs.
-
-- Use the `MIXER TRANSITION` mode to gain airspeed in MC profile, set `MIXER TRANSITION` accordingly.
-
-Conduct a bench test on the model (without props attached). The model can now switch between fixed-wing and multi-copter modes while armed. Furthermore, it is capable of mid-air switching, resulting in an immediate stall upon entering fixed-wing profile
-
-### STEP 4: Tilting Servo Setup (Recommended)
+### STEP 3: Tilting Servo Setup (Recommended)
 
 :::info
 Setting up the tilting servos to operate correctly is crucial for correct yaw control of the craft. Using the default setup works, but will most likely result in your craft crawling forward with every yaw input.
@@ -323,7 +317,7 @@ Optional Setup Step for Tilt Servos:
 8. **Reversing tilt servos and mixer signs:**
    If you have set up the mixer as suggested in STEP1 and STEP2, you may have to deal with negative values for the mixer. You may wish to reverse a servo so that you don't have to deal with the negative signs. In that case, you may have to adjust the MIN and MAX values from point 4 again, so that your tilt servos are operating correctly. Check the operation of the servos once again for the YAW control in multicopter/tricopter mode as well as the horizontal position of the tilt servos in fixed-wing mode.
 
-### STEP 5: Transition Mixing (Multi-Rotor Profile)(Recommended)
+### STEP 4: Transition Mixing (Multi-Rotor Profile)(Recommended)
 
 :::info
 Transition Mixing is typically useful in multi-copter profile to gain airspeed in prior to entering the fixed-wing profile.
@@ -339,6 +333,15 @@ Set the weight/rate according to your desired angle.
 This will allow tilting the motor for tilting rotor model.
 
 ![vtol mixer profile servo transition](/img/features-adv/vtol-mixerprofile-servo-transition-mix.png)
+
+### Tilt rotor transition coupling effect
+
+- On some tilting motor models, you may experience roll/yaw coupled oscillations when `MIXER TRANSITION` is activated. To address this issue, you can try the following.
+  * Adjusting `transition_pid_mmix_multiplier_roll` can recduce the roll/yaw coupling when transitioning. When that settimg is placed in MixerProfile 2 it will reduce the roll gains applied to the front motors when tilting forward in Transition mode. Taking it as low as 500 will reduce roll/yaw shimmy during ttransition.  
+**NOTE:** Make sure you apply the multiplier correctly. i.e. With or without the (-) sign. This will depend on your hardware. If you set it in the wrong direction it will make the shimmy worse.
+
+- There will be a time window that tilting motors is providing up lift but rear motor isn't. Resulting in a sudden pitch raise on the entering of the mode. Using `transition_pid_mmix_multiplier_pitch` can help correct this effect. **NOTE:** Make sure you apply the multiplier correctly. i.e. With or without the (-) sign. This will depend on your hardware. 
+Or use the max speed or faster speed in tiling servo to reduce the time window. OR lower the throttle on the entering of the FW mode to mitigate the effect.
 
 ## TailSitter Setup
 
@@ -448,15 +451,15 @@ set yaw_rate = 6
 control_profile 2
 
 set mc_p_pitch = 90
-set mc_i_pitch = 32
+set mc_i_pitch = 34
 set mc_d_pitch = 7
 set mc_cd_pitch = 160
 set mc_p_roll = 50
 set mc_i_roll = 35
 set mc_d_roll = 16
 set mc_cd_roll = 75
-set mc_p_yaw = 28
-set mc_i_yaw = 35
+set mc_p_yaw = 30
+set mc_i_yaw = 37
 set mc_d_yaw = 4
 set mc_cd_yaw = 100
 set mc_p_level = 35
@@ -656,7 +659,7 @@ set nav_land_slowdown_minalt = 170
 set nav_land_slowdown_maxalt = 500
 set nav_min_rth_distance = 0
 set nav_overrides_motor_stop = AUTO_ONLY
-set nav_rth_alt_mode = FIXED
+set nav_rth_alt_mode = MAX
 set nav_rth_altitude = 5000
 set nav_rth_home_altitude = 4000
 set nav_rth_linear_descent_start_distance = 600
@@ -855,13 +858,15 @@ The fixedwing propulsion motor is driven as normal in MixerProfile 1.
 Make sure you are in MixerProfile 1, then go to the **Mixer Tab** > **Motor mixer**. Based on the setup template you loaded. You will see motors 1 to 4 are orange, with -1 under the Throttle[T] mixer. -1 or orange means that motor will not be mixed to the Output.  
 But motor 5 will not be orange. it will be 1, which means it is 100% mixed to the Output. That indicates only motor mixer 5 (the fixedwing motor) will be operational in MixerProfile 1. The other 4 motor positions are just place holders.
 
-![Quad plane Mix](/img/features-adv/vtol-mixerprofile-4puls1-mix.png)
+![Quad plane fw motor mix](/img/features-adv/vtol-quadplane-motor-mixer-fw.png)
 
 ### Motor Transition Mixing: MC VTOL Lift Motor Configuration
 
 The Multicopter VTOL motors are driven in MixerProfile 2.  
 Make sure you are in MixerProfile 2, then go to the **Mixer Tab** > **Motor mixer**. Based on the setup template you loaded. You will now see motors 1 to 4 are not orange, with 1 under each Throttle[T] mixer. This means those 4 motors will be active in MixerProfile 2 and the Transition mode state.  
 But when you now look at motor 5, which is the fixedwing motor. It **will** be orange, which is normal due to its value being greater than -1. This is because Throttle[T] mixer 5 corrisponds to the throttle value used to drive the fixedwing motor during the MC VTOL to FW Transition phase. **It will ONLY be operational in the Transition phase**.
+
+![Quad plane mc motor mix](/img/features-adv/vtol-quadplane-motor-mixer-mc.png)
 
 ### Fixedwing motor throttle during Transition
 
@@ -885,9 +890,8 @@ However if you do find your build has a little too much motor offset from the ai
 
 :::warning
 Airmode type must NOT be set to "THROTTLE_THRESHOLD".
-If set to `throttle_threshold`, the (-)Throttle mixer sign, will cause the fixedwing motor to spin at idle during VTOL take-off, until the throttle-threshold (us) is exceeded.
+If set to `throttle_threshold`, the (-)Throttle mixer sign, will cause the fixedwing motor to spin at idle during VTOL take-off, until the throttle-threshold setting (us) is exceeded.
 :::
-
 
 
 ## Automated Switching (RTH):
@@ -897,7 +901,7 @@ When configured correctly, the model will use the Fixed-Wing (FW) mode to effici
 
 To enable this feature, type following command in cli
 
-1. If the model is in MC VTOL mode and a FS/RTH is triggered. These settings will allow it to transition back to FW flight mode via `vtol_autotransition_always = ON `.
+1. If the model is in MC VTOL mode and a FS/RTH is triggered. These settings will allow it to transition back to FW flight mode via `mixer_automated_switch = ON`.
 With the setting below in the Master and MixerProfile 2. Transition will commence and be complete when either of these occur first. The airspeed reaches 60km/h or the 4.5s transition timer expires.   
 
 ```
@@ -921,7 +925,7 @@ set mixer_vtol_transition_airspeed_timeout_ms = 6000
 
 ```
 
-2. When the airplane reaches the home location after a FS/RTH, it will transition back from a fixedwing to a MC VTOL and commence a landing via `vtol_autotransition_always = ON` .
+2. When the airplane reaches the home location after a FS/RTH, it will transition back from a fixedwing to a MC VTOL and commence a landing via `mixer_automated_switch = ON`.
 Transition time is only 0.7s with no airspeed check. Because you want the airplane to slow as quickly as possible, so it doesn't have to reverse too far back to the home location.
 
 ```
@@ -944,19 +948,10 @@ If you set `mixer_automated_switch = OFF` for both mixer profiles (the default s
 ### General
 
 - VTOL model operating in multi-copter (MC) mode may encounter challenges in windy conditions. Please exercise caution when testing in such conditions.
+- It is not advisable to fly a VTOL backwards in to the wind. The planes veritical stabilizer fin will against VTOL yaw action.
+- Transitioning in a cross wind is not recommnened. It is better to transition directly into the wind or with the wind.
 - Make sure you can recover from a complete stall before trying the mid air transition
 - It will be much safer if you can understand every line in diff all, read your diff all before maiden
-
-### Tilting-Rotor
-
-- In some tilting motor models, you may experience roll/yaw coupled oscillations when `MIXER TRANSITION` is activated. To address this issue, you can try the following:
-  1. Use prop blade meets at top/rear prop direction for tilting motors to balance the effects of torque and P-factor.
-  2. In addition to 1. Add a little yaw mixing(about 0.2) in tilt motors.
-- There will be a time window that tilting motors is providing up lift but rear motor isn't. Result in a sudden pitch raise on the entering of the mode. Use the max speed or faster speed in tiling servo to reduce the time window. OR lower the throttle on the entering of the FW mode to mitigate the effect.
-
-### Dedicated forward motor
-
-- Easiest way to setup a vtol. and efficiency can be improved by using different motor/prop for hover and forward flight
 
 ## References and Resources
 
