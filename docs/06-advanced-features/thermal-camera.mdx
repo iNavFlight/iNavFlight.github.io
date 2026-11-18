@@ -1,0 +1,178 @@
+---
+title: Thermal Camera (MZTC)
+description: Wire, configure and fly a MassZero thermal camera controlled by INAV
+---
+
+INAV can control a MassZero thermal camera (MZTC) over a UART.
+You set palettes, zoom, image parameters and purpose presets from the Configurator or the CLI, switch palettes and zoom in flight from your radio, and watch the camera's state on the OSD.
+The camera outputs ordinary analog video.
+That video goes straight to your video transmitter, the same as any analog FPV camera.
+INAV never sees the thermal picture itself, only the camera's state.
+The camera reports no temperatures over its control link.
+There is no spot reading, no hottest point in frame and no alarm.
+A preset tunes the image for a task.
+It cannot detect a fire or a person.
+
+:::info
+This integration is part of the INAV 10.1 development branch.
+It has not shipped in a stable release yet.
+You need firmware and Configurator builds that include it.
+:::
+
+:::note
+The feature needs a flight controller with more than 512 KB of flash.
+Boards with 512 KB or less do not include it.
+:::
+
+## Compatible cameras
+
+The MassZero camera is an OEM thermal module that several companies sell under their own names.
+The module family's serial control protocol is published as the HM-TM5X-XRG/C communication guide.
+The INAV driver frames every command with a `0xF0` begin marker, device address `0x36` and a `0xFF` end marker at 115200 baud 8N1, matching that guide.
+The MassZero camera is the module the integration was developed and tested against.
+
+These products have been matched to the same module family:
+
+- MassZero Thermal Camera Core Component
+- Axisflying thermal cameras, sold as the OEM mini series CVBS modules
+- IVCAN analog CVBS thermal modules, whose published protocol page shows the same framing bytes
+- JS-MINI256, JS-MINI384 and JS-MINI640 modules
+
+The module family is sold in 256x192, 384x288 and 640 class resolution variants.
+The resolution only changes the picture.
+The control protocol is identical across the variants.
+
+### Identifying a module
+
+![Back of a thermal camera module. PCB 101253750 is printed along the top edge. A five pin JST connector sits on the left edge, with its JP2 label below it. HM-04107 REV1.0 is printed along the bottom edge.](/img/features-adv/mztc-board-identification.jpg)
+
+Look at the back of the board:
+
+- A model number in the HM-041xx series, such as `HM-04107 REV1.0` on the board pictured
+- A bare board number such as `PCB 101253750`
+- A five pin JST connector labelled `JP2` carrying power, video and the control UART
+
+A compatible camera also identifies itself electrically.
+Once INAV connects to it, the `mztc` CLI command prints the camera's identity bytes on its `Device ID` line.
+
+## Wiring
+
+The camera has two separate connections.
+
+The control UART goes to the flight controller:
+
+- Camera TX to a flight controller RX pad
+- Camera RX to the flight controller TX pad of the same UART
+- Camera GND to flight controller GND
+- Camera VCC to a supply matching the camera's specification
+
+The camera's analog video output goes to your video transmitter.
+The flight controller has no analog video input.
+
+## Configurator setup
+
+Everything the integration adds stays hidden until the camera's UART is assigned.
+The camera section in the Configuration tab, the **THERMAL CALIBRATE** mode, the two adjustment functions and the OSD element all appear only after step 1 below and the reboot.
+
+### 1. Assign the port
+
+1. Open the **Ports** tab.
+2. On the UART the camera is wired to, select **MassZero Thermal Camera** under Peripherals.
+3. Leave the baud rate on the **Peripherals** column of that row at **115200**, the rate the Configurator fills in for this function.
+4. Save and reboot.
+
+The camera only listens at the Peripherals baud rate of its row.
+A rate set in the Data or Telemetry column leaves the camera silent.
+
+### 2. Configure the camera
+
+After the reboot, the **MassZero Thermal Camera** section appears in the **Configuration** tab.
+It offers **Purpose preset**, **Colour palette** and **Digital zoom**, with the remaining image controls under its **Advanced image tuning** expander: automatic shutter mode, shutter interval, digital enhancement, spatial and temporal denoising, brightness, contrast and image mirroring.
+A preset is a named bundle of image settings for a task, such as `SEARCH`, `FIRE` or `MARITIME`.
+Selecting a preset writes the palette, brightness, contrast, enhancement, denoise levels, shutter mode and correction interval in one step.
+The `CUSTOM` preset writes nothing and leaves hand-tuned settings intact.
+The same settings are available in the CLI as the `mztc_*` settings.
+
+### 3. Optional: calibration switch and in-flight adjustments
+
+The **THERMAL CALIBRATE** mode appears in the **Modes** tab under **FPV Camera Modes**.
+Activating it triggers the camera's flat field correction.
+The correction uses the camera's internal shutter as its reference.
+
+Two adjustment functions let you change the camera from your radio in flight:
+
+- **Thermal Camera Zoom Adjustment** steps through the zoom levels
+- **Thermal Camera Palette Adjustment** steps through the colour palettes
+
+Assign them in the **Adjustments** tab like any other adjustment function.
+The two functions are only offered in that tab's dropdown while the camera's UART is assigned.
+
+## OSD status element
+
+Add the **Thermal Camera Status** element in the **OSD** tab.
+The element is only offered there while the camera's UART is assigned.
+
+While the link is up, the element shows the state plus the commanded zoom and palette, for example `IR OK 2X WHT`.
+The zoom and palette fields disappear while the link is down.
+The element blinks on `ERR` and `OFF`.
+
+The state field shows:
+
+| Text  | Meaning                                                                   |
+| ----- | ------------------------------------------------------------------------- |
+| `OK`  | Camera connected and running                                               |
+| `FFC` | Flat field correction in progress                                          |
+| `INI` | INAV is probing for the camera and has not heard a valid answer yet        |
+| `ERR` | The camera stopped answering. Check wiring, power and the baud rate        |
+| `OFF` | No UART is assigned to the MassZero Thermal Camera function                |
+
+The palette codes follow the `mztc_palette_mode` order:
+
+| Code  | Palette    | CLI value    |
+| ----- | ---------- | ------------ |
+| `WHT` | White hot  | `WHITE_HOT`  |
+| `BLK` | Black hot  | `BLACK_HOT`  |
+| `FU1` | Fusion 1   | `FUSION_1`   |
+| `RBW` | Rainbow    | `RAINBOW`    |
+| `FU2` | Fusion 2   | `FUSION_2`   |
+| `IR1` | Iron red 1 | `IRON_RED_1` |
+| `IR2` | Iron red 2 | `IRON_RED_2` |
+| `SEP` | Sepia      | `SEPIA`      |
+| `CL1` | Color 1    | `COLOR_1`    |
+| `CL2` | Color 2    | `COLOR_2`    |
+| `ICE` | Ice fire   | `ICE_FIRE`   |
+| `RAI` | Rain       | `RAIN`       |
+| `GRN` | Green hot  | `GREEN_HOT`  |
+| `RED` | Red hot    | `RED_HOT`    |
+
+## Troubleshooting
+
+**The camera section, mode, adjustments or OSD element are missing.**
+Assign the **MassZero Thermal Camera** function in the Ports tab, save and reboot.
+None of them exist until then.
+
+**The OSD shows `IR OFF`.**
+The firmware has no UART assigned to the camera function.
+This is a Ports tab problem, never a wiring problem.
+
+**The OSD shows `IR ERR` or `IR INI` that never turns to `OK`.**
+The port is assigned and the camera is not answering.
+Check the TX and RX crossover, the power supply and that the Peripherals column of the port reads 115200.
+The `mztc` CLI command prints a `Connected` line, an `Error flags` line and a `Link quality` percentage, the share of recent probes the camera answered.
+
+## Bench configuration tool
+
+The community [HM-TM5X Thermal Camera Programmer](https://github.com/knack-tactical/thermal_camera_programmer) configures these cameras on the bench through a USB to TTL serial adapter, without a flight controller.
+Its Get Model Name button reads the model string back from the camera, a first test that also shows whether an unknown module answers the protocol at all.
+The tool is early stage.
+
+:::warning
+Set the serial adapter to 3.3 V before wiring anything.
+A 5 V adapter can destroy the camera's UART.
+:::
+
+## More information
+
+The full reference lives in the firmware repository as `docs/MassZero_Thermal_Camera.md`, with the complete settings list, every CLI command, the MSP commands and the preset value tables.
+Until INAV 10.1 merges, that file is part of the integration pull request, [iNavFlight/inav#12172](https://github.com/iNavFlight/inav/pull/12172).
+The camera vendor's site is [masszerofpv.com](https://masszerofpv.com).
